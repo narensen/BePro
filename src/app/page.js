@@ -12,14 +12,21 @@ export default function Home() {
 
   useEffect(() => {
     const checkUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
+      const { data, error } = await supabase.auth.getSession()
+      if (error) {
+        console.error('Error fetching session:', error)
+        setUser(null)
+        setMsg('')
+        setLoading(false)
+        return
+      }
+      const session = data?.session
       if (!session) {
         setUser(null)
+        setMsg('')
       } else {
         setUser(session.user)
-        setMsg(session.user.user_metadata.username)
+        setMsg(session.user.user_metadata?.username || 'User')
       }
       setLoading(false)
     }
@@ -29,8 +36,10 @@ export default function Home() {
 
   const handleSignOut = async () => {
     setLoading(true)
-    await supabase.auth.signOut()
+    const { error } = await supabase.auth.signOut()
+    if (error) console.error('Sign out error:', error)
     setUser(null)
+    setMsg('')
     setLoading(false)
   }
 
@@ -50,16 +59,16 @@ export default function Home() {
       <section className="min-h-screen flex flex-col justify-center items-center text-center px-4 relative">
         <div>
           {user ? (
-            <div className='absolute top-6 right-6 flex gap-2'>
+            <div className="absolute top-6 right-6 flex gap-2">
               <p className="bg-black text-yellow-400 px-4 py-2 rounded font-semibold hover:bg-gray-900 transition-all">
-              {msg}
-            </p>
-            <button
-              className="bg-black text-yellow-400 px-4 py-2 rounded font-semibold hover:bg-gray-900 transition-all"
-              onClick={handleSignOut}
-            >
-              Sign Out
-            </button>
+                {msg}
+              </p>
+              <button
+                className="bg-black text-yellow-400 px-4 py-2 rounded font-semibold hover:bg-gray-900 transition-all"
+                onClick={handleSignOut}
+              >
+                Sign Out
+              </button>
             </div>
           ) : (
             <div className="absolute top-6 right-6 flex gap-2">
@@ -191,17 +200,17 @@ export default function Home() {
 
 function TimelineItem({ phase, description }) {
   return (
-    <div className="text-center">
-      <h3 className="text-xl font-semibold mb-2">{phase}</h3>
-      <p className="text-black/80">{description}</p>
+    <div className="bg-yellow-400 rounded-lg p-6 border border-black">
+      <h3 className="font-bold text-xl mb-2">{phase}</h3>
+      <p>{description}</p>
     </div>
   )
 }
 
 function CommunityPanel({ title, desc }) {
   return (
-    <div className="bg-white p-4 rounded shadow">
-      <h4 className="font-bold text-lg mb-2">{title}</h4>
+    <div className="bg-yellow-400 rounded-lg p-6 border border-black">
+      <h3 className="font-semibold text-lg mb-2">{title}</h3>
       <p>{desc}</p>
     </div>
   )
@@ -209,21 +218,21 @@ function CommunityPanel({ title, desc }) {
 
 function Testimonial({ name, role, quote }) {
   return (
-    <div className="bg-white p-4 rounded shadow">
-      <p className="italic mb-2">"{quote}"</p>
-      <p className="font-bold">{name}</p>
-      <p className="text-sm text-black/70">{role}</p>
+    <div className="bg-yellow-400 rounded-lg p-6 border border-black">
+      <p className="italic mb-4">"{quote}"</p>
+      <p className="font-semibold">{name}</p>
+      <p className="text-sm">{role}</p>
     </div>
   )
 }
 
 function PrepTip({ icon, title, desc }) {
   return (
-    <div className="flex items-center bg-white p-4 rounded shadow">
-      <div className="text-3xl mr-4">{icon}</div>
+    <div className="flex items-start gap-4">
+      <div className="text-3xl">{icon}</div>
       <div>
-        <h4 className="font-bold text-lg">{title}</h4>
-        <p className="text-black/70">{desc}</p>
+        <h4 className="font-bold">{title}</h4>
+        <p>{desc}</p>
       </div>
     </div>
   )

@@ -64,11 +64,12 @@ export default function AboutPage() {
 
         <div className="text-center pt-10">
           <p className="text-2xl font-bold mb-4">🚀 Join the Journey</p>
-          <p className="text-lg">
-            Whether you're a coder, designer, analyst, marketer, or future PM — BePro is the OS that helps you take the leap.
-            <br />
-            <strong>Start small. Build real. Get hired.</strong>
-          </p>
+<p className="text-lg">
+  {"Whether you're a coder, designer, analyst, marketer, or future PM — BePro is the OS that helps you take the leap."}
+  <br />
+  <strong>Start small. Build real. Get hired.</strong>
+</p>
+
           <a
             href="/waitlist"
             className="inline-block mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-xl transition-all"

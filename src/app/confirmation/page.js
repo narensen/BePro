@@ -27,7 +27,7 @@ export default function ConfirmationPage() {
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
-          🎉 You're officially in!
+          <p>{"🎉 You're officially in!"}</p>
         </motion.h1>
         <motion.p
           className="text-lg mb-6"
