@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { supabase } from './lib/supabase_client'
+import { supabase } from '../lib/supabase_client'
 
 export default function Home() {
   const [email, setEmail] = useState('')
@@ -27,7 +27,7 @@ export default function Home() {
       setMessage(error.message)
     } else {
       setMessage('Successfully registered!')
-      router.push('/waitlist')
+      router.push('../waitlist')
     }
   }
 
