@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 export default function Home() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
+  const [msg, setMsg] = useState('')
   const router = useRouter()
 
   useEffect(() => {
@@ -18,6 +19,7 @@ export default function Home() {
         setUser(null)
       } else {
         setUser(session.user)
+        setMsg(session.user.user_metadata.username)
       }
       setLoading(false)
     }
@@ -30,7 +32,6 @@ export default function Home() {
     await supabase.auth.signOut()
     setUser(null)
     setLoading(false)
-    alert('Signed out successfully!')
   }
 
   if (loading) {
@@ -49,12 +50,17 @@ export default function Home() {
       <section className="min-h-screen flex flex-col justify-center items-center text-center px-4 relative">
         <div>
           {user ? (
+            <div className='absolute top-6 right-6 flex gap-2'>
+              <p className="bg-black text-yellow-400 px-4 py-2 rounded font-semibold hover:bg-gray-900 transition-all">
+              {msg}
+            </p>
             <button
-              className="absolute top-6 right-6 bg-black text-yellow-400 px-4 py-2 rounded font-semibold hover:bg-gray-900 transition-all"
+              className="bg-black text-yellow-400 px-4 py-2 rounded font-semibold hover:bg-gray-900 transition-all"
               onClick={handleSignOut}
             >
               Sign Out
             </button>
+            </div>
           ) : (
             <div className="absolute top-6 right-6 flex gap-2">
               <button
