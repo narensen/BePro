@@ -93,7 +93,8 @@ export default function Home() {
           Welcome to <span className="text-black">BePro!</span>
         </h1>
         <h2 className="text-xl md:text-2xl max-w-2xl mb-8">
-          You're officially on the waitlist. Get ready to transform your career journey.
+          {/* Escape apostrophe by wrapping in JSX braces */}
+          {"You're officially on the waitlist. Get ready to transform your career journey."}
         </h2>
 
         <div className="bg-black text-yellow-400 px-8 py-4 rounded-lg mb-6">
@@ -115,7 +116,8 @@ export default function Home() {
           <div>
             <div className="text-4xl">🚀</div>
             <p className="mt-4 font-semibold">Early Access</p>
-            <p>Be among the first to experience BePro's AI-powered career tools.</p>
+            <p>Be among the first to experience BePro&apos;s AI-powered career tools.</p>
+            {/* Here, we escape the apostrophe in "BePro's" as &apos; */}
           </div>
           <div>
             <div className="text-4xl">🎁</div>
@@ -128,16 +130,31 @@ export default function Home() {
       <section className="px-4 py-20 bg-yellow-300">
         <h2 className="text-3xl font-bold text-center mb-10">Your BePro Journey Starts Soon</h2>
         <div className="space-y-10 max-w-4xl mx-auto">
-          <TimelineItem phase="Q2 2025 - Now" description="You're on the waitlist! We're building your personalized career OS." />
-          <TimelineItem phase="Q3 2025 - Beta Launch" description="Early access to skill gap analysis, AI roadmaps, and project grading." />
-          <TimelineItem phase="August 1, 2025 - Full Launch" description="Complete platform with XP system, community features, and job tracking." />
-          <TimelineItem phase="Q4 2025 - Pro Features" description="Advanced mentorship, hackathon battles, and premium career tools." />
+          {/* TimelineItem descriptions can use JS strings safely (no direct JSX text), so apostrophes are fine there */}
+          <TimelineItem
+            phase="Q2 2025 - Now"
+            description="You're on the waitlist! We're building your personalized career OS."
+          />
+          <TimelineItem
+            phase="Q3 2025 - Beta Launch"
+            description="Early access to skill gap analysis, AI roadmaps, and project grading."
+          />
+          <TimelineItem
+            phase="August 1, 2025 - Full Launch"
+            description="Complete platform with XP system, community features, and job tracking."
+          />
+          <TimelineItem
+            phase="Q4 2025 - Pro Features"
+            description="Advanced mentorship, hackathon battles, and premium career tools."
+          />
         </div>
       </section>
 
       <section className="px-4 py-20 text-center">
         <h2 className="text-3xl font-bold mb-8">Join the Movement</h2>
-        <p className="max-w-3xl mx-auto mb-10">Connect with fellow BePro members, share your progress, and level up together.</p>
+        <p className="max-w-3xl mx-auto mb-10">
+          Connect with fellow BePro members, share your progress, and level up together.
+        </p>
         <div className="grid md:grid-cols-3 gap-8">
           <CommunityPanel title="Discord Community" desc="Chat with other waitlist members and get updates." />
           <CommunityPanel title="Progress Sharing" desc="Document your learning journey before launch." />
@@ -148,6 +165,7 @@ export default function Home() {
       <section className="bg-yellow-200 px-4 py-20">
         <h2 className="text-3xl font-bold text-center mb-12">From Our Alpha Testers</h2>
         <div className="grid md:grid-cols-3 gap-8 text-center">
+          {/* In Testimonial, we escape the outer quotes around {quote} as &quot; */}
           <Testimonial name="Priya K." role="Frontend Dev" quote="The skill gap analysis showed me exactly what I was missing!" />
           <Testimonial name="Rahul S." role="UX Designer" quote="AI-generated learning path saved me months of research." />
           <Testimonial name="Ananya M." role="Data Analyst" quote="Finally, a career tool that actually gets it." />
@@ -167,8 +185,12 @@ export default function Home() {
         <h2 className="text-3xl font-bold mb-4">Stay Connected</h2>
         <p className="mb-6">Join our community and get the latest updates.</p>
         <div className="flex gap-4 justify-center">
-          <button className="bg-yellow-400 text-black px-6 py-3 font-bold rounded hover:bg-yellow-300">Join Discord</button>
-          <button className="bg-transparent border-2 border-yellow-400 text-yellow-400 px-6 py-3 font-bold rounded hover:bg-yellow-400 hover:text-black">Follow Updates</button>
+          <button className="bg-yellow-400 text-black px-6 py-3 font-bold rounded hover:bg-yellow-300">
+            Join Discord
+          </button>
+          <button className="bg-transparent border-2 border-yellow-400 text-yellow-400 px-6 py-3 font-bold rounded hover:bg-yellow-400 hover:text-black">
+            Follow Updates
+          </button>
         </div>
       </section>
 
@@ -193,6 +215,7 @@ export default function Home() {
           <button className="px-4 py-2 bg-black text-yellow-400 rounded text-sm">Contact Support</button>
         </div>
       </footer>
+
       <div className="text-center text-sm py-4">© 2025 BePro Inc. All rights reserved.</div>
     </main>
   )
@@ -219,7 +242,8 @@ function CommunityPanel({ title, desc }) {
 function Testimonial({ name, role, quote }) {
   return (
     <div className="bg-yellow-400 rounded-lg p-6 border border-black">
-      <p className="italic mb-4">"{quote}"</p>
+      {/* Escape the literal quotes around {quote} */}
+      <p className="italic mb-4">&quot;{quote}&quot;</p>
       <p className="font-semibold">{name}</p>
       <p className="text-sm">{role}</p>
     </div>
