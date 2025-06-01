@@ -8,12 +8,13 @@ export default function WaitlistPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
+  
 
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) {
-        router.push('/signin')
+        router.push('/signup')
       } else {
         setUser(session.user)
         setLoading(false)
@@ -25,7 +26,7 @@ export default function WaitlistPage() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
-    router.push('/signin') // Redirect to signin after logout
+    router.push('/confirmation') // Redirect to signin after logout
   }
 
   if (loading) return <p className="text-center">Loading...</p>

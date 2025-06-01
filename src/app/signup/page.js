@@ -27,7 +27,7 @@ export default function Home() {
       setMessage(error.message)
     } else {
       setMessage('Successfully registered!')
-      router.push('../waitlist')
+      router.push('../confirmation')
     }
   }
 
