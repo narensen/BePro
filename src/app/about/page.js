@@ -1,5 +1,3 @@
-import { supabase} from "../lib/supabase_client";
-
 export default function AboutPage() {
   return (
     <main className="min-h-screen px-6 py-12 md:px-20 lg:px-40 bg-white text-black dark:bg-black dark:text-white transition-colors duration-300">
