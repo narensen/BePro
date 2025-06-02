@@ -60,7 +60,7 @@ export default function AuthPage() {
 
     setLoading(true)
     const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-      redirectTo: 'https://yourapp.com/update-password'
+      redirectTo: 'https://bepro-1.vercel.app/update-password'
     })
     setLoading(false)
 
