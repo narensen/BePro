@@ -46,7 +46,7 @@ export default function AuthPage() {
       setLoading(false)
       if (error) setMessage(error.message)
       else {
-        setMessage("Account created! BePro will launch in 45 days.")
+        setMessage("Account created! BePro will launch on August 3 2025.")
         router.push('/confirm-email')
       }
     }
@@ -128,7 +128,7 @@ export default function AuthPage() {
           ? 'We’ll send you a reset link.'
           : isSignIn
             ? 'Sign in to BePro and power your career.'
-            : 'Join BePro. Launching in 45 days.'}
+            : 'Join BePro. Launching Aug 3 2025.'}
       </motion.p>
 
       <div className="w-full max-w-md mt-10 bg-white/80 rounded-2xl p-6 shadow-xl backdrop-blur">

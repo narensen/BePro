@@ -8,6 +8,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
   const [msg, setMsg] = useState('')
+  const [transitioning, setTransitioning] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -44,22 +45,44 @@ export default function Home() {
   }
 
   const handleSignIn = () => {
-    router.push('/signin')
-    console.log('Navigate to /signin')
+    setTransitioning(true)
+    setTimeout(() => {
+      router.push('/signin')
+      console.log('Navigate to /signin')
+    }, 300)
   }
 
   const handleSignUp = () => {
-    router.push('/signup')
-    console.log('Navigate to /signup')
+    setTransitioning(true)
+    setTimeout(() => {
+      router.push('/signup')
+      console.log('Navigate to /signup')
+    }, 300)
   }
 
-  if (loading) {
+  if (loading || transitioning) {
     return (
       <main className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 font-sans min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-4xl font-black mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">BePro</div>
+          <div className="text-4xl font-black mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent animate-pulse">
+            BePro
+          </div>
           <div className="w-10 h-10 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin mx-auto"></div>
+          {transitioning && (
+            <p className="mt-4 text-gray-800 font-medium animate-fadeIn">
+              Taking you there...
+            </p>
+          )}
         </div>
+        <style jsx>{`
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          .animate-fadeIn {
+            animation: fadeIn 0.3s ease-out;
+          }
+        `}</style>
       </main>
     )
   }
