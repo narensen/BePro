@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { supabase } from './lib/supabase_client'
+import { supabase } from '../lib/supabase_client'
 
 export default function AuthPage() {
   const [isSignIn, setIsSignIn] = useState(true)
