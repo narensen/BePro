@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase_client'
 import { useRouter } from 'next/navigation'
+import CreativeAuthButton from './components/CreativeAuthButton'
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
@@ -42,14 +43,6 @@ export default function Home() {
     setUser(null)
     setMsg('')
     setLoading(false)
-  }
-
-  const handleSignIn = () => {
-    setTransitioning(true)
-    setTimeout(() => {
-      router.push('/signin')
-      console.log('Navigate to /signin')
-    }, 300)
   }
 
   const handleSignUp = () => {
@@ -111,19 +104,8 @@ export default function Home() {
           </div>
         ) : (
           <div className="absolute top-6 right-6 flex gap-3 z-20">
-            <button 
-              className="bg-gray-900/90 backdrop-blur-sm text-yellow-300 px-5 py-3 rounded-xl font-bold shadow-lg hover:bg-gray-800 hover:scale-105 transition-all duration-300 cursor-pointer"
-              onClick={handleSignIn}
-            >
-              Sign In
-            </button>
-            <button 
-              className="bg-transparent border-2 border-gray-900 text-gray-900 px-5 py-3 rounded-xl font-bold hover:bg-gray-900 hover:text-yellow-300 transition-all duration-300 cursor-pointer"
-              onClick={handleSignUp}
-            >
-              Sign Up
-            </button>
-          </div>
+              <CreativeAuthButton onClick={handleSignUp}></CreativeAuthButton>              
+              </div>
         )}
         
         <div className="relative z-10">
