@@ -36,7 +36,7 @@ export default function WaitlistPage() {
       <h1 className="font-bold font-mono text-3xl mb-4">
         Thank you for signing up for <span className="text-yellow-500">BePro</span>!
       </h1>
-      <p className="mb-6 text-lg">The application will go live on <strong>August 1, 2025</strong>.</p>
+      <p className="mb-6 text-lg">The application will go live on <strong>August 3, 2025</strong>.</p>
 
       <button
         onClick={handleSignOut}
