@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase_client'
 import { useRouter } from 'next/navigation'
-import CreativeAuthButton from './components/CreativeAuthButton'
 import Link from 'next/link'
+import {CommunityPanel, FeatureCard, CreativeAuthButton, PrepTip, SideNavbar, Testimonial, TimelineItem} from './components'
+
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
@@ -210,9 +211,6 @@ export default function Home() {
         <h2 className="text-4xl font-black mb-6">Stay Connected</h2>
         <p className="mb-10 text-xl text-amber-200">Join our community and get the latest updates.</p>
         <div className="flex gap-6 justify-center flex-wrap">
-          <button className="bg-gradient-to-r from-amber-400 to-yellow-400 text-gray-900 px-8 py-4 font-black rounded-xl hover:from-yellow-400 hover:to-amber-400 hover:scale-105 transition-all duration-300 shadow-lg cursor-pointer">
-            Join Discord
-          </button>
           <button className="bg-transparent border-2 border-amber-400 text-amber-400 px-8 py-4 font-black rounded-xl hover:bg-amber-400 hover:text-gray-900 hover:scale-105 transition-all duration-300 cursor-pointer">
             Follow Updates
           </button>
@@ -228,10 +226,8 @@ export default function Home() {
           <div>
             <h4 className="font-bold text-lg mb-4">Quick Links</h4>
             <ul className="space-y-2 text-gray-800">
-              <li className="hover:text-gray-900 cursor-pointer transition-colors">Features</li>
               <li className="hover:text-gray-900 cursor-pointer transition-colors">
                 <Link href="/about">About</Link></li>
-              <li className="hover:text-gray-900 cursor-pointer transition-colors">Blog</li>
                 <li className="hover:text-gray-900 cursor-pointer transition-colors">
                   <Link href="/privacypolicy">Privacy Policy</Link>
                 </li>
@@ -254,75 +250,5 @@ export default function Home() {
         © 2025 BePro Inc. All rights reserved.
       </div>
     </main>
-  )
-}
-
-function TimelineItem({ phase, description, status }) {
-  const getStatusStyles = () => {
-    switch(status) {
-      case 'active':
-        return 'bg-gradient-to-r from-emerald-400 to-emerald-500 border-emerald-600 shadow-emerald-200'
-      case 'upcoming':
-        return 'bg-gradient-to-r from-blue-400 to-blue-500 border-blue-600 shadow-blue-200'
-      case 'future':
-        return 'bg-gradient-to-r from-purple-400 to-purple-500 border-purple-600 shadow-purple-200'
-      default:
-        return 'bg-gradient-to-r from-yellow-400 to-amber-400 border-amber-600'
-    }
-  }
-
-  return (
-    <div className={`${getStatusStyles()} rounded-2xl p-8 border-2 shadow-xl transform hover:scale-105 transition-all duration-300`}>
-      <h3 className="font-black text-2xl mb-4 text-gray-900">{phase}</h3>
-      <p className="text-gray-800 text-lg leading-relaxed">{description}</p>
-    </div>
-  )
-}
-
-function FeatureCard({ icon, title, desc, gradient }) {
-  return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
-      <div className={`text-5xl mb-6 w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r ${gradient} flex items-center justify-center shadow-lg`}>
-        {icon}
-      </div>
-      <h3 className="font-black text-xl mb-4 text-gray-900">{title}</h3>
-      <p className="text-gray-700 leading-relaxed">{desc}</p>
-    </div>
-  )
-}
-
-function CommunityPanel({ title, desc, icon }) {
-  return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
-      <div className="text-4xl mb-4">{icon}</div>
-      <h3 className="font-black text-xl mb-4 text-gray-900">{title}</h3>
-      <p className="text-gray-700 leading-relaxed">{desc}</p>
-    </div>
-  )
-}
-
-function Testimonial({ name, role, quote }) {
-  return (
-    <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
-      <p className="italic mb-6 text-lg text-gray-700 leading-relaxed">&quot;{quote}&quot;</p>
-      <div className="border-t border-gray-200 pt-4">
-        <p className="font-black text-gray-900">{name}</p>
-        <p className="text-gray-600 font-medium">{role}</p>
-      </div>
-    </div>
-  )
-}
-
-function PrepTip({ icon, title, desc }) {
-  return (
-    <div className="flex items-start gap-6 bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300">
-      <div className="text-4xl bg-gradient-to-r from-amber-400 to-yellow-400 w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg">
-        {icon}
-      </div>
-      <div>
-        <h4 className="font-black text-xl mb-3 text-gray-900">{title}</h4>
-        <p className="text-gray-700 leading-relaxed">{desc}</p>
-      </div>
-    </div>
   )
 }
