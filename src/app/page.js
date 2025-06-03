@@ -230,7 +230,8 @@ export default function Home() {
             <h4 className="font-bold text-lg mb-4">Quick Links</h4>
             <ul className="space-y-2 text-gray-800">
               <li className="hover:text-gray-900 cursor-pointer transition-colors">Features</li>
-              <li className="hover:text-gray-900 cursor-pointer transition-colors">About</li>
+              <li className="hover:text-gray-900 cursor-pointer transition-colors">
+                <Link href="/about">About</Link></li>
               <li className="hover:text-gray-900 cursor-pointer transition-colors">Blog</li>
                 <li className="hover:text-gray-900 cursor-pointer transition-colors">
                   <Link href="/privacypolicy">Privacy Policy</Link>
