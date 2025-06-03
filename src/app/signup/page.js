@@ -29,6 +29,7 @@ export default function AuthPage() {
       setLoading(false)
       if (error) setMessage(error.message)
       else setMessage('Signed in successfully!')
+      router.push('/')
     } else {
       const { error } = await supabase.auth.signUp({
         email,
