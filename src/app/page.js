@@ -110,7 +110,6 @@ export default function Home() {
         )}
         
         <div className="relative z-10">
-          <div className="text-7xl mb-8 animate-bounce">🎉</div>
           <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
             Welcome to <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">BePro!</span>
           </h1>
