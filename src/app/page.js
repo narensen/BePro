@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase_client'
 import { useRouter } from 'next/navigation'
 import CreativeAuthButton from './components/CreativeAuthButton'
+import Link from 'next/link'
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
@@ -231,8 +232,12 @@ export default function Home() {
               <li className="hover:text-gray-900 cursor-pointer transition-colors">Features</li>
               <li className="hover:text-gray-900 cursor-pointer transition-colors">About</li>
               <li className="hover:text-gray-900 cursor-pointer transition-colors">Blog</li>
-              <li className="hover:text-gray-900 cursor-pointer transition-colors">Privacy Policy</li>
-              <li className="hover:text-gray-900 cursor-pointer transition-colors">Terms of Service</li>
+                <li className="hover:text-gray-900 cursor-pointer transition-colors">
+                  <Link href="/privacypolicy">Privacy Policy</Link>
+                </li>
+                <li className="hover:text-gray-900 cursor-pointer transition-colors">
+                  <Link href="/termsofservice">Terms of Service</Link>
+                </li>
             </ul>
           </div>
           <div>
