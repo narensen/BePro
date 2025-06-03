@@ -14,7 +14,7 @@ export default function WaitlistPage() {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) {
-        router.push('/signup')
+        router.push('/auth')
       } else {
         setUser(session.user)
         setLoading(false)

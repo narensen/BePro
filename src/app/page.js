@@ -50,8 +50,8 @@ export default function Home() {
   const handleSignUp = () => {
     setTransitioning(true)
     setTimeout(() => {
-      router.push('/signup')
-      console.log('Navigate to /signup')
+      router.push('/auth')
+      console.log('Navigate to /auth')
     }, 300)
   }
 
