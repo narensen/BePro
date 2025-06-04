@@ -68,6 +68,7 @@ export default function AuthPage() {
       redirectTo: 'https://bepro.live/update-password'
     })
     setLoading(false)
+    setIsSendingReset(false)
 
     if (error) setMessage(error.message)
     else {
@@ -152,7 +153,7 @@ export default function AuthPage() {
               onClick={handleResetPassword}
               className="bg-yellow-500 text-black font-semibold py-2 rounded hover:bg-yellow-600 transition-all duration-300 cursor-pointer"
             >
-              {setIsSendingReset ? "Sending..." : "Send Reset Link"}
+              {isSendingReset ? "Sending..." : "Send Reset Link"}
             </button>
           </div>
         ) : (
