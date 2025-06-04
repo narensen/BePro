@@ -238,7 +238,6 @@ export default function Home() {
           </div>
           <div>
             <h4 className="font-bold text-lg mb-4">Questions?</h4>
-            <p className="text-gray-800 mb-6">Need help or have feedback?</p>
             <button className="px-6 py-3 bg-gray-900 text-amber-300 rounded-xl font-bold hover:bg-gray-800 hover:scale-105 transition-all duration-300 cursor-pointer">
               Contact Support
             </button>
