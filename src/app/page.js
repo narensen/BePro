@@ -115,7 +115,7 @@ export default function Home() {
             Welcome to <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">BePro!</span>
           </h1>
           <h2 className="text-xl md:text-2xl max-w-3xl mb-10 text-gray-800 font-medium leading-relaxed">
-            {user ? ("You're officially on the waitlist. Get ready to transform your career journey with AI-powered precision.") : ("Join the waitlist. Get ready to transform your career journey with AI-powered precision")}
+            {user ? ("You're officially on the waitlist. Get ready to transform your career journey with AI-powered precision.") : ("Join the waitlist. Get ready to transform your career journey with\nAI-powered precision")}
           </h2>
 
           <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 px-10 py-6 rounded-2xl mb-8 shadow-2xl border border-gray-700">

@@ -16,8 +16,11 @@ export default function AuthPage() {
   const [message, setMessage] = useState('')
   const [showReset, setShowReset] = useState(false)
   const [resetEmail, setResetEmail] = useState('')
+  const [isSendingReset, setIsSendingReset] = useState(false)
 
   const router = useRouter()
+
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -29,7 +32,7 @@ export default function AuthPage() {
       setLoading(false)
       if (error) setMessage(error.message)
       else setMessage('Signed in successfully!')
-      router.push('/')
+      router.push('/waitlist')
     } else {
       const { error } = await supabase.auth.signUp({
         email,
@@ -60,8 +63,9 @@ export default function AuthPage() {
     }
 
     setLoading(true)
+    setIsSendingReset(true)
     const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-      redirectTo: 'https://bepro-1.vercel.app/update-password'
+      redirectTo: 'https://bepro.live/update-password'
     })
     setLoading(false)
 
@@ -148,7 +152,7 @@ export default function AuthPage() {
               onClick={handleResetPassword}
               className="bg-yellow-500 text-black font-semibold py-2 rounded hover:bg-yellow-600 transition-all duration-300 cursor-pointer"
             >
-              Send Reset Link
+              {setIsSendingReset ? "Sending..." : "Send Reset Link"}
             </button>
           </div>
         ) : (
