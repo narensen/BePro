@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase_client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import {CommunityPanel, FeatureCard, CreativeAuthButton, PrepTip, SideNavbar, Testimonial, TimelineItem} from './components'
+import {CommunityPanel, FeatureCard, CreativeAuthButton, PrepTip, StayConnected, Testimonial, TimelineItem} from './components'
 
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
+  const [mail, setMail] = useState('')
   const [msg, setMsg] = useState('')
   const [transitioning, setTransitioning] = useState(false)
   const router = useRouter()
@@ -30,6 +31,7 @@ export default function Home() {
         setMsg('')
       } else {
         setUser(session.user)
+        setMail(session.user_email)
         setMsg(session.user.user_metadata?.username || 'User')
       }
       setLoading(false)
@@ -37,6 +39,15 @@ export default function Home() {
 
     checkUser()
   }, [])
+
+  const handleClick = () => {
+    setLoading(true);
+
+    
+    setTimeout(() => {
+      setLoading(false);
+    }, 6000); // 
+  };
 
   const handleSignOut = async () => {
     setLoading(true)
@@ -207,15 +218,25 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-4 py-24 text-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300">
+      { user ? (
+        <section className="px-4 py-24 text-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300">
         <h2 className="text-4xl font-black mb-6">Stay Connected</h2>
         <p className="mb-10 text-xl text-amber-200">Join our community and get the latest updates.</p>
         <div className="flex gap-6 justify-center flex-wrap">
-          <button className="bg-transparent border-2 border-amber-400 text-amber-400 px-8 py-4 font-black rounded-xl hover:bg-amber-400 hover:text-gray-900 hover:scale-105 transition-all duration-300 cursor-pointer">
-            Follow Updates
-          </button>
+          <StayConnected user_email={mail} supabase={supabase} />
         </div>
-      </section>
+      </section> ) : (<section className="px-4 py-24 text-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300">
+        <h2 className="text-4xl font-black mb-6">Stay Connected</h2>
+        <p className="mb-10 text-xl text-amber-200">Join our community and get the latest updates.</p>
+        <div className="flex gap-6 justify-center flex-wrap">
+          <Link href="/auth">
+          <button className="bg-transparent border-2 border-amber-400 text-amber-400 px-8 py-4 font-black rounded-xl hover:bg-amber-400 hover:text-gray-900 hover:scale-105 transition-all duration-300 cursor-pointer"
+          onClick={() => handleClick()}>
+            Login to Subscribe
+          </button>
+          </Link>
+        </div>
+      </section>)}
 
       <footer className="bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-400 text-gray-900 px-4 py-16">
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
