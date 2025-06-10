@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { supabase } from '../lib/supabase_client'
+import { supabase } from '@/app/lib/supabase_client'
 import { useRouter } from 'next/navigation'
 
 export default function AuthPage() {

@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '../lib/supabase_client'
+import { supabase } from '@/app/lib/supabase_client'
 
 export default function ConfirmEmailPage() {
   const [checking, setChecking] = useState(true)
