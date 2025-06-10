@@ -173,7 +173,7 @@ export default function AuthPage() {
               transition={{ delay: 0.6 }}
             >
               {showReset
-                ? 'We\'ll send you a reset link'
+                ? 'We&#39;ll send you a reset link'
                 : isSignIn
                 ? 'Power your career with BePro'
                 : 'Launching August 3, 2025'}
@@ -379,7 +379,7 @@ export default function AuthPage() {
                         transition={{ delay: 0.2 }}
                       >
                         <span className="text-yellow-400 text-sm font-medium">
-                          "Don't have an account?"
+                          Don&#39;t have an account?
                         </span>
                         <button
                           type="button"
