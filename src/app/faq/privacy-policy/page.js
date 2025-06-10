@@ -9,11 +9,15 @@ export default function PrivacyPolicyPage() {
       
       <section className="max-w-4xl mx-auto space-y-10 mt-8">
         <h1 className="text-4xl font-bold tracking-tight">
-          <span className="text-yellow-500 text-align : center">PRIVACY POLICY</span>
+          <span className="text-yellow-500">BEPRO PRIVACY POLICY</span>
         </h1>
 
         <p className="text-lg leading-relaxed">
-          At BePro, your privacy matters. This Privacy Policy explains how we collect, use, share, and protect your personal information when you access or use BePro's services, including our website, mobile application, and all related features (collectively, the "Services").
+          <strong>Effective Date:</strong> [Date to be filled]
+        </p>
+
+        <p className="text-lg leading-relaxed">
+          At BePro, your privacy matters. This Privacy Policy explains how we collect, use, share, and protect your personal information when you access or use BePro&apos;s services, including our website, mobile application, and all related features (collectively, the &quot;Services&quot;).
         </p>
 
         <p className="text-lg leading-relaxed">
@@ -153,7 +157,7 @@ export default function PrivacyPolicyPage() {
           <ul className="mt-4 space-y-2 text-lg list-disc list-inside ml-4">
             <li>Access your personal data</li>
             <li>Correct or update inaccurate information</li>
-            <li>Delete your data ("right to be forgotten")</li>
+            <li>Delete your data (&quot;right to be forgotten&quot;)</li>
             <li>Withdraw consent for optional processing (e.g., marketing)</li>
             <li>Restrict or object to certain processing activities</li>
           </ul>
@@ -191,7 +195,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-2xl font-semibold text-yellow-500">11. Changes to This Policy</h2>
           <p className="mt-4 text-lg">We may update this Privacy Policy from time to time. When we do:</p>
           <ul className="mt-4 space-y-2 text-lg list-disc list-inside ml-4">
-            <li>The "Effective Date" at the top will be revised</li>
+            <li>The &quot;Effective Date&quot; at the top will be revised</li>
             <li>Significant changes will be communicated via email or in-app notice</li>
           </ul>
           <p className="mt-4 text-lg">
@@ -215,7 +219,7 @@ export default function PrivacyPolicyPage() {
             Your privacy is important to us.
           </p>
           <p className="text-lg mt-2">
-            We're committed to protecting your data, respecting your rights, and giving you full transparency into how your information is used.
+            We&apos;re committed to protecting your data, respecting your rights, and giving you full transparency into how your information is used.
           </p>
         </div>
       </section>

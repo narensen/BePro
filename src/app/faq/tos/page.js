@@ -9,11 +9,11 @@ export default function TermsOfServicePage() {
       
       <section className="max-w-4xl mx-auto space-y-10 mt-8">
         <h1 className="text-4xl font-bold tracking-tight">
-          <span className="text-yellow-500">TERMS OF SERVICE</span>
+          <span className="text-yellow-500">BEPRO – TERMS OF SERVICE</span>
         </h1>
 
         <p className="text-lg leading-relaxed">
-          Welcome to BePro, an AI-powered platform designed to enhance professional skill development through personalized learning, project-based evaluation, peer networking, and job discovery. These Terms of Service ("Terms") outline the rules and responsibilities that govern your use of our website, mobile application, and associated services (collectively, the "Services").
+          Welcome to BePro, an AI-powered platform designed to enhance professional skill development through personalized learning, project-based evaluation, peer networking, and job discovery. These Terms of Service (&quot;Terms&quot;) outline the rules and responsibilities that govern your use of our website, mobile application, and associated services (collectively, the &quot;Services&quot;).
         </p>
 
         <p className="text-lg leading-relaxed">
@@ -154,7 +154,7 @@ export default function TermsOfServicePage() {
         <div>
           <h2 className="text-2xl font-semibold text-yellow-500">8. Disclaimer of Warranties</h2>
           <p className="mt-4 text-lg leading-relaxed">
-            BePro provides its Services "as is" and "as available" without warranties of any kind, either express or implied. We do not guarantee:
+            BePro provides its Services &quot;as is&quot; and &quot;as available&quot; without warranties of any kind, either express or implied. We do not guarantee:
           </p>
           <ul className="mt-4 space-y-2 text-lg list-disc list-inside ml-4">
             <li>That the Services will always be secure, uninterrupted, or error-free.</li>
@@ -188,7 +188,7 @@ export default function TermsOfServicePage() {
             We may update or revise these Terms from time to time. If we make material changes, we will:
           </p>
           <ul className="mt-4 space-y-2 text-lg list-disc list-inside ml-4">
-            <li>Update the "Effective Date" at the top of this page.</li>
+            <li>Update the &quot;Effective Date&quot; at the top of this page.</li>
             <li>Notify users via email or in-app notification (where possible).</li>
           </ul>
           <p className="mt-4 text-lg leading-relaxed">
@@ -202,8 +202,9 @@ export default function TermsOfServicePage() {
             If you have any questions, concerns, or feedback about these Terms, please reach out to us at:
           </p>
           <p className="text-lg">
-            <strong>Email:</strong> bepro.sunday@gmail.com<br />
-            
+            <strong>Email:</strong> [To be filled]<br />
+            <strong>Address:</strong> [To be filled]<br />
+            <strong>Website:</strong> [To be filled]
           </p>
         </div>
 
@@ -212,7 +213,7 @@ export default function TermsOfServicePage() {
             Thank you for being part of the BePro community.
           </p>
           <p className="text-lg">
-            We're committed to building a safe, inclusive, and growth-focused space for professionals at every stage of their journey.
+            We&apos;re committed to building a safe, inclusive, and growth-focused space for professionals at every stage of their journey.
           </p>
         </div>
       </section>
