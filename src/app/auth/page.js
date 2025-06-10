@@ -75,7 +75,7 @@ export default function AuthPage() {
             setMessageType('success')
             // Redirect after successful sign up
             setTimeout(() => {
-              router.push('/confirm-email')
+              router.push('/auth/confirm-email')
             }, 1500)
           }
         }
@@ -100,7 +100,7 @@ export default function AuthPage() {
     
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: `${window.location.origin}/update-password`
+        redirectTo: `${window.location.origin}/auth/update-password`
       })
 
       if (error) {

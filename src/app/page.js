@@ -250,7 +250,7 @@ export default function Home() {
               <li className="hover:text-gray-900 cursor-pointer transition-colors">
                 <Link href="faq/about">About</Link></li>
                 <li className="hover:text-gray-900 cursor-pointer transition-colors">
-                  <Link href="faq/privac-ypolicy">Privacy Policy</Link>
+                  <Link href="faq/privacy-policy">Privacy Policy</Link>
                 </li>
                 <li className="hover:text-gray-900 cursor-pointer transition-colors">
                   <Link href="faq/tos">Terms of Service</Link>
