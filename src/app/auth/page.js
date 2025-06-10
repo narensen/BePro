@@ -379,7 +379,7 @@ export default function AuthPage() {
                         transition={{ delay: 0.2 }}
                       >
                         <span className="text-yellow-400 text-sm font-medium">
-                          Don't have an account?{' '}
+                          `Don't have an account?`
                         </span>
                         <button
                           type="button"
