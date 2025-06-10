@@ -2,6 +2,8 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
+import { supabase } from '../lib/supabase_client'
+import { useRouter } from 'next/navigation'
 
 export default function AuthPage() {
   const [isSignIn, setIsSignIn] = useState(true)
@@ -17,6 +19,8 @@ export default function AuthPage() {
   const [showReset, setShowReset] = useState(false)
   const [resetEmail, setResetEmail] = useState('')
   const [isSendingReset, setIsSendingReset] = useState(false)
+  
+  const router = useRouter()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -24,29 +28,64 @@ export default function AuthPage() {
     setMessage('')
     setMessageType('')
 
-    // Simulate API call with potential failure
-    setTimeout(() => {
-      setLoading(false)
-      
-      // Simulate random failure for demo (replace with actual API logic)
-      const simulateFailure = Math.random() < 0.3; // 30% chance of failure
-      
-      if (simulateFailure && isSignIn) {
-        setMessage('Invalid email or password. Please try again.')
-        setMessageType('error')
-        return // Don't refresh, just show error
-      }
-      
+    try {
       if (isSignIn) {
-        setMessage('Welcome back! 🎉')
-        setMessageType('success')
-        // router.push('/waitlist') // Uncomment in real app
+        // Sign In
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        })
+
+        if (error) {
+          setMessage(error.message)
+          setMessageType('error')
+        } else {
+          setMessage('Welcome back! 🎉')
+          setMessageType('success')
+          // Redirect after successful sign in
+          setTimeout(() => {
+            router.push('/waitlist')
+          }, 1500)
+        }
       } else {
-        setMessage('Account created! BePro launches Aug 3, 2025 🚀')
-        setMessageType('success')
-        // router.push('/confirm-email') // Uncomment in real app
+        // Sign Up
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              username,
+              first_name: firstName,
+              last_name: lastName,
+              date_of_birth: dob,
+              full_name: `${firstName} ${lastName}`
+            }
+          }
+        })
+
+        if (error) {
+          setMessage(error.message)
+          setMessageType('error')
+        } else {
+          if (data.user && !data.user.email_confirmed_at) {
+            setMessage('Check your email to confirm your account! 📧')
+            setMessageType('info')
+          } else {
+            setMessage('Account created! BePro launches Aug 3, 2025 🚀')
+            setMessageType('success')
+            // Redirect after successful sign up
+            setTimeout(() => {
+              router.push('/confirm-email')
+            }, 1500)
+          }
+        }
       }
-    }, 2000)
+    } catch (error) {
+      setMessage('An unexpected error occurred. Please try again.')
+      setMessageType('error')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleResetPassword = async () => {
@@ -59,12 +98,26 @@ export default function AuthPage() {
     setIsSendingReset(true)
     setMessage('')
     
-    setTimeout(() => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${window.location.origin}/update-password`
+      })
+
+      if (error) {
+        setMessage(error.message)
+        setMessageType('error')
+      } else {
+        setMessage('Password reset email sent! Check your inbox 📧')
+        setMessageType('success')
+        setShowReset(false)
+        setResetEmail('')
+      }
+    } catch (error) {
+      setMessage('Failed to send reset email. Please try again.')
+      setMessageType('error')
+    } finally {
       setIsSendingReset(false)
-      setMessage('Password reset email sent! Check your inbox 📧')
-      setMessageType('success')
-      setShowReset(false)
-    }, 1500)
+    }
   }
 
   const containerVariants = {
@@ -153,8 +206,7 @@ export default function AuthPage() {
                 delay: 0.2 
               }}
             >
-              {showReset ? '' : isSignIn ? '' : ''}
-
+              BePro
             </motion.h1>
             
             <motion.h2
@@ -173,7 +225,7 @@ export default function AuthPage() {
               transition={{ delay: 0.6 }}
             >
               {showReset
-                ? 'We&#39;ll send you a reset link'
+                ? 'We\'ll send you a reset link'
                 : isSignIn
                 ? 'Power your career with BePro'
                 : 'Launching August 3, 2025'}
@@ -205,8 +257,6 @@ export default function AuthPage() {
             </div>
 
             <div className="relative z-10">
-
-
               {/* Back Button for Reset */}
               {showReset && (
                 <motion.button
@@ -214,7 +264,8 @@ export default function AuthPage() {
                     setShowReset(false); 
                     setIsSignIn(true); 
                     setMessage(''); 
-                    setMessageType('') 
+                    setMessageType('');
+                    setResetEmail('');
                   }}
                   className="flex items-center text-yellow-400 hover:text-yellow-300 mb-6 transition-colors font-semibold"
                   whileHover={{ x: -5 }}
@@ -379,11 +430,15 @@ export default function AuthPage() {
                         transition={{ delay: 0.2 }}
                       >
                         <span className="text-yellow-400 text-sm font-medium">
-                          Don&#39;t have an account?
+                          Don't have an account?{' '}
                         </span>
                         <button
                           type="button"
-                          onClick={() => setIsSignIn(false)}
+                          onClick={() => {
+                            setIsSignIn(false);
+                            setMessage('');
+                            setMessageType('');
+                          }}
                           className="text-yellow-300 hover:text-yellow-200 text-sm font-bold underline decoration-2 underline-offset-2 transition-colors cursor-pointer"
                         >
                           Create Account
@@ -404,7 +459,11 @@ export default function AuthPage() {
                         </span>
                         <button
                           type="button"
-                          onClick={() => setIsSignIn(true)}
+                          onClick={() => {
+                            setIsSignIn(true);
+                            setMessage('');
+                            setMessageType('');
+                          }}
                           className="text-yellow-300 hover:text-yellow-200 text-sm font-bold underline decoration-2 underline-offset-2 transition-colors"
                         >
                           Sign In
@@ -442,17 +501,17 @@ export default function AuthPage() {
             variants={itemVariants} 
             className="text-center mt-6 text-black/60 text-sm font-medium"
           >
-            🔒 Secure authentication powered by modern encryption
+            🔒 Secure authentication powered by Supabase
           </motion.div>
         </motion.div>
       </div>
-      <>
+      
       <Link
-          href="/"
-          className="fixed top-4 left-4 text-3xl font-bold text-black z-50"
-        >
-          BePro
-        </Link></>
+        href="/"
+        className="fixed top-4 left-4 text-3xl font-bold text-black z-50"
+      >
+        BePro
+      </Link>
     </div>
   )
 }
