@@ -13,10 +13,6 @@ export default function PrivacyPolicyPage() {
         </h1>
 
         <p className="text-lg leading-relaxed">
-          <strong>Effective Date:</strong> [Date to be filled]
-        </p>
-
-        <p className="text-lg leading-relaxed">
           At BePro, your privacy matters. This Privacy Policy explains how we collect, use, share, and protect your personal information when you access or use BePro&apos;s services, including our website, mobile application, and all related features (collectively, the &quot;Services&quot;).
         </p>
 
