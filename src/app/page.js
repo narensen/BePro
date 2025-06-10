@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase_client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import {CommunityPanel, FeatureCard, CreativeAuthButton, PrepTip, StayConnected, Testimonial, TimelineItem} from './components'
+import {CommunityPanel, FeatureCard, GetStartedButton, PrepTip, StayConnected, Testimonial, TimelineItem} from './components'
 
 
 export default function Home() {
@@ -117,7 +117,7 @@ export default function Home() {
           </div>
         ) : (
           <div className="absolute top-6 right-6 flex gap-3 z-20">
-              <CreativeAuthButton onClick={handleSignUp}></CreativeAuthButton>              
+              <GetStartedButton onClick={handleSignUp}></GetStartedButton>              
               </div>
         )}
         
