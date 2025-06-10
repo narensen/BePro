@@ -167,7 +167,7 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">9. Children's Privacy</h2>
+          <h2 className="text-2xl font-semibold text-yellow-500">9. Children&apos;s Privacy</h2>
           <p className="mt-4 text-lg">
             BePro is not intended for users under the age of 13. We do not knowingly collect personal data from children. If we become aware of such collection, we will delete the information promptly.
           </p>
