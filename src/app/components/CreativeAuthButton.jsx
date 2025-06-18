@@ -2,100 +2,71 @@
 
 import React, { useState } from 'react';
 
-const GetStartedButton = ({ 
-  onClick, 
-  className = '',
-  size = 'default' // 'small', 'default', 'large'
-}) => {
+const GetStartedButton = ({ onClick, className = '' }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
 
-  // Size configurations
-  const sizeConfig = {
-    small: { width: 'w-36', height: 'h-12', text: 'text-sm', padding: 'p-3' },
-    default: { width: 'w-44', height: 'h-14', text: 'text-base', padding: 'p-4' },
-    large: { width: 'w-52', height: 'h-16', text: 'text-lg', padding: 'p-5' }
+  const handleMouseDown = () => setIsPressed(true);
+  const handleMouseUp = () => setIsPressed(false);
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setIsPressed(false);
   };
-
-  const config = sizeConfig[size];
 
   return (
     <div className={`relative ${className}`}>
-      {/* Main button container */}
-      <div 
-        className={`relative ${config.width} ${config.height} cursor-pointer group rounded-2xl overflow-hidden shadow-xl`}
+      <button
+        className={`
+          relative w-44 h-14 px-5 py-4
+          bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900
+          text-amber-300 font-bold text-base rounded-xl
+          border-2 border-amber-400/30
+          overflow-hidden
+          transition-all duration-200 ease-out
+          hover:border-amber-400
+          hover:bg-gradient-to-r hover:from-gray-800 hover:via-gray-700 hover:to-gray-800
+          active:scale-98
+          group
+          cursor-pointer
+        `}
         onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseLeave={handleMouseLeave}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
         onClick={onClick}
-        style={{
-          transform: isHovered ? 'scale(1.08) translateY(-4px)' : 'scale(1)',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-        }}
       >
-        
-        {/* Background with gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400" />
-        
-        {/* Animated background pattern */}
+        {/* Simple highlight effect */}
         <div 
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `repeating-linear-gradient(
-              45deg,
-              transparent,
-              transparent 8px,
-              rgba(0, 0, 0, 0.1) 8px,
-              rgba(0, 0, 0, 0.1) 9px
-            )`,
-            transform: isHovered ? 'translateX(20px)' : 'translateX(0px)',
-            transition: 'transform 0.4s ease'
-          }}
+          className="absolute inset-0 bg-amber-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
         />
-
-        {/* Main content */}
-        <div className={`relative z-10 w-full h-full flex items-center justify-center ${config.padding}`}>
-          <span 
-            className={`font-black ${config.text} text-black tracking-wide transition-transform duration-300`}
-            style={{
-              transform: isHovered ? 'translateX(4px)' : 'translateX(0px)'
-            }}
-          >
+        
+        {/* Button content */}
+        <div className="relative z-10 flex items-center justify-center gap-2">
+          <span className="font-black tracking-wide">
             Get Started
           </span>
+          
+          {/* Simple arrow */}
+          <svg 
+            width="16" 
+            height="16" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="3" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+            className="transition-colors duration-200"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
         </div>
-
-        {/* Subtle border */}
-        <div className="absolute inset-0 rounded-2xl border-2 border-black/20" />
         
-        {/* Hover shimmer effect */}
-        <div 
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 transition-opacity duration-300 pointer-events-none rounded-2xl"
-          style={{
-            opacity: isHovered ? 1 : 0,
-            transform: 'translateX(-100%)',
-            animation: isHovered ? 'shimmer 0.8s ease-out' : 'none'
-          }}
-        />
-
-        {/* Bottom glow effect */}
-        <div 
-          className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-3/4 h-2 bg-yellow-400/50 rounded-full blur-sm transition-opacity duration-300"
-          style={{
-            opacity: isHovered ? 1 : 0
-          }}
-        />
-      </div>
-
-      {/* Shimmer animation */}
-      <style jsx>{`
-        @keyframes shimmer {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(100%);
-          }
-        }
-      `}</style>
+        {/* Subtle click feedback */}
+        {isPressed && (
+          <div className="absolute inset-0 bg-amber-400/10 rounded-xl" />
+        )}
+      </button>
     </div>
   );
 };

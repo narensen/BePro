@@ -1,8 +1,6 @@
 'use client'
+
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import Link from 'next/link'
-import { supabase } from '@/app/lib/supabase_client'
 import { useRouter } from 'next/navigation'
 
 export default function AuthPage() {
@@ -22,70 +20,28 @@ export default function AuthPage() {
   
   const router = useRouter()
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     setLoading(true)
     setMessage('')
     setMessageType('')
 
-    try {
+    // Simulate API call
+    setTimeout(() => {
       if (isSignIn) {
-        // Sign In
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        })
-
-        if (error) {
-          setMessage(error.message)
-          setMessageType('error')
-        } else {
-          setMessage('Welcome back! 🎉')
-          setMessageType('success')
-          // Redirect after successful sign in
-          setTimeout(() => {
-            router.push('/waitlist')
-          }, 1500)
-        }
+        setMessage('Welcome back! 🎉')
+        setMessageType('success')
+        setTimeout(() => {
+          router.push('/')
+        }, 1500)
       } else {
-        // Sign Up
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              username,
-              first_name: firstName,
-              last_name: lastName,
-              date_of_birth: dob,
-              full_name: `${firstName} ${lastName}`
-            }
-          }
-        })
-
-        if (error) {
-          setMessage(error.message)
-          setMessageType('error')
-        } else {
-          if (data.user && !data.user.email_confirmed_at) {
-            setMessage('Check your email to confirm your account! 📧')
-            setMessageType('info')
-          } else {
-            setMessage('Account created! BePro launches Aug 3, 2025 🚀')
-            setMessageType('success')
-            // Redirect after successful sign up
-            setTimeout(() => {
-              router.push('/auth/confirm-email')
-            }, 1500)
-          }
-        }
+        setMessage('Check your email to confirm your account! 📧')
+        setMessageType('info')
+        setTimeout(() => {
+          // router.push('/auth/confirm-email')
+        }, 1500)
       }
-    } catch (error) {
-      setMessage('An unexpected error occurred. Please try again.')
-      setMessageType('error')
-    } finally {
       setLoading(false)
-    }
+    }, 2000)
   }
 
   const handleResetPassword = async () => {
@@ -98,420 +54,273 @@ export default function AuthPage() {
     setIsSendingReset(true)
     setMessage('')
     
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: `${window.location.origin}/auth/update-password`
-      })
-
-      if (error) {
-        setMessage(error.message)
-        setMessageType('error')
-      } else {
-        setMessage('Password reset email sent! Check your inbox 📧')
-        setMessageType('success')
-        setShowReset(false)
-        setResetEmail('')
-      }
-    } catch (error) {
-      setMessage('Failed to send reset email. Please try again.')
-      setMessageType('error')
-    } finally {
+    // Simulate reset password
+    setTimeout(() => {
+      setMessage('Password reset email sent! Check your inbox 📧')
+      setMessageType('success')
+      setShowReset(false)
+      setResetEmail('')
       setIsSendingReset(false)
-    }
+    }, 2000)
   }
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.1
-      }
-    }
+  const handleBackToHome = () => {
+    router.push('/')
   }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 }
-    }
-  }
-
-  // Floating geometric shapes
-  const floatingShapes = Array.from({ length: 15 }, (_, i) => (
-    <motion.div
-      key={i}
-      className={`absolute ${
-        i % 3 === 0 ? 'w-4 h-4 bg-black/10 rounded-full' :
-        i % 3 === 1 ? 'w-3 h-3 bg-black/5 rotate-45' :
-        'w-2 h-6 bg-black/10 rounded-full'
-      }`}
-      style={{
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-      }}
-      animate={{
-        y: [0, -30, 0],
-        x: [0, 15, 0],
-        rotate: [0, 180, 360],
-      }}
-      transition={{
-        duration: 8 + Math.random() * 4,
-        repeat: Infinity,
-        delay: Math.random() * 3,
-        ease: "easeInOut"
-      }}
-    />
-  ))
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        {floatingShapes}
-        <motion.div 
-          className="absolute inset-0 bg-gradient-to-r from-yellow-400/50 to-yellow-300/30"
-          animate={{
-            background: [
-              "linear-gradient(45deg, rgba(253, 224, 71, 0.5) 0%, rgba(250, 204, 21, 0.3) 100%)",
-              "linear-gradient(135deg, rgba(250, 204, 21, 0.3) 0%, rgba(253, 224, 71, 0.5) 100%)",
-              "linear-gradient(45deg, rgba(253, 224, 71, 0.5) 0%, rgba(250, 204, 21, 0.3) 100%)"
-            ]
-          }}
-          transition={{ duration: 10, repeat: Infinity }}
-        />
+    <main className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 font-sans flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Background decoration - same as landing page */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gray-900 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-amber-600 rounded-full blur-3xl"></div>
       </div>
 
-      {/* Main Content */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="w-full max-w-md"
-        >
-          {/* Header */}
-          <motion.div variants={itemVariants} className="text-center mb-8">
-            <motion.h1 
-              className="text-5xl md:text-6xl font-black text-black mb-4 tracking-tight"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ 
-                type: "spring", 
-                stiffness: 200, 
-                damping: 15,
-                delay: 0.2 
-              }}
-            >
-              BePro
-            </motion.h1>
-            
-            <motion.h2
-              className="text-2xl md:text-3xl font-bold text-black mb-2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              {showReset ? 'Reset Password' : isSignIn ? 'Welcome Back' : 'Join BePro'}
-            </motion.h2>
-            
-            <motion.p 
-              className="text-black/70 text-lg font-medium"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-            >
+      {/* Back button - same styling as landing page */}
+      <button
+        onClick={handleBackToHome}
+        className="absolute top-6 left-6 bg-gray-900 text-amber-300 px-5 py-3 rounded-xl font-bold shadow-lg hover:bg-gray-800 hover:scale-105 transition-all duration-300 cursor-pointer z-20"
+      >
+        ← Back to Home
+      </button>
+
+      <div className="relative z-10 w-full max-w-md">
+        {/* BePro Logo - same styling as landing page */}
+        <div className="text-center mb-8">
+          <h1 className="text-5xl md:text-6xl font-black mb-4 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+            BePro
+          </h1>
+          <p className="text-gray-800 font-medium text-lg">Learn smart. Build loud. Get hired.</p>
+        </div>
+
+        {/* Auth Card - using white background like the original design */}
+        <div className="bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-gray-200">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-black text-gray-900 mb-2">
+              {showReset ? 'Reset Password' : isSignIn ? 'Welcome Back' : 'Join the Waitlist'}
+            </h2>
+            <p className="text-gray-600">
               {showReset
-                ? 'We\'ll send you a reset link'
+                ? "We'll send you a reset link"
                 : isSignIn
-                ? 'Power your career with BePro'
-                : 'Launching August 3, 2025'}
-            </motion.p>
-          </motion.div>
+                ? 'Sign in to your BePro account'
+                : 'Get early access to BePro and transform your career!'
+              }
+            </p>
+          </div>
 
-          {/* Form Container */}
-          <motion.div
-            variants={itemVariants}
-            className="bg-black/80 backdrop-blur-xl rounded-3xl p-8 border-2 border-black shadow-2xl relative overflow-hidden"
-          >
-            {/* Animated background pattern inside form */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-yellow-600" />
-              <motion.div
-                className="absolute inset-0"
-                style={{
-                  backgroundImage: `repeating-linear-gradient(
-                    45deg,
-                    transparent,
-                    transparent 10px,
-                    rgba(255, 255, 255, 0.1) 10px,
-                    rgba(255, 255, 255, 0.1) 11px
-                  )`
-                }}
-                animate={{ x: [0, 20] }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              />
+          {/* Back Button for Reset */}
+          {showReset && (
+            <button
+              onClick={() => { 
+                setShowReset(false); 
+                setIsSignIn(true); 
+                setMessage(''); 
+                setMessageType('');
+                setResetEmail('');
+              }}
+              className="flex items-center text-gray-600 hover:text-gray-800 mb-6 transition-colors font-semibold"
+            >
+              <span className="mr-2 text-xl">←</span> Back
+            </button>
+          )}
+
+          {/* Message */}
+          {message && (
+            <div className={`mb-4 p-3 rounded-xl text-center font-medium ${
+              messageType === 'error' 
+                ? 'bg-red-100 text-red-800 border border-red-200' 
+                : messageType === 'success'
+                ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                : 'bg-blue-100 text-blue-800 border border-blue-200'
+            }`}>
+              {message}
             </div>
+          )}
 
-            <div className="relative z-10">
-              {/* Back Button for Reset */}
-              {showReset && (
-                <motion.button
-                  onClick={() => { 
-                    setShowReset(false); 
-                    setIsSignIn(true); 
-                    setMessage(''); 
-                    setMessageType('');
-                    setResetEmail('');
-                  }}
-                  className="flex items-center text-yellow-400 hover:text-yellow-300 mb-6 transition-colors font-semibold"
-                  whileHover={{ x: -5 }}
-                >
-                  <span className="mr-2 text-xl">←</span> Back
-                </motion.button>
-              )}
-
-              {/* Form */}
-              <AnimatePresence mode="wait">
-                {showReset ? (
-                  <motion.div
-                    key="reset"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="space-y-6"
-                  >
-                    <div className="relative">
+          {/* Form */}
+          {showReset ? (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent font-medium"
+                />
+              </div>
+              <button
+                onClick={handleResetPassword}
+                disabled={isSendingReset}
+                className="w-full bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 py-4 rounded-xl font-black text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                {isSendingReset ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-5 h-5 border-2 border-amber-300/20 border-t-amber-300 rounded-full animate-spin"></div>
+                    Sending...
+                  </div>
+                ) : (
+                  'Send Reset Link'
+                )}
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {!isSignIn && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2">
+                        First Name
+                      </label>
                       <input
-                        type="email"
-                        placeholder="Enter your email"
-                        value={resetEmail}
-                        onChange={(e) => setResetEmail(e.target.value)}
-                        className="w-full bg-yellow-400 border-2 border-yellow-500 rounded-2xl px-6 py-4 text-black placeholder-black/60 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 transition-all duration-300 font-medium"
+                        type="text"
+                        placeholder="First Name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent font-medium"
+                        required
                       />
                     </div>
-                    <motion.button
-                      onClick={handleResetPassword}
-                      disabled={isSendingReset}
-                      whileHover={{ scale: 1.02, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-4 rounded-2xl transition-all duration-300 disabled:opacity-50 shadow-lg hover:shadow-xl"
-                    >
-                      {isSendingReset ? (
-                        <div className="flex items-center justify-center">
-                          <motion.div 
-                            className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full mr-2"
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                          />
-                          Sending...
-                        </div>
-                      ) : (
-                        'Send Reset Link'
-                      )}
-                    </motion.button>
-                  </motion.div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2">
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Last Name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent font-medium"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                      Username
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Choose a username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent font-medium"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                      Date of Birth
+                    </label>
+                    <input
+                      type="date"
+                      value={dob}
+                      onChange={(e) => setDob(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent font-medium"
+                      required
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent font-medium"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent font-medium"
+                  required
+                />
+              </div>
+
+              {isSignIn && (
+                <div className="text-right">
+                  <button
+                    onClick={() => { 
+                      setShowReset(true); 
+                      setMessage(''); 
+                      setMessageType('') 
+                    }}
+                    className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors underline decoration-2 underline-offset-2 cursor-pointer"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+              )}
+
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 py-4 rounded-xl font-black text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none cursor-pointer"
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-5 h-5 border-2 border-amber-300/20 border-t-amber-300 rounded-full animate-spin"></div>
+                    {isSignIn ? 'Signing in...' : 'Creating account...'}
+                  </div>
                 ) : (
-                  <motion.form
-                    key={isSignIn ? 'signin' : 'signup'}
-                    initial={{ opacity: 0, x: isSignIn ? -20 : 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: isSignIn ? 20 : -20 }}
-                    onSubmit={handleSubmit}
-                    className="space-y-6"
-                  >
-                    {!isSignIn && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="space-y-4"
-                      >
-                        <div className="grid grid-cols-2 gap-4">
-                          <input
-                            type="text"
-                            placeholder="First Name"
-                            value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
-                            required
-                            className="bg-yellow-400 border-2 border-yellow-500 rounded-2xl px-4 py-4 text-black placeholder-black/60 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 transition-all duration-300 font-medium"
-                          />
-                          <input
-                            type="text"
-                            placeholder="Last Name"
-                            value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
-                            required
-                            className="bg-yellow-400 border-2 border-yellow-500 rounded-2xl px-4 py-4 text-black placeholder-black/60 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 transition-all duration-300 font-medium"
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          placeholder="Username"
-                          value={username}
-                          onChange={(e) => setUsername(e.target.value)}
-                          required
-                          className="w-full bg-yellow-400 border-2 border-yellow-500 rounded-2xl px-6 py-4 text-black placeholder-black/60 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 transition-all duration-300 font-medium"
-                        />
-                        <input
-                          type="date"
-                          value={dob}
-                          onChange={(e) => setDob(e.target.value)}
-                          required
-                          className="w-full bg-yellow-400 border-2 border-yellow-500 rounded-2xl px-6 py-4 text-black focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 transition-all duration-300 font-medium"
-                        />
-                      </motion.div>
-                    )}
-
-                    <input
-                      type="email"
-                      placeholder="Email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className="w-full bg-yellow-400 border-2 border-yellow-500 rounded-2xl px-6 py-4 text-black placeholder-black/60 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 transition-all duration-300 font-medium"
-                    />
-
-                    <input
-                      type="password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="w-full bg-yellow-400 border-2 border-yellow-500 rounded-2xl px-6 py-4 text-black placeholder-black/60 focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:border-yellow-400 transition-all duration-300 font-medium"
-                    />
-
-                    {isSignIn && (
-                      <div className="text-right">
-                        <button
-                          type="button"
-                          onClick={() => { 
-                            setShowReset(true); 
-                            setMessage(''); 
-                            setMessageType('') 
-                          }}
-                          className="text-yellow-400 hover:text-yellow-300 text-sm font-semibold transition-colors underline decoration-2 underline-offset-2 cursor-pointer"
-                        >
-                          Forgot Password?
-                        </button>
-                      </div>
-                    )}
-
-                    <motion.button
-                      type="submit"
-                      disabled={loading}
-                      whileHover={{ scale: 1.02, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-4 rounded-2xl transition-all duration-300 disabled:opacity-50 shadow-lg hover:shadow-xl"
-                    >
-                      {loading ? (
-                        <div className="flex items-center justify-center">
-                          <motion.div 
-                            className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full mr-2"
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                          />
-                          {isSignIn ? 'Signing in...' : 'Creating account...'}
-                        </div>
-                      ) : (
-                        isSignIn ? 'Sign In' : 'Create Account'
-                      )}
-                    </motion.button>
-
-                    {/* Sign Up Link */}
-                    {isSignIn && (
-                      <motion.div 
-                        className="text-center mt-4"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.2 }}
-                      >
-                        <span className="text-yellow-400 text-sm font-medium">
-                          Don&#39;t have an account?
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setIsSignIn(false);
-                            setMessage('');
-                            setMessageType('');
-                          }}
-                          className="text-yellow-300 hover:text-yellow-200 text-sm font-bold underline decoration-2 underline-offset-2 transition-colors cursor-pointer"
-                        >
-                          Create Account
-                        </button>
-                      </motion.div>
-                    )}
-
-                    {/* Sign In Link */}
-                    {!isSignIn && (
-                      <motion.div 
-                        className="text-center mt-4"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.2 }}
-                      >
-                        <span className="text-yellow-400 text-sm font-medium">
-                          Already have an account?{' '}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setIsSignIn(true);
-                            setMessage('');
-                            setMessageType('');
-                          }}
-                          className="text-yellow-300 hover:text-yellow-200 text-sm font-bold underline decoration-2 underline-offset-2 transition-colors"
-                        >
-                          Sign In
-                        </button>
-                      </motion.div>
-                    )}
-                  </motion.form>
+                  isSignIn ? '✨ Sign In' : '🚀 Join Waitlist'
                 )}
-              </AnimatePresence>
-
-              {/* Message */}
-              <AnimatePresence>
-                {message && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                    className={`mt-6 p-4 rounded-2xl text-center font-semibold ${
-                      messageType === 'error' 
-                        ? 'bg-red-500 text-white' 
-                        : messageType === 'success'
-                        ? 'bg-green-500 text-white'
-                        : 'bg-yellow-400 text-black'
-                    }`}
-                  >
-                    {message}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              </button>
             </div>
-          </motion.div>
+          )}
 
-          {/* Footer */}
-          <motion.div 
-            variants={itemVariants} 
-            className="text-center mt-6 text-black/60 text-sm font-medium"
-          >
-            🔒 Secure authentication powered by Supabase
-          </motion.div>
-        </motion.div>
+          {/* Toggle between Sign In and Sign Up */}
+          {!showReset && (
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => {
+                  setIsSignIn(!isSignIn);
+                  setMessage('');
+                  setMessageType('');
+                }}
+                className="text-gray-600 hover:text-gray-900 font-medium transition-colors cursor-pointer"
+              >
+                {isSignIn 
+                  ? "Don't have an account? Join the waitlist" 
+                  : "Already have an account? Sign in"
+                }
+              </button>
+            </div>
+          )}
+
+          {/* Waitlist Perks for Sign Up */}
+          {!isSignIn && !showReset && (
+            <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border border-amber-200">
+              <h3 className="font-bold text-gray-900 mb-2">🎁 Waitlist Perks:</h3>
+              <ul className="text-sm text-gray-700 space-y-1">
+                <li>• Early access to BePro platform</li>
+                <li>• Exclusive founding member badge</li>
+                <li>• Priority support and feedback</li>
+                <li>• Bonus XP when you join</li>
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
-      
-      <Link
-        href="/"
-        className="fixed top-4 left-4 text-3xl font-bold text-black z-50"
-      >
-        BePro
-      </Link>
-    </div>
+    </main>
   )
 }
