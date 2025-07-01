@@ -96,13 +96,13 @@ export default function Home() {
   return (
     <main className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 font-sans">
       <section className="min-h-screen flex flex-col justify-center items-center text-center px-4 relative overflow-hidden">
-        {/* Background decoration */}
+        
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gray-900 rounded-full blur-3xl"></div>
           <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-amber-600 rounded-full blur-3xl"></div>
         </div>
         
-        {/* Auth buttons - positioned absolutely at top right */}
+        
         {user ? (
           <div className="absolute top-6 right-6 flex gap-3 z-20">
             <p className="bg-gray-900 text-amber-300 px-5 py-3 rounded-xl font-bold shadow-lg hover:bg-gray-800 transition-all duration-300">

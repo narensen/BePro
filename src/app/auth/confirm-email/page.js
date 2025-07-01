@@ -29,7 +29,7 @@ export default function ConfirmEmailPage() {
         <h1 className="text-3xl font-bold mb-3">📬 Confirmation Email Sent</h1>
         <p className="text-lg mb-4">
           We’ve sent you a link to confirm your email.
-          <br /> Click it and come back here.
+          <br /> Check your spam if not present
         </p>
         <p className="text-sm text-black/70">
           {checking ? 'Checking your status...' : 'Waiting for confirmation...'}
