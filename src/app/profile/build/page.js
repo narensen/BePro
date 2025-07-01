@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Check, X, User, Tag, ArrowRight, Loader2 } from 'lucide-react';
+import { Check, X, User, Tag, ArrowRight, Loader2, ChevronLeft } from 'lucide-react';
 import { supabase } from '../../lib/supabase_client';
 import { useRouter } from 'next/navigation';
 
@@ -41,18 +41,18 @@ const ProfileBuilder = () => {
   }, []);
 
   const availableTags = [
-    { id: 'AI', name: 'Artificial Intelligence', icon: '🤖' },
-    { id: 'ML', name: 'Machine Learning', icon: '🧠' },
-    { id: 'DS', name: 'Data Science', icon: '📊' },
-    { id: 'WEB', name: 'Web Development', icon: '🌐' },
-    { id: 'MOBILE', name: 'Mobile Development', icon: '📱' },
-    { id: 'CLOUD', name: 'Cloud Computing', icon: '☁️' },
-    { id: 'DEVOPS', name: 'DevOps', icon: '⚙️' },
-    { id: 'CYBER', name: 'Cybersecurity', icon: '🔒' },
-    { id: 'BLOCKCHAIN', name: 'Blockchain', icon: '⛓️' },
-    { id: 'UI_UX', name: 'UI/UX Design', icon: '🎨' },
-    { id: 'GAME', name: 'Game Development', icon: '🎮' },
-    { id: 'IOT', name: 'Internet of Things', icon: '🌐' },
+    { id: 'AI', name: 'Artificial Intelligence' },
+    { id: 'ML', name: 'Machine Learning' },
+    { id: 'DS', name: 'Data Science' },
+    { id: 'WEB', name: 'Web Development' },
+    { id: 'MOBILE', name: 'Mobile Development' },
+    { id: 'CLOUD', name: 'Cloud Computing' },
+    { id: 'DEVOPS', name: 'DevOps & Infrastructure' },
+    { id: 'CYBER', name: 'Cybersecurity' },
+    { id: 'BLOCKCHAIN', name: 'Blockchain Technology' },
+    { id: 'UI_UX', name: 'UI/UX Design' },
+    { id: 'GAME', name: 'Game Development' },
+    { id: 'IOT', name: 'Internet of Things' },
   ];
 
   const checkUsernameAvailability = async (name) => {
@@ -122,7 +122,7 @@ const ProfileBuilder = () => {
 
     if (insertError) {
       console.error(insertError);
-      setError('Could not create profile. Try again.');
+      setError('Could not create profile. Please try again.');
     } else {
       router.push('/home');
     }
@@ -131,7 +131,7 @@ const ProfileBuilder = () => {
   };
 
   const getStatusIcon = () => {
-    if (usernameStatus === 'checking') return <Loader2 className="w-5 h-5 animate-spin text-gray-600" />;
+    if (usernameStatus === 'checking') return <Loader2 className="w-5 h-5 animate-spin text-gray-500" />;
     if (usernameStatus === 'available') return <Check className="w-5 h-5 text-green-600" />;
     if (usernameStatus === 'taken') return <X className="w-5 h-5 text-red-600" />;
     return null;
@@ -139,7 +139,7 @@ const ProfileBuilder = () => {
 
   const getStatusText = () => {
     if (usernameStatus === 'checking') return 'Checking availability...';
-    if (usernameStatus === 'available') return 'Username is available!';
+    if (usernameStatus === 'available') return 'Username is available';
     if (usernameStatus === 'taken') return 'Username is already taken';
     return '';
   };
@@ -148,25 +148,33 @@ const ProfileBuilder = () => {
     <main className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 min-h-screen flex items-center justify-center p-4">
       <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl w-full max-w-2xl p-8">
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-center">
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-center font-medium">
             {error}
           </div>
         )}
 
         <div className="text-center mb-8">
           <h1 className="text-4xl font-black text-gray-900 mb-2">
-            Welcome to <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">BePro!</span>
+            Welcome to <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">BePro</span>
           </h1>
-          <p className="text-gray-600 text-lg">Let's set up your profile to get personalized recommendations</p>
-          {user && <p className="text-sm text-gray-500 mt-2">Setting up profile for: {user.email}</p>}
+          <p className="text-gray-600 text-lg">Complete your profile to get personalized learning recommendations</p>
+          {user && <p className="text-sm text-gray-500 mt-2">{user.email}</p>}
         </div>
 
         {/* Progress */}
         <div className="flex items-center justify-center mb-8">
           <div className="flex items-center space-x-4">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${currentStep >= 1 ? 'bg-amber-500 text-white' : 'bg-gray-200 text-gray-500'}`}>1</div>
-            <div className={`w-16 h-1 ${currentStep >= 2 ? 'bg-amber-500' : 'bg-gray-200'}`}></div>
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${currentStep >= 2 ? 'bg-amber-500 text-white' : 'bg-gray-200 text-gray-500'}`}>2</div>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${
+              currentStep >= 1 ? 'bg-gray-900 text-amber-300' : 'bg-gray-200 text-gray-500'
+            }`}>
+              1
+            </div>
+            <div className={`w-16 h-1 transition-all ${currentStep >= 2 ? 'bg-gray-900' : 'bg-gray-200'}`}></div>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${
+              currentStep >= 2 ? 'bg-gray-900 text-amber-300' : 'bg-gray-200 text-gray-500'
+            }`}>
+              2
+            </div>
           </div>
         </div>
 
@@ -174,7 +182,7 @@ const ProfileBuilder = () => {
         {currentStep === 1 && (
           <div className="space-y-6">
             <div className="text-center">
-              <User className="w-16 h-16 text-amber-500 mx-auto mb-4" />
+              <User className="w-16 h-16 text-gray-900 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Choose Your Username</h2>
               <p className="text-gray-600">This will be your unique identifier on BePro</p>
             </div>
@@ -185,7 +193,7 @@ const ProfileBuilder = () => {
                   type="text"
                   value={username}
                   onChange={handleUsernameChange}
-                  className="w-full px-4 py-4 text-lg border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:outline-none transition-colors"
+                  className="w-full px-4 py-4 text-lg border-2 border-gray-300 rounded-xl focus:border-gray-900 focus:outline-none transition-colors font-medium"
                   placeholder="Enter your username"
                   maxLength={20}
                 />
@@ -195,7 +203,13 @@ const ProfileBuilder = () => {
               </div>
 
               {username.length > 0 && (
-                <div className={`text-sm ${usernameStatus === 'available' ? 'text-green-600' : usernameStatus === 'taken' ? 'text-red-600' : 'text-gray-600'}`}>
+                <div className={`text-sm font-medium ${
+                  usernameStatus === 'available' 
+                    ? 'text-green-600' 
+                    : usernameStatus === 'taken' 
+                    ? 'text-red-600' 
+                    : 'text-gray-600'
+                }`}>
                   {getStatusText()}
                 </div>
               )}
@@ -204,8 +218,10 @@ const ProfileBuilder = () => {
             <button
               onClick={handleNextStep}
               disabled={usernameStatus !== 'available'}
-              className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center space-x-2 ${
-                usernameStatus === 'available' ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:scale-105' : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+              className={`w-full py-4 rounded-xl font-black text-lg transition-all duration-300 flex items-center justify-center space-x-2 ${
+                usernameStatus === 'available' 
+                  ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 hover:scale-105 shadow-lg hover:shadow-xl' 
+                  : 'bg-gray-200 text-gray-500 cursor-not-allowed'
               }`}
             >
               <span>Continue</span>
@@ -218,34 +234,33 @@ const ProfileBuilder = () => {
         {currentStep === 2 && (
           <div className="space-y-6">
             <div className="text-center">
-              <Tag className="w-16 h-16 text-amber-500 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Choose Your Interests</h2>
-              <p className="text-gray-600">Select up to 4 topics you're most interested in</p>
-              <div className="mt-2 text-sm text-amber-600 font-medium">
+              <Tag className="w-16 h-16 text-gray-900 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Select Your Interests</h2>
+              <p className="text-gray-600">Choose up to 4 areas you want to focus on</p>
+              <div className="mt-2 text-sm text-gray-900 font-bold">
                 {selectedTags.length}/4 selected
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {availableTags.map((tag) => (
                 <button
                   key={tag.id}
                   onClick={() => handleTagToggle(tag.id)}
                   disabled={!selectedTags.includes(tag.id) && selectedTags.length >= 4}
-                  className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${
+                  className={`p-4 rounded-xl border-2 transition-all duration-300 text-left font-medium ${
                     selectedTags.includes(tag.id)
-                      ? 'border-amber-500 bg-amber-50 text-amber-700'
+                      ? 'border-gray-900 bg-gray-50 text-gray-900'
                       : selectedTags.length >= 4
                       ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
-                      : 'border-gray-200 hover:border-amber-300 hover:bg-amber-50 text-gray-700'
+                      : 'border-gray-300 hover:border-gray-900 hover:bg-gray-50 text-gray-700 hover:text-gray-900'
                   }`}
                 >
-                  <div className="flex items-center space-x-3">
-                    <span className="text-2xl">{tag.icon}</span>
-                    <div>
-                      <div className="font-semibold">{tag.name}</div>
-                      <div className="text-xs opacity-70">{tag.id}</div>
-                    </div>
+                  <div className="flex items-center justify-between">
+                    <span>{tag.name}</span>
+                    {selectedTags.includes(tag.id) && (
+                      <Check className="w-5 h-5 text-gray-900" />
+                    )}
                   </div>
                 </button>
               ))}
@@ -254,16 +269,17 @@ const ProfileBuilder = () => {
             <div className="flex space-x-4">
               <button
                 onClick={() => setCurrentStep(1)}
-                className="flex-1 py-4 rounded-xl border-2 border-gray-300 text-gray-700 font-bold hover:bg-gray-50 transition-colors"
+                className="flex-1 py-4 rounded-xl border-2 border-gray-300 text-gray-700 font-bold hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2"
               >
-                Back
+                <ChevronLeft className="w-5 h-5" />
+                <span>Back</span>
               </button>
               <button
                 onClick={handleCreateProfile}
                 disabled={selectedTags.length === 0 || isLoading}
-                className={`flex-1 py-4 rounded-xl font-bold transition-all duration-300 flex items-center justify-center space-x-2 ${
+                className={`flex-1 py-4 rounded-xl font-black transition-all duration-300 flex items-center justify-center space-x-2 ${
                   selectedTags.length > 0 && !isLoading
-                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:scale-105'
+                    ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 hover:scale-105 shadow-lg hover:shadow-xl'
                     : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                 }`}
               >
