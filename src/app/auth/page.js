@@ -42,7 +42,7 @@ export default function AuthPage() {
 
           // ✅ Check for profile
           const { data: profileData, error: profileError } = await supabase
-            .from('profiles') // Make sure 'profiles' table exists
+            .from('profile') // Make sure 'profiles' table exists
             .select('id')
             .eq('email', email)
             .single()
