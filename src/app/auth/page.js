@@ -54,7 +54,7 @@ export default function AuthPage() {
             setMessage('Welcome! Please complete your profile.')
             setMessageType('info')
             setTimeout(() => {
-              router.push('/build-profile') // ← Replace with your actual profile-building route
+              router.push('/profile/build')
             }, 1500)
           } else {
             setMessage('Welcome back! 🎉')
