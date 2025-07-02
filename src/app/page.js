@@ -105,9 +105,9 @@ export default function Home() {
         
         {user ? (
           <div className="absolute top-6 right-6 flex gap-3 z-20">
-            <p className="bg-gray-900 text-amber-300 px-5 py-3 rounded-xl font-bold shadow-lg hover:bg-gray-800 transition-all duration-300">
-              {msg}
-            </p>
+            <button className="bg-gray-900 text-amber-300 px-5 py-3 rounded-xl font-bold shadow-lg hover:bg-gray-800 hover:scale-105 transition-all duration-300">
+              <Link href="/home">Home</Link>
+            </button>
             <button
               className="bg-gray-900 text-amber-300 px-5 py-3 rounded-xl font-bold shadow-lg hover:bg-gray-800 hover:scale-105 transition-all duration-300 cursor-pointer"
               onClick={handleSignOut}
@@ -130,8 +130,14 @@ export default function Home() {
           </h2>
 
           <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 px-10 py-6 rounded-2xl mb-8 shadow-2xl border border-gray-700">
-            <p className="text-lg font-bold mb-2">🚀 Launch Date</p>
-            <p className="text-4xl font-black">August 3, 2025</p>
+            { user ? (<h1 className="uppercase text-3xl font-semibold mb-2">{msg}</h1>) 
+            : (
+            <>
+            <p className="text-lg font-bold mb-2">Launch Date</p> 
+              <p className="text-4xl font-black">August 3, 2025</p>
+              </>
+          )}
+            
           </div>
 
           <p className="mt-8 text-gray-800 text-xl font-semibold">Learn smart. Build loud. Get hired.</p>
