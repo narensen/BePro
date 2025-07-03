@@ -13,7 +13,10 @@ import {
   PlusCircle,
   Home,
   Settings,
-  LogOut
+  LogOut,
+  MessageCircle,
+  MessageCircleHeart,
+  MessageCircleX
 } from 'lucide-react';
 
 export default function SideBar({ user, username, onSignOut }) {
@@ -21,13 +24,11 @@ export default function SideBar({ user, username, onSignOut }) {
 
   const navigationItems = [
     { name: 'Dashboard', icon: Home, href: '/home' },
-    { name: 'Job Scrapper', icon: Search, href: '/jobs' },
-    { name: 'Profile', icon: User, href: '/profile' },
-    { name: 'Community', icon: Users, href: '/community' },
-    { name: 'Ada', icon: Bot, href: '/ada' },
-    { name: 'Communities', icon: MessageSquare, href: '/communities' },
-    { name: 'Spaces', icon: Layout, href: '/spaces' },
-    { name: 'Post', icon: PlusCircle, href: '/post' },
+    { name: 'Explore', icon: Search, href: '/home/explore' },
+    { name: 'Profile', icon: User, href: '/profile' },  
+    { name: 'Ada', icon: MessageCircleX, href: '/home/ada' },
+    { name: 'Communities', icon: MessageSquare, href: '/home/communities' },
+    { name: 'Post', icon: PlusCircle, href: '/home/post' },
   ];
 
   const bottomItems = [
@@ -59,7 +60,6 @@ export default function SideBar({ user, username, onSignOut }) {
         <p className="text-sm text-gray-600 font-medium mt-1">Learn smart. Build loud. Get hired.</p>
       </div>
 
-      {/* User Info */}
       {user && (
         <div className="p-4 border-b border-gray-200/30">
           <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-400/20 to-yellow-400/20 rounded-xl">
@@ -144,7 +144,7 @@ export default function SideBar({ user, username, onSignOut }) {
         {/* Version Info */}
         <div className="mt-4 p-3 bg-gray-50 rounded-xl">
           <p className="text-xs text-gray-500 text-center">
-            BePro v1.0
+            BePro
           </p>
         </div>
       </div>

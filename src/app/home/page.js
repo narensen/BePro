@@ -55,16 +55,14 @@ export default function Home() {
   }
 
   return (
+
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
-      {/* Fixed Sidebar */}
-      <div className="fixed left-0 top-0 h-full z-30">
+      <div className="fixed left-0 top-0 h-full z-30 w-72">
         <SideBar user={user} username={username} onSignOut={handleSignOut} />
       </div>
-
-      {/* Main Content Area */}
-      <div className="ml-72"> {/* Match sidebar width */}
-        {/* Header */}
+      <div className="ml-72">
         <header className="sticky top-0 z-20 border-gray-200/50 p-4">
+        
           <div className="flex justify-end max-w-6xl">
             <div className="flex items-end gap-4">
               <div className="relative left-15 top-2 bg-gray-900 justify-end text-amber-300 px-4 py-2 rounded-xl font-bold shadow-lg">
@@ -74,7 +72,6 @@ export default function Home() {
           </div>
         </header>
 
-        {/* Main Dashboard Content */}
         <main className="p-6 min-h-[calc(100vh-80px)] flex items-center justify-center">
           <div className="text-center">
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-12 shadow-xl border border-gray-200 max-w-md mx-auto">
