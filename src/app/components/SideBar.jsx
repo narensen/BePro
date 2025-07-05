@@ -47,7 +47,7 @@ export default function SideBar({ user, username, onSignOut }) {
   `;
 
   return (
-    <div className="h-screen bg-white/90 backdrop-blur-sm border-r border-gray-200/50 
+    <div className="text-md font-mono h-screen bg-white/90 backdrop-blur-sm border-r border-gray-200/50 
       shadow-xl flex flex-col w-72">
       
       {/* Logo/Brand */}

@@ -56,7 +56,7 @@ export default function Home() {
 
   return (
 
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
       <div className="fixed left-0 top-0 h-full z-30 w-72">
         <SideBar user={user} username={username} onSignOut={handleSignOut} />
       </div>

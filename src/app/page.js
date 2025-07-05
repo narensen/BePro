@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase_client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import {CommunityPanel, FeatureCard, GetStartedButton, PrepTip, StayConnected, Testimonial, TimelineItem} from './components'
+import {CommunityPanel, FeatureCard, GetStartedButton, StayConnected} from './components'
 
 
 export default function Home() {
@@ -68,7 +68,7 @@ export default function Home() {
 
   if (loading || transitioning) {
     return (
-      <main className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 font-sans min-h-screen flex items-center justify-center">
+      <main className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 font-mono min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="text-4xl font-black mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent animate-pulse">
             BePro
@@ -168,32 +168,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-4 py-24 bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-300">
-        <h2 className="text-4xl font-black text-center mb-12 text-gray-900">Your BePro Journey Starts Soon</h2>
-        <div className="space-y-8 max-w-5xl mx-auto">
-          <TimelineItem
-            phase="Q2 2025 - Now"
-            description="You're on the waitlist! We're building your personalized career OS."
-            status="active"
-          />
-          <TimelineItem
-            phase="Q3 2025 - Beta Launch"
-            description="Early access to skill gap analysis, AI roadmaps, and project grading."
-            status="upcoming"
-          />
-          <TimelineItem
-            phase="August 1, 2025 - Full Launch"
-            description="Complete platform with XP system, community features, and job tracking."
-            status="upcoming"
-          />
-          <TimelineItem
-            phase="Q4 2025 - Pro Features"
-            description="Advanced mentorship, hackathon battles, and premium career tools."
-            status="future"
-          />
-        </div>
-      </section>
-
       <section className="px-4 py-24 text-center bg-gradient-to-b from-yellow-400 via-amber-400 to-yellow-400">
         <h2 className="text-4xl font-black mb-10 text-gray-900">Join the Movement</h2>
         <p className="max-w-4xl mx-auto mb-12 text-xl text-gray-800 leading-relaxed">
@@ -203,24 +177,6 @@ export default function Home() {
           <CommunityPanel title="Discord Community" desc="Chat with other waitlist members and get updates." icon="💬" />
           <CommunityPanel title="Progress Sharing" desc="Document your learning journey before launch." icon="📈" />
           <CommunityPanel title="Beta Testing" desc="Help shape BePro with your feedback." icon="🧪" />
-        </div>
-      </section>
-
-      <section className="bg-gradient-to-r from-amber-200 via-yellow-200 to-amber-200 px-4 py-24">
-        <h2 className="text-4xl font-black text-center mb-16 text-gray-900">From Our Alpha Testers</h2>
-        <div className="grid md:grid-cols-3 gap-8 text-center max-w-6xl mx-auto">
-          <Testimonial name="Priya K." role="Frontend Dev" quote="The skill gap analysis showed me exactly what I was missing!" />
-          <Testimonial name="Rahul S." role="UX Designer" quote="AI-generated learning path saved me months of research." />
-          <Testimonial name="Ananya M." role="Data Analyst" quote="Finally, a career tool that actually gets it." />
-        </div>
-      </section>
-
-      <section className="px-4 py-24 text-center bg-gradient-to-b from-yellow-400 via-amber-400 to-yellow-400">
-        <h2 className="text-4xl font-black mb-12 text-gray-900">Get Ready for Launch</h2>
-        <div className="max-w-3xl mx-auto space-y-8 text-left">
-          <PrepTip icon="💼" title="Update Your Profile" desc="Start thinking about your current skills and career goals." />
-          <PrepTip icon="🎯" title="Identify Target Roles" desc="Research job postings in your field to understand requirements." />
-          <PrepTip icon="📚" title="Gather Your Work" desc="Collect projects, certificates, and achievements to showcase." />
         </div>
       </section>
 
