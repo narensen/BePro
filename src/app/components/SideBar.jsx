@@ -51,11 +51,12 @@ export default function SideBar({ user, username, onSignOut }) {
       shadow-xl flex flex-col w-72">
       
       {/* Logo/Brand */}
-      <div className="p-6 border-b border-gray-200/30">
+      <div className="p-6 border-gray-200/30">
         <Link href="/home">
-          <h1 className="text-3xl font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent cursor-pointer">
-            BePro
-          </h1>
+          <h1 className="flex text-3xl font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent cursor-pointer outline-none focus:outline-none focus-visible:outline-none">
+  BePro
+</h1>
+
         </Link>
         <p className="text-sm text-gray-600 font-medium mt-1">Learn smart. Build loud. Get hired.</p>
       </div>

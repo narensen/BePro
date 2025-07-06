@@ -59,7 +59,7 @@ export default function BeProAI() {
 
         <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
         <div className="flex justify-center">
-            <h1 className="relative text-2xl text-white bg-black hover:bg-black/60 font-semibold font-mono rounded-4xl px-4 py-2 top-4 right-95">BePro AI</h1>
+            <h1 className="relative text-2xl text-white bg-black click:bg-black/60 font-semibold font-mono rounded-4xl px-4 py-2 top-4 right-95">BePro AI</h1>
             <div className="fixed left-0 top-0 h-full z-30 w-72">
                     <SideBar user={user} username={username} onSignOut={handleSignOut} />
                   </div>
