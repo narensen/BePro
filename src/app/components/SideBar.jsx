@@ -25,7 +25,6 @@ export default function SideBar({ user, username, onSignOut }) {
   const navigationItems = [
     { name: 'Dashboard', icon: Home, href: '/home' },
     { name: 'Explore', icon: Search, href: '/home/explore' },
-    { name: 'Profile', icon: User, href: '/profile' },  
     { name: 'Ada', icon: MessageCircleX, href: '/home/ada' },
     { name: 'Communities', icon: MessageSquare, href: '/home/communities' },
     { name: 'Post', icon: PlusCircle, href: '/home/post' },
@@ -33,6 +32,7 @@ export default function SideBar({ user, username, onSignOut }) {
 
   const bottomItems = [
     { name: 'Settings', icon: Settings, href: '/settings' },
+    { name: 'Profile', icon: User, href: '/profile' },  
   ];
 
   const buttonClass = `
@@ -139,13 +139,6 @@ export default function SideBar({ user, username, onSignOut }) {
             <LogOut size={20} />
             <span className="font-medium">Logout</span>
           </button>
-        </div>
-
-        {/* Version Info */}
-        <div className="mt-4 p-3 bg-gray-50 rounded-xl">
-          <p className="text-xs text-gray-500 text-center">
-            BePro
-          </p>
         </div>
       </div>
     </div>
