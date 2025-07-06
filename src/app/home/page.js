@@ -43,7 +43,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 flex items-center justify-center">
+      <div className="min-h-screen w-full bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 flex items-center justify-center">
         <div className="text-center">
           <div className="text-4xl font-black mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent animate-pulse">
             BePro
