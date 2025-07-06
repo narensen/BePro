@@ -65,9 +65,10 @@ export default function Home() {
         
           <div className="flex justify-end max-w-6xl">
             <div className="flex items-end gap-4">
-              <div className="relative left-15 top-2 bg-gray-900 justify-end text-amber-300 px-4 py-2 rounded-xl font-bold shadow-lg">
-                Pro Member
-              </div>
+              <div className="bg-gray-900 text-amber-300 px-4 py-2 rounded-xl font-bold shadow-lg">
+  Pro Member
+</div>
+
             </div>
           </div>
         </header>
