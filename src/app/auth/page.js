@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '../lib/supabase_client'
+import useUserStore from '../store/useUserStore'
 
 export default function AuthPage() {
   const [isSignIn, setIsSignIn] = useState(true)
@@ -19,6 +20,7 @@ export default function AuthPage() {
   const [isSendingReset, setIsSendingReset] = useState(false)
 
   const router = useRouter()
+  const setUserSession = useUserStore((state) => state.setUserSession)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -28,21 +30,16 @@ export default function AuthPage() {
 
     try {
       if (isSignIn) {
-        // 🔐 Sign In
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        })
-
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) {
           setMessage(error.message)
           setMessageType('error')
         } else {
           const user = data.user
+          setUserSession(user)
 
-          // ✅ Check for profile
           const { data: profileData, error: profileError } = await supabase
-            .from('profile') // Make sure 'profiles' table exists
+            .from('profile')
             .select('id')
             .eq('email', email)
             .single()
@@ -53,19 +50,14 @@ export default function AuthPage() {
           } else if (!profileData) {
             setMessage('Welcome! Please complete your profile.')
             setMessageType('info')
-            setTimeout(() => {
-              router.push('/profile/build')
-            }, 1500)
+            setTimeout(() => router.push('/profile/build'), 1500)
           } else {
             setMessage('Welcome back! 🎉')
             setMessageType('success')
-            setTimeout(() => {
-              router.push('/home')
-            }, 1500)
+            setTimeout(() => router.push('/home'), 1500)
           }
         }
       } else {
-        // 🆕 Sign Up
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -74,9 +66,9 @@ export default function AuthPage() {
               first_name: firstName,
               last_name: lastName,
               date_of_birth: dob,
-              full_name: `${firstName} ${lastName}`
-            }
-          }
+              full_name: `${firstName} ${lastName}`,
+            },
+          },
         })
 
         if (error) {
@@ -91,9 +83,7 @@ export default function AuthPage() {
             setMessageType('success')
           }
 
-          setTimeout(() => {
-            router.push('/auth/confirm-email')
-          }, 1500)
+          setTimeout(() => router.push('/auth/confirm-email'), 1500)
         }
       }
     } catch (error) {
@@ -116,7 +106,7 @@ export default function AuthPage() {
 
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-        redirectTo: `${window.location.origin}/update-password`
+        redirectTo: `${window.location.origin}/update-password`,
       })
 
       if (error) {
