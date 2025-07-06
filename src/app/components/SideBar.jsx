@@ -99,7 +99,7 @@ export default function SideBar({ onSignOut }) {
                         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                       />
                     )}
-                    <div className={`flex items-center gap-3 p-3 rounded-3xl font-semibold relative z-10 ${isActive ? 'text-gray-900' : 'text-gray-600 hover:text-gray-800 transition-colors duration-300'}`}>
+                    <div className={`flex items-center gap-3 p-3 rounded-3xl font-semibold relative z-10 ${isActive ? 'text-gray-900' : 'text-gray-600 hover:text-gray-800 hover:scale-105 transition-all duration-200'}`}>
                       <Icon size={20} />
                       <span className="font-medium">{item.name}</span>
                     </div>

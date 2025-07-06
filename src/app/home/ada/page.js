@@ -51,9 +51,8 @@ export default function BeProAI() {
             </div>
           </div>
         ) : (
-          // Actual main content
           <div className="">
-            <button className="relative text-2xl text-white bg-black hover:bg-black/60 font-semibold font-mono rounded-4xl px-4 py-2 top-4 left-4 cursor-pointer">
+            <button className="relative text-2xl text-white bg-black/80 hover:bg-black font-semibold font-mono rounded-4xl px-4 py-2 top-4 left-4 cursor-pointer">
               BePro AI
             </button>
           </div>
