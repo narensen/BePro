@@ -69,7 +69,7 @@ async function toggleInteraction(postId, userId, type, currentState) {
       return false;
     }
   } else {
-    // Insert the interaction
+    
     const { error } = await supabase
       .from('post_interactions')
       .insert([{ post_id: postId, user_id: userId, type }]);
