@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase_client'
 import SideBar from '../components/SideBar'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
+  const router = useRouter()
 
   useEffect(() => {
     const checkUser = async () => {
@@ -15,25 +17,38 @@ export default function Home() {
         console.error('Error fetching session:', error)
         return
       }
+
       const session = data?.session
       if (session?.user) {
-        setUser(session.user)
-        setUsername(session.user.user_metadata?.username || 'User')
+        const currentUser = session.user
+        setUser(currentUser)
+        setUsername(currentUser.user_metadata?.username || 'User')
+
+        // Check if user has completed profile
+        const { data: profile, error: profileError } = await supabase
+          .from('profile')
+          .select('id')
+          .eq('email', currentUser.email)
+          .maybeSingle()
+
+        if (!profile || profileError) {
+          console.warn('No profile found for user. Redirecting to build.')
+          router.push('/profile/build')
+        }
       }
     }
 
     checkUser()
-  }, [])
+  }, [router])
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut()
     if (error) console.error('Sign out error:', error)
-    else location.reload() // force reload so user is reset 
+    else location.reload()
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
-      {/* Sidebar — always rendered */}
       <div className="fixed left-0 top-0 h-full z-30 w-72">
         <SideBar user={user} username={username} onSignOut={handleSignOut} />
       </div>
@@ -73,28 +88,19 @@ export default function Home() {
                   <p className="text-gray-600 mb-6">
                     Please log in to access your dashboard.
                   </p>
-                  <div className="flex justify-center gap-4">
-                    <button
-                      onClick={() => router.push('/login')}
-                      className="bg-gray-900 text-white px-4 py-2 rounded-md font-semibold hover:bg-gray-800"
-                    >
-                      Login
-                    </button>
-                    <button
-                      onClick={() => router.push('/signup')}
-                      className="bg-white border border-gray-900 text-gray-900 px-4 py-2 rounded-md font-semibold hover:bg-gray-100"
-                    >
-                      Sign Up
-                    </button>
-                  </div>
                 </>
               )}
 
-              {/* Loading dots always shown */}
               <div className="flex items-center justify-center gap-2 text-amber-500 mt-6">
                 <div className="w-2 h-2 bg-amber-500 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-amber-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-2 h-2 bg-amber-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                <div
+                  className="w-2 h-2 bg-amber-500 rounded-full animate-bounce"
+                  style={{ animationDelay: '0.1s' }}
+                ></div>
+                <div
+                  className="w-2 h-2 bg-amber-500 rounded-full animate-bounce"
+                  style={{ animationDelay: '0.2s' }}
+                ></div>
               </div>
             </div>
           </div>

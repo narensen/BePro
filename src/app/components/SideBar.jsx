@@ -4,11 +4,18 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
-  Home, Search, MessageCircleX, MessageSquare, PlusCircle, Settings, User, LogOut,
+  Home,
+  Search,
+  MessageCircleX,
+  MessageSquare,
+  PlusCircle,
+  Settings,
+  User,
+  LogOut,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import useUserStore from '../store/useUserStore';
 import { supabase } from '../lib/supabase_client';
-import { useEffect, useState } from 'react';
 
 const navItems = [
   { name: 'Dashboard', icon: Home, href: '/home' },
@@ -26,9 +33,18 @@ const bottomItems = [
 export default function SideBar({ onSignOut }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, setUserSession } = useUserStore();
+
+  const {
+    user,
+    username,
+    setUserSession,
+    setUsername,
+    clearUserSession,
+  } = useUserStore();
+
   const [loading, setLoading] = useState(!user);
 
+  // Step 1: Fetch session if not already in store
   useEffect(() => {
     const checkSession = async () => {
       if (!user) {
@@ -42,7 +58,26 @@ export default function SideBar({ onSignOut }) {
     checkSession();
   }, [user, setUserSession]);
 
-  const username = user?.user_metadata?.username || 'User';
+  // Step 2: Once session is present, fetch username
+  useEffect(() => {
+    const fetchUsername = async () => {
+      if (!user?.email || username) return;
+
+      const { data, error } = await supabase
+        .from('profile')
+        .select('username')
+        .eq('email', user.email)
+        .single();
+
+      if (error) {
+        console.error('Error fetching username from profile:', error.message);
+      } else if (data?.username) {
+        setUsername(data.username);
+      }
+    };
+
+    fetchUsername();
+  }, [user, username, setUsername]);
 
   return (
     <div className="h-screen w-72 font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex flex-col relative">
@@ -56,6 +91,7 @@ export default function SideBar({ onSignOut }) {
         <p className="text-sm text-gray-600 font-medium mt-1">Learn smart. Build loud. Get hired.</p>
       </div>
 
+      {/* Auth Loading State */}
       {loading ? (
         <div className="flex-1 flex items-center justify-center">
           <div className="w-10 h-10 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin"></div>
@@ -75,10 +111,10 @@ export default function SideBar({ onSignOut }) {
           <div className="p-4 border-b border-gray-200/30">
             <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-400/20 to-yellow-400/20 rounded-xl">
               <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-sm">{username.charAt(0).toUpperCase()}</span>
+                <span className="text-white font-bold text-sm">{username?.charAt(0).toUpperCase() || 'U'}</span>
               </div>
               <div className="flex-1">
-                <p className="font-bold text-gray-900 text-sm">{username}</p>
+                <p className="font-bold text-gray-900 text-sm">{username || 'User'}</p>
                 <p className="text-gray-600 text-xs">{user.email}</p>
               </div>
             </div>
@@ -99,7 +135,13 @@ export default function SideBar({ onSignOut }) {
                         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                       />
                     )}
-                    <div className={`flex items-center gap-3 p-3 rounded-3xl font-semibold relative z-10 ${isActive ? 'text-gray-900' : 'text-gray-600 hover:text-gray-800 hover:scale-105 transition-all duration-200'}`}>
+                    <div
+                      className={`flex items-center gap-3 p-3 rounded-3xl font-semibold relative z-10 ${
+                        isActive
+                          ? 'text-gray-900'
+                          : 'text-gray-600 hover:text-gray-800 hover:scale-105 transition-all duration-200'
+                      }`}
+                    >
                       <Icon size={20} />
                       <span className="font-medium">{item.name}</span>
                     </div>
@@ -112,11 +154,20 @@ export default function SideBar({ onSignOut }) {
           {/* Bottom Buttons */}
           <div className="p-4 border-t border-gray-200/30">
             <div className="space-y-1">
-              {[...bottomItems, { name: 'Logout', icon: LogOut, action: onSignOut }].map((item) => {
+              {[...bottomItems, { name: 'Logout', icon: LogOut, action: () => {
+                clearUserSession();
+                onSignOut?.();
+              } }].map((item) => {
                 const isActive = pathname === item.href;
                 const Icon = item.icon;
                 const content = (
-                  <div className={`flex items-center gap-3 p-3 rounded-3xl font-semibold relative z-10 ${isActive ? 'text-gray-900' : 'text-gray-600 hover:text-gray-800 transition-colors duration-300'}`}>
+                  <div
+                    className={`flex items-center gap-3 p-3 rounded-3xl font-semibold relative z-10 ${
+                      isActive
+                        ? 'text-gray-900'
+                        : 'text-gray-600 hover:text-gray-800 transition-colors duration-300'
+                    }`}
+                  >
                     <Icon size={20} />
                     <span className="font-medium">{item.name}</span>
                   </div>
