@@ -1,11 +1,13 @@
-import { create } from 'zustand';
+import { create } from 'zustand'
 
 const useUserStore = create((set) => ({
   user: null,
   username: null,
+  email: null,
   setUserSession: (user) => set({ user }),
   setUsername: (username) => set({ username }),
-  clearUserSession: () => set({ user: null, username: null }),
-}));
+  setEmail: (email) => set({ email }),   // <-- this line is critical
+  clearUserSession: () => set({ user: null, username: null, email: null }),
+}))
 
-export default useUserStore;
+export default useUserStore

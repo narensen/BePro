@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase_client'
+import useUserStore from '../store/useUserStore';
 import SideBar from '../components/SideBar'
 import { useRouter } from 'next/navigation'
 

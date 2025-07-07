@@ -3,58 +3,68 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase_client'
 import { useRouter } from 'next/navigation'
+import useUserStore from './store/useUserStore'
 import Link from 'next/link'
-import {CommunityPanel, FeatureCard, GetStartedButton, StayConnected} from './components'
-
+import {
+  CommunityPanel,
+  FeatureCard,
+  GetStartedButton,
+  StayConnected
+} from './components'
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState(null)
-  const [mail, setMail] = useState('')
-  const [msg, setMsg] = useState('')
   const [transitioning, setTransitioning] = useState(false)
   const router = useRouter()
+
+  const {
+    user,
+    username,
+    email,
+    setUserSession,
+    setUsername,
+    setEmail,
+    clearUserSession
+  } = useUserStore()
 
   useEffect(() => {
     const checkUser = async () => {
       const { data, error } = await supabase.auth.getSession()
-      if (error) {
-        console.error('Error fetching session:', error)
-        setUser(null)
-        setMsg('')
+      if (error || !data?.session) {
+        clearUserSession()
         setLoading(false)
         return
       }
-      const session = data?.session
-      if (!session) {
-        setUser(null)
-        setMsg('')
-      } else {
-        setUser(session.user)
-        setMail(session.user_email)
-        setMsg(session.user.user_metadata?.username || 'User')
+
+      const session = data.session
+      const currentUser = session.user
+      setUserSession(currentUser)
+      setEmail(currentUser.email)
+
+      const { data: profileData, error: profileError } = await supabase
+        .from('profile')
+        .select('username')
+        .eq('email', currentUser.email)
+        .maybeSingle()
+
+      if (profileError || !profileData?.username) {
+        console.warn('Username missing, redirecting to /profile/build')
+        router.push('/profile/build')
+        return
       }
+
+      setUsername(profileData.username)
       setLoading(false)
     }
 
     checkUser()
-  }, [])
-
-  const handleClick = () => {
-    setLoading(true);
-
-    
-    setTimeout(() => {
-      setLoading(false);
-    }, 6000); // 
-  };
+  }, [router, setUserSession, setUsername, setEmail, clearUserSession])
 
   const handleSignOut = async () => {
     setLoading(true)
     const { error } = await supabase.auth.signOut()
     if (error) console.error('Sign out error:', error)
-    setUser(null)
-    setMsg('')
+    clearUserSession()
     setLoading(false)
   }
 
@@ -62,8 +72,12 @@ export default function Home() {
     setTransitioning(true)
     setTimeout(() => {
       router.push('/auth')
-      console.log('Navigate to /auth')
     }, 300)
+  }
+
+  const handleClick = () => {
+    setLoading(true)
+    setTimeout(() => setLoading(false), 6000)
   }
 
   if (loading || transitioning) {
@@ -75,9 +89,7 @@ export default function Home() {
           </div>
           <div className="w-10 h-10 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin mx-auto"></div>
           {transitioning && (
-            <p className="mt-4 text-gray-800 font-medium animate-fadeIn">
-              Taking you there...
-            </p>
+            <p className="mt-4 text-gray-800 font-medium animate-fadeIn">Taking you there...</p>
           )}
         </div>
         <style jsx>{`
@@ -96,78 +108,69 @@ export default function Home() {
   return (
     <main className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 font-sans">
       <section className="min-h-screen flex flex-col justify-center items-center text-center px-4 relative overflow-hidden">
-        
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gray-900 rounded-full blur-3xl"></div>
           <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-amber-600 rounded-full blur-3xl"></div>
         </div>
-        
-        
-        {user ? (
-          <div className="absolute top-6 right-6 flex gap-3 z-20">
-            <button className="bg-gray-900 text-amber-300 px-5 py-3 rounded-xl font-bold shadow-lg hover:bg-gray-800 hover:scale-105 transition-all duration-300">
-              <Link href="/home">Home</Link>
-            </button>
-            <button
-              className="bg-gray-900 text-amber-300 px-5 py-3 rounded-xl font-bold shadow-lg hover:bg-gray-800 hover:scale-105 transition-all duration-300 cursor-pointer"
-              onClick={handleSignOut}
-            >
-              Sign Out
-            </button>
-          </div>
-        ) : (
-          <div className="absolute top-6 right-6 flex gap-3 z-20">
-              <GetStartedButton onClick={handleSignUp}></GetStartedButton>              
-              </div>
-        )}
-        
+
+        {/* Top right buttons */}
+        <div className="absolute top-6 right-6 flex gap-3 z-20">
+          {user ? (
+            <>
+              <Link href="/home">
+                <button className="bg-gray-900 text-amber-300 px-5 py-3 rounded-xl font-bold shadow-lg hover:bg-gray-800 hover:scale-105 transition-all duration-300">
+                  Home
+                </button>
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="bg-gray-900 text-amber-300 px-5 py-3 rounded-xl font-bold shadow-lg hover:bg-gray-800 hover:scale-105 transition-all duration-300 cursor-pointer"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <GetStartedButton onClick={handleSignUp} />
+          )}
+        </div>
+
+        {/* Welcome text */}
         <div className="relative z-10">
           <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
             Welcome to <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">BePro!</span>
           </h1>
           <h2 className="text-xl md:text-2xl max-w-3xl mb-10 text-gray-800 font-medium leading-relaxed">
-            {user ? ("You're officially on the waitlist. Transform your career journey with\nAI-powered precision.") : ("Join the waitlist. Transform your career journey with\nAI-powered precision")}
+            {user
+              ? "You're officially on the waitlist. Transform your career journey with AI-powered precision."
+              : "Join the waitlist. Transform your career journey with AI-powered precision."}
           </h2>
 
           <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 px-10 py-6 rounded-2xl mb-8 shadow-2xl border border-gray-700">
-            { user ? (<h1 className="uppercase text-3xl font-semibold mb-2">{msg}</h1>) 
-            : (
-            <>
-            <p className="text-lg font-bold mb-2">Launch Date</p> 
-              <p className="text-4xl font-black">August 3, 2025</p>
+            {user ? (
+              <h1 className="uppercase text-3xl font-semibold mb-2">{username}</h1>
+            ) : (
+              <>
+                <p className="text-lg font-bold mb-2">Launch Date</p>
+                <p className="text-4xl font-black">August 3, 2025</p>
               </>
-          )}
-            
+            )}
           </div>
 
           <p className="mt-8 text-gray-800 text-xl font-semibold">Learn smart. Build loud. Get hired.</p>
         </div>
       </section>
 
+      {/* Feature section */}
       <section className="px-4 py-24 text-center bg-gradient-to-b from-amber-400 via-yellow-400 to-amber-400">
         <h2 className="text-4xl font-black mb-12 text-gray-900">What Happens Next?</h2>
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <FeatureCard 
-            icon="📧" 
-            title="Exclusive Updates" 
-            desc="Get the latest news, features, and early access invites straight to your inbox."
-            gradient="from-blue-500 to-blue-600"
-          />
-          <FeatureCard 
-            icon="🚀" 
-            title="Early Access" 
-            desc="Be among the first to experience BePro's AI-powered career tools."
-            gradient="from-purple-500 to-purple-600"
-          />
-          <FeatureCard 
-            icon="🎁" 
-            title="Founding Member Perks" 
-            desc="Special badges, bonus XP, and exclusive community access."
-            gradient="from-emerald-500 to-emerald-600"
-          />
+          <FeatureCard icon="📧" title="Exclusive Updates" desc="Get the latest news, features, and early access invites straight to your inbox." gradient="from-blue-500 to-blue-600" />
+          <FeatureCard icon="🚀" title="Early Access" desc="Be among the first to experience BePro's AI-powered career tools." gradient="from-purple-500 to-purple-600" />
+          <FeatureCard icon="🎁" title="Founding Member Perks" desc="Special badges, bonus XP, and exclusive community access." gradient="from-emerald-500 to-emerald-600" />
         </div>
       </section>
 
+      {/* Community section */}
       <section className="px-4 py-24 text-center bg-gradient-to-b from-yellow-400 via-amber-400 to-yellow-400">
         <h2 className="text-4xl font-black mb-10 text-gray-900">Join the Movement</h2>
         <p className="max-w-4xl mx-auto mb-12 text-xl text-gray-800 leading-relaxed">
@@ -180,26 +183,27 @@ export default function Home() {
         </div>
       </section>
 
-      { user ? (
-        <section className="px-4 py-24 text-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300">
+      {/* Stay Connected */}
+      <section className="px-4 py-24 text-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300">
         <h2 className="text-4xl font-black mb-6">Stay Connected</h2>
         <p className="mb-10 text-xl text-amber-200">Join our community and get the latest updates.</p>
         <div className="flex gap-6 justify-center flex-wrap">
-          <StayConnected user_email={mail} supabase={supabase} />
+          {user ? (
+            <StayConnected user_email={email} supabase={supabase} />
+          ) : (
+            <Link href="/auth">
+              <button
+                onClick={handleClick}
+                className="bg-transparent border-2 border-amber-400 text-amber-400 px-8 py-4 font-black rounded-xl hover:bg-amber-400 hover:text-gray-900 hover:scale-105 transition-all duration-300 cursor-pointer"
+              >
+                Login to Subscribe
+              </button>
+            </Link>
+          )}
         </div>
-      </section> ) : (<section className="px-4 py-24 text-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300">
-        <h2 className="text-4xl font-black mb-6">Stay Connected</h2>
-        <p className="mb-10 text-xl text-amber-200">Join our community and get the latest updates.</p>
-        <div className="flex gap-6 justify-center flex-wrap">
-          <Link href="/auth">
-          <button className="bg-transparent border-2 border-amber-400 text-amber-400 px-8 py-4 font-black rounded-xl hover:bg-amber-400 hover:text-gray-900 hover:scale-105 transition-all duration-300 cursor-pointer"
-          onClick={() => handleClick()}>
-            Login to Subscribe
-          </button>
-          </Link>
-        </div>
-      </section>)}
+      </section>
 
+      {/* Footer */}
       <footer className="bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-400 text-gray-900 px-4 py-16">
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           <div>
@@ -209,14 +213,9 @@ export default function Home() {
           <div>
             <h4 className="font-bold text-lg mb-4">Quick Links</h4>
             <ul className="space-y-2 text-gray-800">
-              <li className="hover:text-gray-900 cursor-pointer transition-colors">
-                <Link href="faq/about">About</Link></li>
-                <li className="hover:text-gray-900 cursor-pointer transition-colors">
-                  <Link href="faq/privacy-policy">Privacy Policy</Link>
-                </li>
-                <li className="hover:text-gray-900 cursor-pointer transition-colors">
-                  <Link href="faq/tos">Terms of Service</Link>
-                </li>
+              <li><Link href="faq/about">About</Link></li>
+              <li><Link href="faq/privacy-policy">Privacy Policy</Link></li>
+              <li><Link href="faq/tos">Terms of Service</Link></li>
             </ul>
           </div>
           <div>
