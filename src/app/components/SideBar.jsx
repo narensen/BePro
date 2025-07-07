@@ -6,10 +6,11 @@ import { motion } from 'framer-motion';
 import {
   Home,
   Search,
-  MessageCircleX,
+  Bookmark,
   MessageSquare,
   PlusCircle,
   Settings,
+  BookAIcon,
   User,
   LogOut,
 } from 'lucide-react';
@@ -20,7 +21,8 @@ import { supabase } from '../lib/supabase_client';
 const navItems = [
   { name: 'Dashboard', icon: Home, href: '/home' },
   { name: 'Explore', icon: Search, href: '/home/explore' },
-  { name: 'Ada', icon: MessageCircleX, href: '/home/ada' },
+  { name: 'Ada', icon: BookAIcon, href: '/home/ada' },
+  { name: 'Bookmarks', icon: Bookmark, href: '/home/bookmark' },
   { name: 'Communities', icon: MessageSquare, href: '/home/communities' },
   { name: 'Post', icon: PlusCircle, href: '/home/post' },
 ];
