@@ -22,7 +22,6 @@ const navItems = [
   { name: 'Dashboard', icon: Home, href: '/home' },
   { name: 'Explore', icon: Search, href: '/home/explore' },
   { name: 'Ada', icon: BookAIcon, href: '/home/ada' },
-  { name: 'Bookmarks', icon: Bookmark, href: '/home/bookmark' },
   { name: 'Communities', icon: MessageSquare, href: '/home/communities' },
   { name: 'Post', icon: PlusCircle, href: '/home/post' },
 ];
@@ -62,24 +61,38 @@ export default function SideBar({ onSignOut }) {
 
   // Step 2: Once session is present, fetch username
   useEffect(() => {
-    const fetchUsername = async () => {
-      if (!user?.email || username) return;
+  const loadUserData = async () => {
+    setLoading(true)
 
-      const { data, error } = await supabase
-        .from('profile')
-        .select('username')
-        .eq('email', user.email)
-        .single();
+    const { data, error } = await supabase.auth.getSession()
+    if (error || !data?.session?.user) {
+      clearUserSession()
+      setLoading(false)
+      return
+    }
 
-      if (error) {
-        console.error('Error fetching username from profile:', error.message);
-      } else if (data?.username) {
-        setUsername(data.username);
-      }
-    };
+    const sessionUser = data.session.user
+    setUserSession(sessionUser)
 
-    fetchUsername();
-  }, [user, username, setUsername]);
+    const { data: profile, error: profileError } = await supabase
+      .from('profile')
+      .select('username')
+      .eq('email', sessionUser.email)
+      .single()
+
+    if (profileError) {
+      console.error('Error fetching profile:', profileError.message)
+      setUsername('User')
+    } else {
+      setUsername(profile.username || 'User')
+    }
+
+    setLoading(false)
+  }
+
+  loadUserData()
+}, [setUserSession, setUsername, clearUserSession])
+
 
   return (
     <div className="h-screen w-72 font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex flex-col relative">

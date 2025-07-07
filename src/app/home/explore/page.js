@@ -82,7 +82,7 @@ const PostCard = ({ post, userInteractions, onInteraction, onComment, onViewPost
           profile:user_id(username, email)
         `)
         .eq('post_id', post.id)
-        .is('parent_comment_id', null) // Only top-level comments for simplicity
+        .is('parent_comment_id', null)
         .order('created_at', { ascending: true });
 
       if (!error && data) {
@@ -109,7 +109,7 @@ const PostCard = ({ post, userInteractions, onInteraction, onComment, onViewPost
       const success = await onComment(post.id, commentText);
       if (success !== false) {
         setCommentText('');
-        // Add the new comment to local state for immediate feedback
+        
         const newComment = {
           id: Date.now(), // Temporary ID
           content: commentText,
@@ -407,7 +407,7 @@ export default function Explore() {
       }
 
       if (success !== false) {
-        // Update posts
+        
         setPosts(prevPosts => 
           prevPosts.map(post => {
             if (post.id === postId) {
@@ -631,5 +631,5 @@ export default function Explore() {
         }
       `}</style>
     </div>
-  );
+  );  
 }
