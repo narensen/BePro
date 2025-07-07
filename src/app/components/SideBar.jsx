@@ -60,7 +60,6 @@ export default function SideBar({ onSignOut }) {
     checkSession();
   }, [user, setUserSession]);
 
-  // Step 2: Once session is present, fetch username
   useEffect(() => {
     const fetchUsername = async () => {
       if (!user?.email || username) return;

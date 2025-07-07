@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase_client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import {CommunityPanel, FeatureCard, GetStartedButton, StayConnected} from './components'
-
+import useUserStore from './store/useUserStore'
+import { CommunityPanel, FeatureCard, GetStartedButton, StayConnected } from './components'
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
@@ -15,9 +15,16 @@ export default function Home() {
   const [transitioning, setTransitioning] = useState(false)
   const router = useRouter()
 
+  const {
+    setUserSession,
+    setUsername,
+    clearUserSession
+  } = useUserStore()
+
   useEffect(() => {
     const checkUser = async () => {
       const { data, error } = await supabase.auth.getSession()
+
       if (error) {
         console.error('Error fetching session:', error)
         setUser(null)
@@ -25,29 +32,38 @@ export default function Home() {
         setLoading(false)
         return
       }
+
       const session = data?.session
+
       if (!session) {
         setUser(null)
         setMsg('')
+        clearUserSession()
       } else {
-        setUser(session.user)
-        setMail(session.user_email)
-        setMsg(session.user.user_metadata?.username || 'User')
+        const userObj = session.user
+        const usernameFromMeta = userObj.user_metadata?.username || userObj.email
+
+        setUser(userObj)
+        setMail(userObj.email)
+        setMsg(usernameFromMeta)
+
+        // ✅ Save to Zustand
+        setUserSession(userObj)
+        setUsername(usernameFromMeta)
       }
+
       setLoading(false)
     }
 
     checkUser()
-  }, [])
+  }, [setUserSession, setUsername, clearUserSession])
 
   const handleClick = () => {
-    setLoading(true);
-
-    
+    setLoading(true)
     setTimeout(() => {
-      setLoading(false);
-    }, 6000); // 
-  };
+      setLoading(false)
+    }, 6000)
+  }
 
   const handleSignOut = async () => {
     setLoading(true)
@@ -55,6 +71,7 @@ export default function Home() {
     if (error) console.error('Sign out error:', error)
     setUser(null)
     setMsg('')
+    clearUserSession()
     setLoading(false)
   }
 
@@ -96,13 +113,11 @@ export default function Home() {
   return (
     <main className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 font-sans">
       <section className="min-h-screen flex flex-col justify-center items-center text-center px-4 relative overflow-hidden">
-        
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gray-900 rounded-full blur-3xl"></div>
           <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-amber-600 rounded-full blur-3xl"></div>
         </div>
-        
-        
+
         {user ? (
           <div className="absolute top-6 right-6 flex gap-3 z-20">
             <button className="bg-gray-900 text-amber-300 px-5 py-3 rounded-xl font-bold shadow-lg hover:bg-gray-800 hover:scale-105 transition-all duration-300">
@@ -117,27 +132,29 @@ export default function Home() {
           </div>
         ) : (
           <div className="absolute top-6 right-6 flex gap-3 z-20">
-              <GetStartedButton onClick={handleSignUp}></GetStartedButton>              
-              </div>
+            <GetStartedButton onClick={handleSignUp} />
+          </div>
         )}
-        
+
         <div className="relative z-10">
           <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
             Welcome to <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">BePro!</span>
           </h1>
           <h2 className="text-xl md:text-2xl max-w-3xl mb-10 text-gray-800 font-medium leading-relaxed">
-            {user ? ("You're officially on the waitlist. Transform your career journey with\nAI-powered precision.") : ("Join the waitlist. Transform your career journey with\nAI-powered precision")}
+            {user
+              ? "You're officially on the waitlist. Transform your career journey with AI-powered precision."
+              : "Join the waitlist. Transform your career journey with AI-powered precision."}
           </h2>
 
           <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 px-10 py-6 rounded-2xl mb-8 shadow-2xl border border-gray-700">
-            { user ? (<h1 className="uppercase text-3xl font-semibold mb-2">{msg}</h1>) 
-            : (
-            <>
-            <p className="text-lg font-bold mb-2">Launch Date</p> 
-              <p className="text-4xl font-black">August 3, 2025</p>
+            {user ? (
+              <h1 className="uppercase text-3xl font-semibold mb-2">{msg}</h1>
+            ) : (
+              <>
+                <p className="text-lg font-bold mb-2">Launch Date</p>
+                <p className="text-4xl font-black">August 3, 2025</p>
               </>
-          )}
-            
+            )}
           </div>
 
           <p className="mt-8 text-gray-800 text-xl font-semibold">Learn smart. Build loud. Get hired.</p>
@@ -147,21 +164,21 @@ export default function Home() {
       <section className="px-4 py-24 text-center bg-gradient-to-b from-amber-400 via-yellow-400 to-amber-400">
         <h2 className="text-4xl font-black mb-12 text-gray-900">What Happens Next?</h2>
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <FeatureCard 
-            icon="📧" 
-            title="Exclusive Updates" 
+          <FeatureCard
+            icon="📧"
+            title="Exclusive Updates"
             desc="Get the latest news, features, and early access invites straight to your inbox."
             gradient="from-blue-500 to-blue-600"
           />
-          <FeatureCard 
-            icon="🚀" 
-            title="Early Access" 
+          <FeatureCard
+            icon="🚀"
+            title="Early Access"
             desc="Be among the first to experience BePro's AI-powered career tools."
             gradient="from-purple-500 to-purple-600"
           />
-          <FeatureCard 
-            icon="🎁" 
-            title="Founding Member Perks" 
+          <FeatureCard
+            icon="🎁"
+            title="Founding Member Perks"
             desc="Special badges, bonus XP, and exclusive community access."
             gradient="from-emerald-500 to-emerald-600"
           />
@@ -180,25 +197,30 @@ export default function Home() {
         </div>
       </section>
 
-      { user ? (
+      {user ? (
         <section className="px-4 py-24 text-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300">
-        <h2 className="text-4xl font-black mb-6">Stay Connected</h2>
-        <p className="mb-10 text-xl text-amber-200">Join our community and get the latest updates.</p>
-        <div className="flex gap-6 justify-center flex-wrap">
-          <StayConnected user_email={mail} supabase={supabase} />
-        </div>
-      </section> ) : (<section className="px-4 py-24 text-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300">
-        <h2 className="text-4xl font-black mb-6">Stay Connected</h2>
-        <p className="mb-10 text-xl text-amber-200">Join our community and get the latest updates.</p>
-        <div className="flex gap-6 justify-center flex-wrap">
-          <Link href="/auth">
-          <button className="bg-transparent border-2 border-amber-400 text-amber-400 px-8 py-4 font-black rounded-xl hover:bg-amber-400 hover:text-gray-900 hover:scale-105 transition-all duration-300 cursor-pointer"
-          onClick={() => handleClick()}>
-            Login to Subscribe
-          </button>
-          </Link>
-        </div>
-      </section>)}
+          <h2 className="text-4xl font-black mb-6">Stay Connected</h2>
+          <p className="mb-10 text-xl text-amber-200">Join our community and get the latest updates.</p>
+          <div className="flex gap-6 justify-center flex-wrap">
+            <StayConnected user_email={mail} supabase={supabase} />
+          </div>
+        </section>
+      ) : (
+        <section className="px-4 py-24 text-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300">
+          <h2 className="text-4xl font-black mb-6">Stay Connected</h2>
+          <p className="mb-10 text-xl text-amber-200">Join our community and get the latest updates.</p>
+          <div className="flex gap-6 justify-center flex-wrap">
+            <Link href="/auth">
+              <button
+                className="bg-transparent border-2 border-amber-400 text-amber-400 px-8 py-4 font-black rounded-xl hover:bg-amber-400 hover:text-gray-900 hover:scale-105 transition-all duration-300 cursor-pointer"
+                onClick={handleClick}
+              >
+                Login to Subscribe
+              </button>
+            </Link>
+          </div>
+        </section>
+      )}
 
       <footer className="bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-400 text-gray-900 px-4 py-16">
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -210,13 +232,14 @@ export default function Home() {
             <h4 className="font-bold text-lg mb-4">Quick Links</h4>
             <ul className="space-y-2 text-gray-800">
               <li className="hover:text-gray-900 cursor-pointer transition-colors">
-                <Link href="faq/about">About</Link></li>
-                <li className="hover:text-gray-900 cursor-pointer transition-colors">
-                  <Link href="faq/privacy-policy">Privacy Policy</Link>
-                </li>
-                <li className="hover:text-gray-900 cursor-pointer transition-colors">
-                  <Link href="faq/tos">Terms of Service</Link>
-                </li>
+                <Link href="faq/about">About</Link>
+              </li>
+              <li className="hover:text-gray-900 cursor-pointer transition-colors">
+                <Link href="faq/privacy-policy">Privacy Policy</Link>
+              </li>
+              <li className="hover:text-gray-900 cursor-pointer transition-colors">
+                <Link href="faq/tos">Terms of Service</Link>
+              </li>
             </ul>
           </div>
           <div>
