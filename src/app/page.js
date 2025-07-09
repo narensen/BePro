@@ -155,14 +155,25 @@ export default function Home() {
         )}
 
         <div className="relative z-10">
+          <div className="flex items-center justify-center mb-8">
+            <img 
+              src="/BP.png" 
+              alt="BePro Logo" 
+              className="w-24 h-24 md:w-32 md:h-32 rounded-2xl shadow-2xl border-4 border-white/20"
+            />
+          </div>
+          
           <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
             Welcome to <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">BePro!</span>
           </h1>
-          <h2 className="text-xl md:text-2xl max-w-3xl mb-10 text-gray-800 font-medium leading-relaxed">
-            {user
-              ? "You're officially on the waitlist. Transform your career journey with AI-powered precision."
-              : "Join the waitlist. Transform your career journey with AI-powered precision."}
-          </h2>
+          
+          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-white/30">
+            <h2 className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-800 font-medium leading-relaxed">
+              {user
+                ? "You're officially on the waitlist. Transform your career journey with AI-powered precision."
+                : "Join the waitlist. Transform your career journey with AI-powered precision."}
+            </h2>
+          </div>
 
           <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 px-10 py-6 rounded-2xl mb-8 shadow-2xl border border-gray-700">
             {user ? (
@@ -175,7 +186,40 @@ export default function Home() {
             )}
           </div>
 
-          <p className="mt-8 text-gray-800 text-xl font-semibold">Learn smart. Build loud. Get hired.</p>
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 mb-8 shadow-xl border border-white/50">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full flex items-center justify-center">
+                <span className="text-2xl">🚀</span>
+              </div>
+              <h3 className="text-2xl font-black text-gray-900">Learn smart. Build loud. Get hired.</h3>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6 text-center">
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-3">
+                  <span className="text-2xl">🧠</span>
+                </div>
+                <h4 className="font-bold text-gray-900 mb-2">AI-Powered Learning</h4>
+                <p className="text-gray-600 text-sm">Personalized career guidance</p>
+              </div>
+              
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-3">
+                  <span className="text-2xl">🏗️</span>
+                </div>
+                <h4 className="font-bold text-gray-900 mb-2">Build Your Portfolio</h4>
+                <p className="text-gray-600 text-sm">Showcase your skills</p>
+              </div>
+              
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-3">
+                  <span className="text-2xl">💼</span>
+                </div>
+                <h4 className="font-bold text-gray-900 mb-2">Land Your Dream Job</h4>
+                <p className="text-gray-600 text-sm">Connect with opportunities</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -203,15 +247,27 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-4 py-24 text-center bg-gradient-to-b from-yellow-400 via-amber-400 to-yellow-400">
-        <h2 className="text-4xl font-black mb-10 text-gray-900">Join the Movement</h2>
-        <p className="max-w-4xl mx-auto mb-12 text-xl text-gray-800 leading-relaxed">
-          Connect with fellow BePro members, share your progress, and level up together in our thriving community.
-        </p>
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <CommunityPanel title="Discord Community" desc="Chat with other waitlist members and get updates." icon="💬" />
-          <CommunityPanel title="Progress Sharing" desc="Document your learning journey before launch." icon="📈" />
-          <CommunityPanel title="Beta Testing" desc="Help shape BePro with your feedback." icon="🧪" />
+      <section className="px-4 py-24 text-center bg-gradient-to-b from-yellow-400 via-amber-400 to-yellow-400 relative overflow-hidden">
+        <div className="absolute inset-0 bg-white/10"></div>
+        <div className="relative z-10">
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center">
+              <span className="text-3xl">🌟</span>
+            </div>
+            <h2 className="text-4xl font-black text-gray-900">Join the Movement</h2>
+          </div>
+          
+          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 max-w-4xl mx-auto mb-12 border border-white/30">
+            <p className="text-xl text-gray-800 leading-relaxed font-medium">
+              Connect with fellow BePro members, share your progress, and level up together in our thriving community.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <CommunityPanel title="Discord Community" desc="Chat with other waitlist members and get updates." icon="💬" />
+            <CommunityPanel title="Progress Sharing" desc="Document your learning journey before launch." icon="📈" />
+            <CommunityPanel title="Beta Testing" desc="Help shape BePro with your feedback." icon="🧪" />
+          </div>
         </div>
       </section>
 
