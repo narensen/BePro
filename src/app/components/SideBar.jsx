@@ -22,7 +22,7 @@ const navItems = [
   { name: 'Dashboard', icon: Home, href: '/home' },
   { name: 'Explore', icon: Search, href: '/home/explore' },
   { name: 'Ada', icon: BookAIcon, href: '/home/ada' },
-  { name: 'Bookmarks', icon: Bookmark, href: '/home/bookmark' },
+  { name: 'Bookmarks', icon: Bookmark, href: '/home/bookmarks' },
   { name: 'Communities', icon: MessageSquare, href: '/home/communities' },
   { name: 'Post', icon: PlusCircle, href: '/home/post' },
 ];

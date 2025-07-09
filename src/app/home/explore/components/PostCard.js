@@ -96,7 +96,7 @@ const PostCard = ({ post, userInteractions, onInteraction, onComment, onViewPost
         showComments={showComments}
         toggleComments={toggleComments}
         comments={comments}
-      />
+        userProfile={userProfile}/>
 
       <CommentSection
         showComments={showComments}

@@ -33,15 +33,14 @@ export default function BeProAI() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
-      {/* Sidebar always mounted */}
+
       <div className="fixed left-0 top-0 h-full z-30 w-72">
         <SideBar user={user} username={username} onSignOut={handleSignOut} />
       </div>
 
-      {/* Page content with margin-left to account for sidebar */}
       <div className="ml-72">
         {loading ? (
-          // Just show loading spinner in main content, not whole page
+          
           <div className="flex items-center justify-center min-h-screen">
             <div className="text-center">
               <div className="text-4xl font-black mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent animate-pulse">
@@ -52,9 +51,9 @@ export default function BeProAI() {
           </div>
         ) : (
           <div className="">
-            <button className="relative text-2xl text-white bg-black/80 hover:bg-black font-semibold font-mono rounded-4xl px-4 py-2 top-4 left-4 cursor-pointer">
+            <h1 className="relative text-3xl text-black font-sans text-center font-bold px-4 py-2 top-8">
               BePro AI
-            </button>
+            </h1>
           </div>
         )}
       </div>

@@ -22,7 +22,7 @@ export const handleViewPost = async (postId, userId) => {
     const { data: post, error: fetchError } = await supabase
       .from('posts')
       .select('view_count')
-      .eq('id', postId)
+      .eq('id', postId) // postId as UUID string
       .single();
 
     if (fetchError) {
@@ -36,7 +36,7 @@ export const handleViewPost = async (postId, userId) => {
     const { error: updateError } = await supabase
       .from('posts')
       .update({ view_count: newViewCount })
-      .eq('id', postId);
+      .eq('id', postId); // postId as UUID string
 
     if (updateError) {
       console.error('Error updating view count:', updateError);
