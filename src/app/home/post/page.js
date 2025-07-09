@@ -147,7 +147,7 @@ export default function CreatePost() {
 
   return (
     <div className="flex">
-      <div className="w-72 fixed top-0 left-0 h-full z-30">
+      <div className="w-72 bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono fixed top-0 left-0 h-full z-30">
         <SideBar onSignOut={() => supabase.auth.signOut()} />
       </div>
 
