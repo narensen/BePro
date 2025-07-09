@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../lib/supabase_client';
 import SideBar from '../../components/SideBar';
@@ -19,17 +19,57 @@ import {
 
 export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [allComments, setAllComments] = useState([]);
   const router = useRouter();
   const { user } = useUserStore();
   const { loading, posts, setPosts, userInteractions, setUserInteractions, userProfile } = usePostData(user);
 
-  // Filter posts based on search
-  const filteredPosts = posts.filter(post => 
-    !searchQuery || 
-    post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    post.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    post.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  // Fetch all comments when posts are loaded to enable search through comments
+  useEffect(() => {
+    const fetchAllComments = async () => {
+      if (posts.length === 0) return;
+      
+      try {
+        const postIds = posts.map(post => post.id);
+        const { data: commentsData, error } = await supabase
+          .from('comments')
+          .select('post_id, content, profile:user_id(username)')
+          .in('post_id', postIds);
+
+        if (!error && commentsData) {
+          setAllComments(commentsData);
+        }
+      } catch (error) {
+        console.error('Error fetching comments for search:', error);
+      }
+    };
+
+    fetchAllComments();
+  }, [posts]);
+
+  // Enhanced filter that includes both posts and comments/replies
+  const filteredPosts = posts.filter(post => {
+    if (!searchQuery) return true;
+    
+    const query = searchQuery.toLowerCase();
+    
+    // Search in post content, username, and tags
+    const postMatches = 
+      post.content.toLowerCase().includes(query) ||
+      post.username?.toLowerCase().includes(query) ||
+      post.tags?.some(tag => tag.toLowerCase().includes(query));
+    
+    if (postMatches) return true;
+    
+    // Search in comments/replies for this post
+    const postComments = allComments.filter(comment => comment.post_id === post.id);
+    const commentMatches = postComments.some(comment => 
+      comment.content.toLowerCase().includes(query) ||
+      comment.profile?.username?.toLowerCase().includes(query)
+    );
+    
+    return commentMatches;
+  });
 
   const handleInteraction = useCallback(async (type, postId, currentState) => {
     const userId = userProfile?.id;

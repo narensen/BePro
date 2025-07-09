@@ -45,8 +45,8 @@ export default function SideBar({ onSignOut }) {
   } = useUserStore();
 
   const [loading, setLoading] = useState(!user);
+  const [profilePicture, setProfilePicture] = useState(null);
 
-  // Step 1: Fetch session if not already in store
   useEffect(() => {
     const checkSession = async () => {
       if (!user) {
@@ -66,7 +66,7 @@ export default function SideBar({ onSignOut }) {
 
       const { data, error } = await supabase
         .from('profile')
-        .select('username')
+        .select('username, avatar_url')
         .eq('email', user.email)
         .single();
 
@@ -74,6 +74,7 @@ export default function SideBar({ onSignOut }) {
         console.error('Error fetching username from profile:', error.message);
       } else if (data?.username) {
         setUsername(data.username);
+        setProfilePicture(data.avatar_url);
       }
     };
 
@@ -111,8 +112,16 @@ export default function SideBar({ onSignOut }) {
           {/* User Info */}
           <div className="p-4 border-b border-gray-200/30">
             <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-400/20 to-yellow-400/20 rounded-xl">
-              <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-sm">{username?.charAt(0).toUpperCase() || 'U'}</span>
+              <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden">
+                {profilePicture ? (
+                  <img 
+                    src={profilePicture} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-white font-bold text-sm">{username?.charAt(0).toUpperCase() || 'U'}</span>
+                )}
               </div>
               <div className="flex-1">
                 <p className="font-bold text-gray-900 text-sm">{username || 'User'}</p>
