@@ -23,7 +23,22 @@ export default function BeProAI() {
       }
       const session = data.session
       setUser(session.user)
-      setUsername(session.user.user_metadata?.username || 'User')
+      
+      // Fetch username from profile table
+      try {
+        const { data: profileData, error: profileError } = await supabase
+          .from('profile')
+          .select('username')
+          .eq('email', session.user.email)
+          .single()
+
+        const displayUsername = profileData?.username || session.user.user_metadata?.username || 'User'
+        setUsername(displayUsername)
+      } catch (error) {
+        console.error('Error fetching profile username:', error)
+        setUsername(session.user.user_metadata?.username || 'User')
+      }
+      
       setLoading(false)
       
       // Load bookmarks after user is set

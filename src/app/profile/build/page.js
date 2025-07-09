@@ -42,7 +42,7 @@ const ProfileBuilder = () => {
     };
 
     checkUser();
-  }, []);
+  }, [router]);
 
   const filteredTags = availableTags.filter(tag =>
     tag.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
