@@ -1,3 +1,4 @@
+// Temporarily commented out due to network connectivity issues
 // import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
