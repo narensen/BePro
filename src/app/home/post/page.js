@@ -160,7 +160,6 @@ export default function CreatePost() {
           }
         }
         
-        // Handle specific error types
         if (postError.code === '23502') {
           setError('Missing required field. Please check your profile setup.')
         } else if (postError.code === '23503') {

@@ -47,7 +47,6 @@ export default function SideBar({ onSignOut }) {
   const [loading, setLoading] = useState(!user);
   const [profilePicture, setProfilePicture] = useState(null);
 
-  // Step 1: Fetch session if not already in store
   useEffect(() => {
     const checkSession = async () => {
       if (!user) {
