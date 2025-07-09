@@ -41,15 +41,33 @@ export default function Home() {
         clearUserSession()
       } else {
         const userObj = session.user
-        const usernameFromMeta = userObj.user_metadata?.username || userObj.email
 
         setUser(userObj)
         setMail(userObj.email)
-        setMsg(usernameFromMeta)
 
-        // ✅ Save to Zustand
-        setUserSession(userObj)
-        setUsername(usernameFromMeta)
+        // Fetch username from profile table
+        try {
+          const { data: profileData, error: profileError } = await supabase
+            .from('profile')
+            .select('username')
+            .eq('email', userObj.email)
+            .single()
+
+          const displayUsername = profileData?.username || userObj.user_metadata?.username || 'User'
+          
+          setMsg(displayUsername)
+          
+          // ✅ Save to Zustand
+          setUserSession(userObj)
+          setUsername(displayUsername)
+        } catch (error) {
+          console.error('Error fetching profile username:', error)
+          // Fallback to user metadata or default
+          const fallbackUsername = userObj.user_metadata?.username || 'User'
+          setMsg(fallbackUsername)
+          setUserSession(userObj)
+          setUsername(fallbackUsername)
+        }
       }
 
       setLoading(false)
