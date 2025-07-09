@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '../lib/supabase_client'
 import SideBar from '../components/SideBar'
+import ImageUpload from '../components/ImageUpload'
+import { uploadProfileImage, deleteProfileImage } from '../utils/imageUtils'
 import { 
   MapPin, 
   Link as LinkIcon, 
@@ -16,26 +18,34 @@ import {
   Star,
   Trophy,
   Target,
-  Briefcase
+  Briefcase,
+  Save,
+  X
 } from 'lucide-react'
 
 export default function Profile() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
+  const [isEditing, setIsEditing] = useState(false)
+  const [isSaving, setSaving] = useState(false)
+  const [isUploadingImage, setUploadingImage] = useState(false)
   const [profileData, setProfileData] = useState({
+    id: null,
     username: '',
     email: '',
     bio: '',
     website: '',
     location: '',
     avatar_url: '',
+    avatar_path: '',
     tags: [],
     created_at: '',
     posts_count: 0,
     followers_count: 0,
     following_count: 0
   })
+  const [editData, setEditData] = useState({})
   const router = useRouter()
 
   useEffect(() => {
@@ -63,20 +73,29 @@ export default function Profile() {
         .single()
 
       if (data) {
-        setProfileData({
+        const profile = {
+          id: data.id,
           username: data.username || 'User',
           email: data.email || email,
           bio: data.bio || '',
           website: data.website || '',
           location: data.location || '',
           avatar_url: data.avatar_url || '',
+          avatar_path: data.avatar_path || '',
           tags: data.tags || [],
           created_at: data.created_at || '',
           posts_count: 0,
           followers_count: 0,
           following_count: 0
+        }
+
+        setProfileData(profile)
+        setEditData({
+          bio: profile.bio,
+          website: profile.website,
+          location: profile.location
         })
-        setUsername(data.username || 'User')
+        setUsername(profile.username)
 
         const postsResponse = await supabase
           .from('posts')
@@ -98,17 +117,79 @@ export default function Profile() {
     router.push('/')
   }
 
-  const handleEditProfile = () => {
-    router.push('/settings')
+  const handleImageUpload = async (file) => {
+    if (!file || !user || !profileData.id) return
+
+    setUploadingImage(true)
+    try {
+      if (profileData.avatar_path) {
+        await deleteProfileImage(profileData.avatar_path)
+      }
+
+      const { url, path } = await uploadProfileImage(file, user.id)
+
+      const { error } = await supabase
+        .from('profile')
+        .update({ 
+          avatar_url: url,
+          avatar_path: path
+        })
+        .eq('id', profileData.id)
+
+      if (error) throw error
+
+      setProfileData(prev => ({
+        ...prev,
+        avatar_url: url,
+        avatar_path: path
+      }))
+    } catch (error) {
+      console.error('Error uploading profile image:', error)
+      alert('Failed to upload image. Please try again.')
+    } finally {
+      setUploadingImage(false)
+    }
+  }
+
+  const handleSaveProfile = async () => {
+    if (!profileData.id) return
+
+    setSaving(true)
+    try {
+      const { error } = await supabase
+        .from('profile')
+        .update({
+          bio: editData.bio || '',
+          website: editData.website || '',
+          location: editData.location || ''
+        })
+        .eq('id', profileData.id)
+
+      if (error) throw error
+
+      setProfileData(prev => ({
+        ...prev,
+        bio: editData.bio || '',
+        website: editData.website || '',
+        location: editData.location || ''
+      }))
+
+      setIsEditing(false)
+    } catch (error) {
+      console.error('Error saving profile:', error)
+      alert('Failed to save profile. Please try again.')
+    } finally {
+      setSaving(false)
+    }
   }
 
   const achievements = [
-    { name: 'First Post', icon: Trophy, color: 'text-yellow-500', earned: true },
+    { name: 'First Post', icon: Trophy, color: 'text-yellow-500', earned: profileData.posts_count > 0 },
     { name: 'Community Builder', icon: Users, color: 'text-blue-500', earned: true },
     { name: 'Helpful', icon: Heart, color: 'text-red-500', earned: false },
     { name: 'Expert', icon: Star, color: 'text-purple-500', earned: false },
-    { name: 'Goal Setter', icon: Target, color: 'text-green-500', earned: true },
-    { name: 'Professional', icon: Briefcase, color: 'text-gray-500', earned: false }
+    { name: 'Goal Setter', icon: Target, color: 'text-green-500', earned: profileData.bio.length > 0 },
+    { name: 'Professional', icon: Briefcase, color: 'text-gray-500', earned: profileData.website.length > 0 }
   ]
 
   const stats = [
@@ -149,23 +230,37 @@ export default function Profile() {
                 <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 p-8">
                   <div className="flex flex-col md:flex-row gap-6">
                     <div className="flex flex-col items-center md:items-start">
-                      <div className="relative">
-                        <div className="w-32 h-32 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-lg">
-                          {profileData.avatar_url ? (
-                            <img 
-                              src={profileData.avatar_url} 
-                              alt="Profile" 
-                              className="w-full h-full rounded-full object-cover"
-                              loading="lazy"
-                            />
-                          ) : (
-                            profileData.username.charAt(0).toUpperCase()
-                          )}
+                      {profileData.avatar_url ? (
+                        <ImageUpload
+                          currentImage={profileData.avatar_url}
+                          onImageSelect={handleImageUpload}
+                          isLoading={isUploadingImage}
+                          type="profile"
+                        />
+                      ) : (
+                        <div className="relative">
+                          <div className="w-32 h-32 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                            {profileData.username.charAt(0).toUpperCase()}
+                          </div>
+                          <button 
+                            onClick={() => document.getElementById('profile-image-input').click()}
+                            disabled={isUploadingImage}
+                            className="absolute bottom-0 right-0 bg-gray-900 text-amber-300 p-2 rounded-full hover:scale-110 transition-all duration-300 shadow-lg disabled:opacity-50"
+                          >
+                            <Camera size={16} />
+                          </button>
+                          <input
+                            id="profile-image-input"
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0]
+                              if (file) handleImageUpload(file)
+                            }}
+                            className="hidden"
+                          />
                         </div>
-                        <button className="absolute bottom-0 right-0 bg-gray-900 text-amber-300 p-2 rounded-full hover:scale-110 transition-all duration-300 shadow-lg">
-                          <Camera size={16} />
-                        </button>
-                      </div>
+                      )}
                       
                       <div className="mt-4 text-center md:text-left">
                         <h2 className="text-2xl font-bold text-gray-900">{profileData.username}</h2>
@@ -201,19 +296,64 @@ export default function Profile() {
                     
                     <div className="flex-1">
                       <div className="flex justify-between items-start mb-4">
-                        <div>
+                        <div className="flex-1">
                           <h3 className="text-lg font-bold text-gray-900 mb-2">About</h3>
-                          <p className="text-gray-700 leading-relaxed">
-                            {profileData.bio || 'No bio added yet. Share something about yourself!'}
-                          </p>
+                          {isEditing ? (
+                            <div className="space-y-4">
+                              <textarea
+                                value={editData.bio}
+                                onChange={(e) => setEditData(prev => ({ ...prev, bio: e.target.value }))}
+                                placeholder="Tell us about yourself..."
+                                rows={4}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"
+                              />
+                              <input
+                                type="text"
+                                value={editData.location}
+                                onChange={(e) => setEditData(prev => ({ ...prev, location: e.target.value }))}
+                                placeholder="Location"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400"
+                              />
+                              <input
+                                type="url"
+                                value={editData.website}
+                                onChange={(e) => setEditData(prev => ({ ...prev, website: e.target.value }))}
+                                placeholder="Website"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400"
+                              />
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={handleSaveProfile}
+                                  disabled={isSaving}
+                                  className="flex items-center gap-2 bg-gradient-to-r from-gray-900 to-gray-800 text-amber-300 font-bold py-2 px-4 rounded-xl hover:scale-105 transition-all duration-300 shadow-md disabled:opacity-50"
+                                >
+                                  <Save size={16} />
+                                  {isSaving ? 'Saving...' : 'Save'}
+                                </button>
+                                <button
+                                  onClick={() => setIsEditing(false)}
+                                  className="flex items-center gap-2 bg-gray-500 text-white font-bold py-2 px-4 rounded-xl hover:bg-gray-600 transition-colors"
+                                >
+                                  <X size={16} />
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <p className="text-gray-700 leading-relaxed">
+                              {profileData.bio || 'No bio added yet. Share something about yourself!'}
+                            </p>
+                          )}
                         </div>
-                        <button 
-                          onClick={handleEditProfile}
-                          className="flex items-center gap-2 bg-gradient-to-r from-gray-900 to-gray-800 text-amber-300 font-bold py-2 px-4 rounded-xl hover:scale-105 transition-all duration-300 shadow-md"
-                        >
-                          <Edit3 size={16} />
-                          Edit
-                        </button>
+                        {!isEditing && (
+                          <button 
+                            onClick={() => setIsEditing(true)}
+                            className="flex items-center gap-2 bg-gradient-to-r from-gray-900 to-gray-800 text-amber-300 font-bold py-2 px-4 rounded-xl hover:scale-105 transition-all duration-300 shadow-md"
+                          >
+                            <Edit3 size={16} />
+                            Edit
+                          </button>
+                        )}
                       </div>
                       
                       {profileData.tags && profileData.tags.length > 0 && (
@@ -286,15 +426,17 @@ export default function Profile() {
                   <h3 className="text-xl font-bold text-gray-900 mb-6">Recent Activity</h3>
                   
                   <div className="space-y-4">
-                    <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
-                      <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
-                        <MessageSquare className="text-white" size={16} />
+                    {profileData.posts_count > 0 && (
+                      <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
+                        <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                          <MessageSquare className="text-white" size={16} />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">Created your first post</p>
+                          <p className="text-sm text-gray-600">Welcome to the BePro community!</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-gray-900">Created your first post</p>
-                        <p className="text-sm text-gray-600">Welcome to the BePro community!</p>
-                      </div>
-                    </div>
+                    )}
                     
                     <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
                       <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">

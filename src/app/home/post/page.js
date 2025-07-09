@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '../../lib/supabase_client'
 import SideBar from '../../components/SideBar'
-import { Loader2, Hash, Type, Send, Sparkles, X } from 'lucide-react'
+import ImageUpload from '../../components/ImageUpload'
+import { uploadPostImages, deletePostImages } from '../../utils/imageUtils'
+import { Loader2, Hash, Type, Send, Sparkles, X, Image as ImageIcon } from 'lucide-react'
 import useUserStore from '../../store/useUserStore'
 
 const availableTags = [
@@ -28,6 +30,8 @@ const availableTags = [
 export default function CreatePost() {
   const [content, setContent] = useState('')
   const [tags, setTags] = useState([])
+  const [images, setImages] = useState([])
+  const [isUploadingImages, setUploadingImages] = useState(false)
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [username, setUsername] = useState('User')
@@ -88,6 +92,34 @@ export default function CreatePost() {
     setTags(tags.filter((t) => t !== tagToRemove))
   }
 
+  const handleImageSelect = async (files) => {
+    if (!files || files.length === 0) {
+      setImages([])
+      return
+    }
+
+    setUploadingImages(true)
+    try {
+      const uploadedImages = await uploadPostImages(files, user.id)
+      setImages(uploadedImages)
+    } catch (error) {
+      console.error('Error uploading images:', error)
+      setError('Failed to upload images. Please try again.')
+    } finally {
+      setUploadingImages(false)
+    }
+  }
+
+  const removeImage = async (index) => {
+    const imageToRemove = images[index]
+    try {
+      await deletePostImages([imageToRemove.path])
+      setImages(images.filter((_, i) => i !== index))
+    } catch (error) {
+      console.error('Error removing image:', error)
+    }
+  }
+
   const submitPost = async () => {
     if (!content.trim() || tags.length === 0) {
       setError('Post content and at least one tag are required.')
@@ -102,7 +134,12 @@ export default function CreatePost() {
         content: content.trim(),
         tags,
         profile_id: profileId,
-        username: username
+        username: username,
+        images: images.length > 0 ? images.map(img => ({
+          url: img.url,
+          path: img.path,
+          name: img.name
+        })) : null
       }
 
       console.log('Attempting to insert post:', postData)
@@ -114,6 +151,14 @@ export default function CreatePost() {
 
       if (postError) {
         console.error('Insert error:', postError)
+        
+        if (images.length > 0) {
+          try {
+            await deletePostImages(images.map(img => img.path))
+          } catch (cleanupError) {
+            console.error('Error cleaning up images:', cleanupError)
+          }
+        }
         
         // Handle specific error types
         if (postError.code === '23502') {
@@ -131,9 +176,9 @@ export default function CreatePost() {
         }
       } else {
         console.log('Post created successfully:', data)
-        // Clear form
         setContent('')
         setTags([])
+        setImages([])
         setCharCount(0)
         router.push('/home/explore')
       }
@@ -248,6 +293,45 @@ export default function CreatePost() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Images section */}
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-4">
+                <ImageIcon className="w-5 h-5 text-gray-800" />
+                <span className="text-gray-900 font-bold text-lg">Images</span>
+                <span className="text-gray-600 text-sm font-semibold">({images.length}/5)</span>
+              </div>
+
+              <ImageUpload
+                onImageSelect={handleImageSelect}
+                isLoading={isUploadingImages}
+                multiple={true}
+                className="w-full"
+              />
+
+              {images.length > 0 && (
+                <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {images.map((image, index) => (
+                    <div key={index} className="relative group">
+                      <img 
+                        src={image.url} 
+                        alt={`Upload ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg shadow-md"
+                      />
+                      <button
+                        onClick={() => removeImage(index)}
+                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                      >
+                        <X size={14} />
+                      </button>
+                      <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                        {image.name}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Submit button */}
