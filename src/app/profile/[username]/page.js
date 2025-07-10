@@ -19,7 +19,7 @@ export default async function ProfilePage({ params }) {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">{user.name}'s Profile</h1>
+      <h1 className="text-2xl font-bold">{user.name}</h1>
       <p>Email: {user.email}</p>
       <p>About: {user.bio}</p>
     </div>
