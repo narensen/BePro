@@ -1,3 +1,5 @@
+import { Link } from "lucide-react";
+
 export default function AboutPage() {
   return (
     <main className="min-h-screen px-6 py-12 md:px-20 lg:px-40 bg-white text-black dark:bg-black dark:text-white transition-colors duration-300">
@@ -70,12 +72,12 @@ export default function AboutPage() {
   <strong>Start small. Build real. Get hired.</strong>
 </p>
 
-          <a
+          <Link
             href="/waitlist"
             className="inline-block mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-xl transition-all"
           >
             👉 Join the Waitlist
-          </a>
+          </Link>
         </div>
       </section>
     </main>
