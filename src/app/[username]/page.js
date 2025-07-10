@@ -25,7 +25,7 @@ export default async function ProfilePage({ params }) {
 
     return (
       <div className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 min-h-screen flex justify-center items-center font-mono">
-        <div className="bg-white rounded-xl shadow-lg w-[36rem] h-[27rem] flex flex-col justify-center items-center">
+        <div className="z-30 bg-white/90 backdrop-blur-sm shadow-3xl rounded-2xl shadow-lg w-[45rem] h-[27rem] flex flex-col justify-center items-center hover:scale-105 transition-all duration-300">
           <h1 className="mb-10 text-3xl font-bold">Error 404</h1>
           <h1 className="text-3xl font-bold text-gray-900 text-center mb-4 transition-all duration-500">
             {headline}.

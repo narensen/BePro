@@ -46,7 +46,6 @@ export default function SideBar({ onSignOut }) {
 
   const [loading, setLoading] = useState(!user);
 
-  // Step 1: Fetch session if not already in store
   useEffect(() => {
     const checkSession = async () => {
       if (!user) {
@@ -82,7 +81,7 @@ export default function SideBar({ onSignOut }) {
 
   return (
     <div className="h-screen w-72 font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex flex-col relative">
-      {/* Logo */}
+
       <div className="p-6 border-b border-gray-200/30">
         <Link href="/home">
           <h1 className="text-3xl font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent cursor-pointer">
@@ -92,7 +91,6 @@ export default function SideBar({ onSignOut }) {
         <p className="text-sm text-gray-600 font-medium mt-1">Learn smart. Build loud. Get hired.</p>
       </div>
 
-      {/* Auth Loading State */}
       {loading ? (
         <div className="flex-1 flex items-center justify-center">
           <div className="w-10 h-10 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin"></div>
@@ -108,7 +106,7 @@ export default function SideBar({ onSignOut }) {
         </div>
       ) : (
         <>
-          {/* User Info */}
+
           <div className="p-4 border-b border-gray-200/30">
             <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-400/20 to-yellow-400/20 rounded-xl">
               <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center">
@@ -121,7 +119,6 @@ export default function SideBar({ onSignOut }) {
             </div>
           </div>
 
-          {/* Navigation */}
           <div className="flex-1 relative p-4 overflow-y-auto">
             <nav className="space-y-1 relative">
               {navItems.map((item) => {

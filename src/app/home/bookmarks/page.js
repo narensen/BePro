@@ -34,29 +34,9 @@ export default function Bookmarks() {
 
   const loadBookmarks = async (userId) => {
     setLoadingBookmarks(true)
-    console.log('Loading bookmarks for user:', userId)
     
     try {
-      // First, test if bookmarks table exists with a simple query
-      console.log('Testing bookmarks table access...')
-      const { data: testData, error: testError } = await supabase
-        .from('bookmarks')
-        .select('id')
-        .limit(1)
 
-      console.log('Bookmarks table test result:', { testData, testError })
-
-      if (testError) {
-        console.error('Bookmarks table test failed:', testError)
-        
-        // If table doesn't exist, show empty state
-        setBookmarkedPosts([])
-        setLoadingBookmarks(false)
-        return
-      }
-
-      // Try simplified query first
-      console.log('Fetching user bookmarks...')
       const { data: bookmarksData, error: bookmarksError } = await supabase
         .from('bookmarks')
         .select('*')
@@ -80,11 +60,10 @@ export default function Bookmarks() {
         return
       }
 
-      // Get post IDs from bookmarks
       const postIds = bookmarksData.map(bookmark => bookmark.post_id)
       console.log('Fetching posts for IDs:', postIds)
 
-      // Fetch the actual posts
+      
       const { data: postsData, error: postsError } = await supabase
         .from('posts')
         .select(`
@@ -105,7 +84,7 @@ export default function Bookmarks() {
         return
       }
 
-      // Combine bookmark data with post data
+      
       const bookmarkedPostsWithData = bookmarksData.map(bookmark => {
         const post = postsData?.find(p => p.id === bookmark.post_id)
         return post ? {
@@ -157,7 +136,7 @@ export default function Bookmarks() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
-      {/* Sidebar always mounted */}
+      
       <div className="fixed left-0 top-0 h-full z-30 w-72">
         <SideBar user={user} username={username} onSignOut={handleSignOut} />
       </div>
