@@ -6,7 +6,7 @@ import { supabase } from '../../lib/supabase_client';
 import { useRouter } from 'next/navigation';
 import { availableTags } from './availableTags';
 
-const reservedUsernames = ['admin', 'root', 'support', 'bepro', 'help', 'login', 'signup'];
+const reservedUsernames = ['admin', 'root', 'support', 'bepro', 'help', 'login', 'signup', 'profile', 'auth', 'lib', 'settings', 'store', 'utils', 'home', 'faq', 'components'];
 
 const ProfileBuilder = () => {
   const [currentStep, setCurrentStep] = useState(1);
