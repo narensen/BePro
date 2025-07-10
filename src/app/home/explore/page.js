@@ -134,7 +134,7 @@ export default function Explore() {
       <div className="w-72 bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono fixed top-0 left-0 h-full z-30">
         <SideBar 
           user={user} 
-          username={user?.user_metadata?.username || 'user'} 
+          username={user?.user_metadata?.username || ''} 
           onSignOut={async () => { 
             await supabase.auth.signOut(); 
             router.push('/'); 
@@ -174,6 +174,7 @@ export default function Explore() {
                     onComment={handleComment}
                     onViewPost={handleViewPostCallback}
                     userProfile={userProfile}
+                    searchQuery={searchQuery}
                   />
                 </div>
               ))
@@ -182,7 +183,7 @@ export default function Explore() {
         </div>
       </div>
 
-      {/* Enhanced CSS for smooth animations */}
+     
       <style jsx global>{`
         @keyframes fadeInUp {
           from {

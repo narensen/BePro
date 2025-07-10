@@ -14,7 +14,7 @@ export default function ConfirmEmailPage() {
 
       if (user?.confirmed_at) {
         clearInterval(interval)
-        router.push('/waitlist')
+        router.push('/home')
       } else {
         setChecking(false)
       }

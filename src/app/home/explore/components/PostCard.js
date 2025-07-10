@@ -6,14 +6,21 @@ import PostInteractions from './PostInteractions';
 import CommentSection from './CommentSection';
 import { submitReply } from '../../../utils/postActions';
 
-const PostCard = ({ post, userInteractions, onInteraction, onComment, onViewPost, userProfile }) => {
+const PostCard = ({
+  post,
+  searchQuery, // <-- add this
+  userInteractions,
+  onInteraction,
+  onComment,
+  onViewPost,
+  userProfile
+}) => {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(false);
   const [hasViewedOnce, setHasViewedOnce] = useState(false);
 
-  // Track view when component mounts and user profile is available
   useEffect(() => {
     if (!hasViewedOnce && userProfile?.id && post?.id) {
       console.log('Tracking view for post:', post.id, 'user:', userProfile.id);
@@ -24,7 +31,7 @@ const PostCard = ({ post, userInteractions, onInteraction, onComment, onViewPost
 
   const fetchComments = async () => {
     if (comments.length > 0) return;
-    
+
     setLoadingComments(true);
     try {
       const { data, error } = await supabase
@@ -49,7 +56,7 @@ const PostCard = ({ post, userInteractions, onInteraction, onComment, onViewPost
   const toggleComments = async () => {
     const newShowState = !showComments;
     setShowComments(newShowState);
-    
+
     if (newShowState && comments.length === 0) {
       await fetchComments();
     }
@@ -86,7 +93,7 @@ const PostCard = ({ post, userInteractions, onInteraction, onComment, onViewPost
     <div className="bg-white/95 rounded-xl shadow-lg border border-white/30 overflow-hidden hover:shadow-xl transition-all duration-500 transform hover:scale-[1.01]">
       <div className="p-6">
         <PostHeader post={post} />
-        <PostContent post={post} />
+        <PostContent post={post} searchQuery={searchQuery} /> {/* <- Pass searchQuery */}
       </div>
 
       <PostInteractions
@@ -96,7 +103,8 @@ const PostCard = ({ post, userInteractions, onInteraction, onComment, onViewPost
         showComments={showComments}
         toggleComments={toggleComments}
         comments={comments}
-        userProfile={userProfile}/>
+        userProfile={userProfile}
+      />
 
       <CommentSection
         showComments={showComments}

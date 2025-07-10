@@ -32,7 +32,7 @@ const Comment = ({
     setShowReplies(!showReplies);
   };
 
-  const maxDepth = 3; // Limit nesting depth
+  const maxDepth = 3;
   const indentClass = level > 0 ? `ml-${Math.min(level * 4, 12)}` : '';
   
   return (
@@ -98,7 +98,7 @@ const Comment = ({
             <div className="flex flex-col gap-1">
               <button
                 onClick={handleReply}
-                className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors disabled:opacity-50"
+                className="bg-amber-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors disabled:opacity-50"
                 disabled={!replyText.trim()}
               >
                 Reply

@@ -6,7 +6,7 @@ import { supabase } from '../../lib/supabase_client'
 import SideBar from '../../components/SideBar'
 import PostCard from '../explore/components/PostCard'
 
-export default function BeProAI() {
+export default function Bookmarks() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
@@ -179,7 +179,7 @@ export default function BeProAI() {
             {/* Header */}
             <div className="sticky top-0 bg-white/20 backdrop-blur-md border-b border-white/30 p-4 z-10">
               <h1 className="text-3xl font-black text-gray-900">
-                📚 Your Bookmarks
+                Your Bookmarks (Temporarily not active)
               </h1>
               <p className="text-gray-700 mt-1">
                 {bookmarkedPosts.length} saved posts
