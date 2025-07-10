@@ -68,8 +68,7 @@ export default function Home() {
 
         <main className="p-6 min-h-[calc(100vh-80px)] flex items-center justify-center">
           <div className="text-center">
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-12 shadow-xl border border-gray-200 max-w-md mx-auto">
-              <div className="text-6xl mb-6">👋</div>
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-12 shadow-xl border border-gray-200 max-w-md mx-auto mb-20">
 
               {user ? (
                 <>

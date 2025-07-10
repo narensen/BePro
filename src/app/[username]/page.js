@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase_client";
+import SideBar from "../components/SideBar";
 
 export default async function ProfilePage({ params }) {
   const { username } = params;
@@ -40,7 +41,13 @@ export default async function ProfilePage({ params }) {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">{user.name}</h1>
+      <div className="w-72 fixed bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono top-0 left-0 h-full z-30">
+                <SideBar 
+                  user={user} 
+                  username={user?.user_metadata?.username || 'user'} 
+                />
+              </div>
+      <h1 className="text-2xl font-bold">{user.username}</h1>
       <p>Email: {user.email}</p>
       <p>About: {user.bio}</p>
     </div>

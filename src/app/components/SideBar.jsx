@@ -18,21 +18,7 @@ import { useEffect, useState } from 'react';
 import useUserStore from '../store/useUserStore';
 import { supabase } from '../lib/supabase_client';
 
-const navItems = [
-  { name: 'Dashboard', icon: Home, href: '/home' },
-  { name: 'Explore', icon: Search, href: '/home/explore' },
-  { name: 'Ada', icon: BookAIcon, href: '/home/ada' },
-  { name: 'Bookmarks', icon: Bookmark, href: '/home/bookmarks' },
-  { name: 'Communities', icon: MessageSquare, href: '/home/communities' },
-  { name: 'Post', icon: PlusCircle, href: '/home/post' },
-];
-
-const bottomItems = [
-  { name: 'Settings', icon: Settings, href: '/settings' },
-  { name: 'Profile', icon: User, href: '/profile' },
-];
-
-export default function SideBar({ onSignOut }) {
+export default function SideBar() {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -78,6 +64,20 @@ export default function SideBar({ onSignOut }) {
 
     fetchUsername();
   }, [user, username, setUsername]);
+
+  const navItems = [
+  { name: 'Dashboard', icon: Home, href: '/home' },
+  { name: 'Explore', icon: Search, href: '/home/explore' },
+  { name: 'Ada', icon: BookAIcon, href: '/home/ada' },
+  { name: 'Bookmarks', icon: Bookmark, href: '/home/bookmarks' },
+  { name: 'Communities', icon: MessageSquare, href: '/home/communities' },
+  { name: 'Post', icon: PlusCircle, href: '/home/post' },
+];
+
+const bottomItems = [
+  { name: 'Settings', icon: Settings, href: '/settings' },
+  { name: 'Profile', icon: User, href: `/${username}`},
+];
 
   return (
     <div className="h-screen w-72 font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex flex-col relative">
@@ -150,12 +150,14 @@ export default function SideBar({ onSignOut }) {
           </div>
 
           {/* Bottom Buttons */}
-          <div className="p-4 border-t border-gray-200/30">
-            <div className="space-y-1">
-              {[...bottomItems, { name: 'Logout', icon: LogOut, action: () => {
-                clearUserSession();
-                onSignOut?.();
-              } }].map((item) => {
+          <div className="p-4 border-t border-gray-200/30 cursor-pointer">
+            <div className="space-y-1 cursor-pointer">
+              {[...bottomItems, { name: 'Logout', icon: LogOut, action: async () => {
+    await supabase.auth.signOut();
+    clearUserSession();
+    router.push('/');
+}}
+].map((item) => {
                 const isActive = pathname === item.href;
                 const Icon = item.icon;
                 const content = (

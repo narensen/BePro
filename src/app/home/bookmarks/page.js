@@ -136,7 +136,7 @@ export default function Bookmarks() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
-      
+
       <div className="fixed left-0 top-0 h-full z-30 w-72">
         <SideBar user={user} username={username} onSignOut={handleSignOut} />
       </div>
@@ -175,8 +175,7 @@ export default function Bookmarks() {
                   </div>
                 </div>
               ) : bookmarkedPosts.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="text-6xl mb-4">📖</div>
+                <div className="text-center py-12 mt-10">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     No bookmarks yet
                   </h3>
