@@ -1,4 +1,4 @@
-import { supabase } from "../../lib/supabase_client"
+import { supabase } from "../lib/supabase_client"
 
 export default async function ProfilePage({ params }) {
   const { username } = params;
