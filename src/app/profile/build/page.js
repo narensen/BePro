@@ -181,7 +181,7 @@ const ProfileBuilder = () => {
                 value={username}
                 onChange={handleUsernameChange}
                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-gray-900 text-gray-800 font-semibold"
-                placeholder="e.g. naren_s"
+                placeholder="e.g. john_doe"
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
                 {usernameStatus === 'checking' && <Loader2 className="w-5 h-5 animate-spin text-gray-500" />}
