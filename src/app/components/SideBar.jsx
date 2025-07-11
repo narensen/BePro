@@ -31,6 +31,7 @@ export default function SideBar() {
   } = useUserStore();
 
   const [loading, setLoading] = useState(!user);
+  const [avatarUrl, setAvatarUrl] = useState('');
 
   useEffect(() => {
     const checkSession = async () => {
@@ -46,42 +47,46 @@ export default function SideBar() {
   }, [user, setUserSession]);
 
   useEffect(() => {
-    const fetchUsername = async () => {
-      if (!user?.email || username) return;
+    const fetchUserProfile = async () => {
+      if (!user?.email) return;
 
       const { data, error } = await supabase
         .from('profile')
-        .select('username')
+        .select('username, avatar_url')
         .eq('email', user.email)
         .single();
 
       if (error) {
-        console.error('Error fetching username from profile:', error.message);
-      } else if (data?.username) {
-        setUsername(data.username);
+        console.error('Error fetching profile:', error.message);
+      } else if (data) {
+        if (data.username && !username) {
+          setUsername(data.username);
+        }
+        if (data.avatar_url) {
+          setAvatarUrl(data.avatar_url);
+        }
       }
     };
 
-    fetchUsername();
+    fetchUserProfile();
   }, [user, username, setUsername]);
 
   const navItems = [
-  { name: 'Dashboard', icon: Home, href: '/home' },
-  { name: 'Explore', icon: Search, href: '/home/explore' },
-  { name: 'Ada', icon: BookAIcon, href: '/home/ada' },
-  { name: 'Bookmarks', icon: Bookmark, href: '/home/bookmarks' },
-  { name: 'Communities', icon: MessageSquare, href: '/home/communities' },
-  { name: 'Post', icon: PlusCircle, href: '/home/post' },
-];
+    { name: 'Dashboard', icon: Home, href: '/home' },
+    { name: 'Explore', icon: Search, href: '/home/explore' },
+    { name: 'Ada', icon: BookAIcon, href: '/home/ada' },
+    { name: 'Bookmarks', icon: Bookmark, href: '/home/bookmarks' },
+    { name: 'Communities', icon: MessageSquare, href: '/home/communities' },
+    { name: 'Post', icon: PlusCircle, href: '/home/post' },
+  ];
 
-const bottomItems = [
-  { name: 'Settings', icon: Settings, href: '/settings' },
-  { name: 'Profile', icon: User, href: `/${username}`},
-];
+  const bottomItems = [
+    { name: 'Settings', icon: Settings, href: '/settings' },
+    { name: 'Profile', icon: User, href: `/${username}` },
+  ];
 
   return (
     <div className="h-screen w-72 font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex flex-col relative">
-
       <div className="p-6 border-b border-gray-200/30">
         <Link href="/home">
           <h1 className="text-3xl font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent cursor-pointer">
@@ -106,11 +111,33 @@ const bottomItems = [
         </div>
       ) : (
         <>
-
           <div className="p-4 border-b border-gray-200/30">
             <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-400/20 to-yellow-400/20 rounded-xl">
-              <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-sm">{username?.charAt(0).toUpperCase() || 'U'}</span>
+              <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt={`${username}'s avatar`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback to initial if image fails to load
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                ) : (
+                  <span className="text-white font-bold text-sm">
+                    {username?.charAt(0).toUpperCase() || 'U'}
+                  </span>
+                )}
+                {avatarUrl && (
+                  <span 
+                    className="text-white font-bold text-sm hidden items-center justify-center w-full h-full"
+                    style={{ display: 'none' }}
+                  >
+                    {username?.charAt(0).toUpperCase() || 'U'}
+                  </span>
+                )}
               </div>
               <div className="flex-1">
                 <p className="font-bold text-gray-900 text-sm">{username || 'User'}</p>
@@ -152,12 +179,15 @@ const bottomItems = [
           {/* Bottom Buttons */}
           <div className="p-4 border-t border-gray-200/30 cursor-pointer">
             <div className="space-y-1 cursor-pointer">
-              {[...bottomItems, { name: 'Logout', icon: LogOut, action: async () => {
-    await supabase.auth.signOut();
-    clearUserSession();
-    router.push('/');
-}}
-].map((item) => {
+              {[...bottomItems, { 
+                name: 'Logout', 
+                icon: LogOut, 
+                action: async () => {
+                  await supabase.auth.signOut();
+                  clearUserSession();
+                  router.push('/');
+                }
+              }].map((item) => {
                 const isActive = pathname === item.href;
                 const Icon = item.icon;
                 const content = (
@@ -190,7 +220,7 @@ const bottomItems = [
                   </button>
                 );
               })}
-            </div>
+            </div>  
           </div>
         </>
       )}

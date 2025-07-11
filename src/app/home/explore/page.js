@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../lib/supabase_client';
 import SideBar from '../../components/SideBar';
@@ -16,20 +16,94 @@ import {
   toggleBookmark,
   submitComment,
 } from '../../utils/postActions.js';
+import { 
+  getRecommendedPosts, 
+  getRecommendedPostsByCategory,
+  calculateUserCringeTolerance 
+} from '../explore/utils/recommendationSystem';
 
 export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortMode, setSortMode] = useState('recommended'); // recommended, trending, recent, lowCringe
+  const [postInteractions, setPostInteractions] = useState([]);
   const router = useRouter();
   const { user } = useUserStore();
   const { loading, posts, setPosts, userInteractions, setUserInteractions, userProfile } = usePostData(user);
 
+  // Fetch user interaction history for better recommendations
+  useEffect(() => {
+    const fetchInteractionHistory = async () => {
+      if (!userProfile?.id) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('post_interactions')
+          .select(`
+            *,
+            post:posts(*)
+          `)
+          .eq('user_id', userProfile.id)
+          .order('created_at', { ascending: false })
+          .limit(100);
+
+        if (error) throw error;
+        setPostInteractions(data || []);
+      } catch (error) {
+        console.error('Error fetching interaction history:', error);
+      }
+    };
+
+    fetchInteractionHistory();
+  }, [userProfile?.id]);
+
+  // Calculate user's cringe tolerance based on their interaction history
+  const userCringeTolerance = useMemo(() => {
+    if (!userInteractions || !posts.length) return 0.5;
+    return calculateUserCringeTolerance(userInteractions, posts);
+  }, [userInteractions, posts]);
+
+  // Get recommended posts based on selected sort mode
+  const sortedPosts = useMemo(() => {
+    if (!posts.length || !userProfile) return posts;
+
+    const categorizedPosts = getRecommendedPostsByCategory(
+      posts,
+      userProfile,
+      userInteractions,
+      postInteractions,
+      userCringeTolerance
+    );
+
+    switch (sortMode) {
+      case 'recommended':
+        return getRecommendedPosts(
+          posts,
+          userProfile,
+          userInteractions,
+          postInteractions,
+          userCringeTolerance
+        );
+      case 'trending':
+        return categorizedPosts.trending;
+      case 'recent':
+        return categorizedPosts.recent;
+      case 'lowCringe':
+        return categorizedPosts.lowCringe;
+      default:
+        return posts;
+    }
+  }, [posts, userProfile, userInteractions, postInteractions, userCringeTolerance, sortMode]);
+
   // Filter posts based on search
-  const filteredPosts = posts.filter(post => 
-    !searchQuery || 
-    post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    post.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    post.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredPosts = useMemo(() => {
+    if (!searchQuery) return sortedPosts;
+    
+    return sortedPosts.filter(post => 
+      post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+  }, [sortedPosts, searchQuery]);
 
   const handleInteraction = useCallback(async (type, postId, currentState) => {
     const userId = userProfile?.id;
@@ -72,11 +146,24 @@ export default function Explore() {
             [type]: !currentState
           }
         }));
+
+        // Update interaction history for better future recommendations
+        const post = posts.find(p => p.id === postId);
+        if (post) {
+          setPostInteractions(prev => [{
+            id: Date.now().toString(),
+            user_id: userId,
+            post_id: postId,
+            type: type,
+            created_at: new Date().toISOString(),
+            post: post
+          }, ...prev]);
+        }
       }
     } catch (error) {
       console.error(`Error handling ${type}:`, error);
     }
-  }, [userProfile?.id, setPosts, setUserInteractions]);
+  }, [userProfile?.id, setPosts, setUserInteractions, posts]);
 
   const handleComment = useCallback(async (postId, content) => {
     try {
@@ -147,18 +234,50 @@ export default function Explore() {
           {/* Header */}
           <div className="mb-8 transform transition-all duration-700 opacity-0 translate-y-4" style={{ animation: 'fadeInUp 0.6s ease-out 0.1s both' }}>
             <h1 className="text-3xl font-bold text-white mb-2">Explore</h1>
-            <p className="text-white/80">Discover posts from the community</p>
+            <p className="text-white/80">
+              Discover posts tailored for you • Cringe Tolerance: {Math.round(userCringeTolerance * 100)}%
+            </p>
           </div>
 
           <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+
+          {/* Sort Options */}
+          <div className="mb-6 transform transition-all duration-700 opacity-0 translate-y-4" style={{ animation: 'fadeInUp 0.6s ease-out 0.2s both' }}>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { key: 'recommended', label: 'For You', desc: 'Personalized recommendations' },
+                { key: 'trending', label: 'Trending', desc: 'Most engaged posts' },
+                { key: 'recent', label: 'Recent', desc: 'Latest posts' },
+                { key: 'lowCringe', label: 'Premium', desc: 'Low cringe, high quality' }
+              ].map((mode) => (
+                <button
+                  key={mode.key}
+                  onClick={() => setSortMode(mode.key)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                    sortMode === mode.key
+                      ? 'bg-white text-orange-600 shadow-lg scale-105'
+                      : 'bg-white/20 text-white hover:bg-white/30 hover:scale-105'
+                  }`}
+                  title={mode.desc}
+                >
+                  {mode.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* Posts */}
           <div className="space-y-6">
             {filteredPosts.length === 0 ? (
               <div className="text-center py-12 bg-white/10 rounded-xl border border-white/20 transform transition-all duration-700 opacity-0 translate-y-4" style={{ animation: 'fadeInUp 0.6s ease-out 0.3s both' }}>
                 <p className="text-white/80 text-lg">
-                  {searchQuery ? 'No posts found' : 'No posts yet'}
+                  {searchQuery ? 'No posts found matching your search' : 'No posts available for this category'}
                 </p>
+                {sortMode === 'recommended' && (
+                  <p className="text-white/60 text-sm mt-2">
+                    Interact with more posts to improve your recommendations!
+                  </p>
+                )}
               </div>
             ) : (
               filteredPosts.map((post, index) => (
@@ -175,6 +294,7 @@ export default function Explore() {
                     onViewPost={handleViewPostCallback}
                     userProfile={userProfile}
                     searchQuery={searchQuery}
+                    showRecommendationScore={sortMode === 'recommended'}
                   />
                 </div>
               ))
@@ -183,7 +303,6 @@ export default function Explore() {
         </div>
       </div>
 
-     
       <style jsx global>{`
         @keyframes fadeInUp {
           from {
