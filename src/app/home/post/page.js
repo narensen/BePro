@@ -162,7 +162,7 @@ export default function CreatePost() {
             <div className="mb-8">
               <div className="flex items-center gap-2 mb-4">
                 <Type className="w-5 h-5 text-gray-800" />
-                <span className="text-gray-900 font-bold text-lg">What's on your mind?</span>
+                <span className="text-gray-900 font-bold text-lg">{"What's on your mind?"}</span>
               </div>
 
               <div className="relative">
