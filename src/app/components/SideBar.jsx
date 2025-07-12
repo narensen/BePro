@@ -60,17 +60,14 @@ export default function SideBar() {
       if (error) {
         console.error('Error fetching profile:', error.message);
       } else if (data) {
-        if (data.username && !username) {
-          setUsername(data.username);
-        }
-        if (data.avatar_url) {
-          setAvatarUrl(data.avatar_url);
-        }
+      
+        setUsername(data.username || '');
+        setAvatarUrl(data.avatar_url || '');
       }
     };
 
     fetchUserProfile();
-  }, [user, username, setUsername]);
+  }, [user, setUsername]);
 
   const navItems = [
     { name: 'Dashboard', icon: Home, href: '/home' },
@@ -94,7 +91,9 @@ export default function SideBar() {
             BePro
           </h1>
         </Link>
-        <p className="text-sm text-gray-600 font-medium mt-1">Learn smart. Build loud. Get hired.</p>
+        <p className="text-sm text-gray-600 font-medium mt-1">
+          Learn smart. Build loud. Get hired.
+        </p>
       </div>
 
       {loading ? (
@@ -121,7 +120,6 @@ export default function SideBar() {
                     alt={`${username}'s avatar`}
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      // Fallback to initial if image fails to load
                       e.target.style.display = 'none';
                       e.target.nextSibling.style.display = 'flex';
                     }}
@@ -132,7 +130,7 @@ export default function SideBar() {
                   </span>
                 )}
                 {avatarUrl && (
-                  <span 
+                  <span
                     className="text-white font-bold text-sm hidden items-center justify-center w-full h-full"
                     style={{ display: 'none' }}
                   >
@@ -141,7 +139,9 @@ export default function SideBar() {
                 )}
               </div>
               <div className="flex-1">
-                <p className="font-bold text-gray-900 text-sm">{username || 'User'}</p>
+                <p className="font-bold text-gray-900 text-sm">
+                  {username || 'User'}
+                </p>
                 <p className="text-gray-600 text-xs">{user.email}</p>
               </div>
             </div>
@@ -153,7 +153,11 @@ export default function SideBar() {
                 const isActive = pathname === item.href;
                 const Icon = item.icon;
                 return (
-                  <Link href={item.href} key={item.name} className="block relative">
+                  <Link
+                    href={item.href}
+                    key={item.name}
+                    className="block relative"
+                  >
                     {isActive && (
                       <motion.div
                         layoutId="active-pill"
@@ -180,15 +184,16 @@ export default function SideBar() {
           {/* Bottom Buttons */}
           <div className="p-4 border-t border-gray-200/30 cursor-pointer">
             <div className="space-y-1 cursor-pointer">
-              {[...bottomItems, { 
-                name: 'Logout', 
-                icon: LogOut, 
-                action: async () => {
-                  await supabase.auth.signOut();
-                  clearUserSession();
-                  router.push('/');
-                }
-              }].map((item) => {
+              {[...bottomItems,
+                {
+                  name: 'Logout',
+                  icon: LogOut,
+                  action: async () => {
+                    await supabase.auth.signOut();
+                    clearUserSession();
+                    router.push('/');
+                  }
+                }].map((item) => {
                 const isActive = pathname === item.href;
                 const Icon = item.icon;
                 const content = (
@@ -221,7 +226,7 @@ export default function SideBar() {
                   </button>
                 );
               })}
-            </div>  
+            </div>
           </div>
         </>
       )}

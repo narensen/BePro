@@ -32,7 +32,6 @@ export default function PlainPost({
   const [showComments, setShowComments] = useState(false)
   const [comments, setComments] = useState([])
 
-  // Highlight for search
   function highlight(text, query) {
     if (!query) return text
     return text.split(new RegExp(`(${query})`, 'gi')).map((part, i) =>
