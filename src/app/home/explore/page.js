@@ -231,11 +231,11 @@ export default function Explore() {
 
       <div className="flex-1 ml-72 min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
         <div className="max-w-2xl mx-auto px-6 py-8">
-          {/* Header */}
+          
           <div className="mb-8 transform transition-all duration-700 opacity-0 translate-y-4" style={{ animation: 'fadeInUp 0.6s ease-out 0.1s both' }}>
             <h1 className="text-3xl font-bold text-white mb-2">Explore</h1>
             <p className="text-white/80">
-              Discover posts tailored for you • Cringe Tolerance: {Math.round(userCringeTolerance * 100)}%
+              Discover posts tailored for you
             </p>
           </div>
 

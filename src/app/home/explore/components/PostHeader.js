@@ -1,18 +1,69 @@
-import React from 'react';
-import { formatDate } from '../utils/dateUtils';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../../../lib/supabase_client';
 
-const PostHeader = ({ post }) => (
-  <div className="flex items-center gap-3 mb-4">
-    <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-full flex items-center justify-center text-white font-bold transition-transform duration-300 hover:scale-110">
-      {post.username?.charAt(0).toUpperCase() || 'U'}
-    </div>
-    <div>
-      <div className="font-semibold text-gray-900 transition-colors duration-300 hover:text-yellow-600">
-        @{post.username || 'user'}
+const PostHeader = ({ post }) => {
+  const username = post.username;
+  const [avatarUrl, setAvatarUrl] = useState('');
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!post?.email && !username) return;
+
+      const { data, error } = await supabase
+        .from('profile')
+        .select('username, avatar_url')
+        .eq('username', username)
+        .single();
+
+      if (error) {
+        console.error('Error fetching profile:', error.message);
+      } else if (data) {
+        if (data.avatar_url) {
+          setAvatarUrl(data.avatar_url);
+        }
+      }
+    };
+
+    fetchUserProfile();
+  }, [username, post]);
+
+  return (
+    <div className="flex items-center gap-3 mb-2">
+      <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+        {avatarUrl ? (
+          <img
+            src={avatarUrl}
+            alt={`${username}'s avatar`}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // Fallback to initial if image fails to load
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'flex';
+            }}
+          />
+        ) : (
+          <span className="text-white font-bold text-sm">
+            {username?.charAt(0).toUpperCase() || 'U'}
+          </span>
+        )}
+        {avatarUrl && (
+          <span 
+            className="text-white font-bold text-sm hidden items-center justify-center w-full h-full"
+            style={{ display: 'none' }}
+          >
+            {username?.charAt(0).toUpperCase() || 'U'}
+          </span>
+        )}
       </div>
-      <div className="text-sm text-gray-500">{formatDate(post.created_at)}</div>
+      <button
+        className="font-bold text-black/80 cursor-pointer"
+        onClick={() => window.open(`https://bepro.live/${username}`, "_blank")}
+      >
+        {`@${username}`}
+      </button>
+      {/* Add more post meta here if needed */}
     </div>
-  </div>
-);
+  );
+};
 
 export default PostHeader;

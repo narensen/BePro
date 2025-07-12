@@ -8,12 +8,13 @@ import { submitReply } from '../../../utils/postActions';
 
 const PostCard = ({
   post,
-  searchQuery, // <-- add this
+  searchQuery,
   userInteractions,
   onInteraction,
   onComment,
   onViewPost,
-  userProfile
+  userProfile,
+  showRecommendationScore
 }) => {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState('');
@@ -23,7 +24,6 @@ const PostCard = ({
 
   useEffect(() => {
     if (!hasViewedOnce && userProfile?.id && post?.id) {
-      console.log('Tracking view for post:', post.id, 'user:', userProfile.id);
       onViewPost(post.id);
       setHasViewedOnce(true);
     }
@@ -36,16 +36,11 @@ const PostCard = ({
     try {
       const { data, error } = await supabase
         .from('comments')
-        .select(`
-          *,
-          profile:user_id(username, email)
-        `)
+        .select(`*, profile:user_id(username, email)`)
         .eq('post_id', post.id)
         .order('created_at', { ascending: true });
 
-      if (!error && data) {
-        setComments(data);
-      }
+      if (!error && data) setComments(data);
     } catch (error) {
       console.error('Error fetching comments:', error);
     } finally {
@@ -85,17 +80,14 @@ const PostCard = ({
     return false;
   };
 
-  const handleLoadReplies = async (commentId) => {
-    return true;
-  };
+  const handleLoadReplies = async (commentId) => true;
 
   return (
-    <div className="bg-white/95 rounded-xl shadow-lg border border-white/30 overflow-hidden hover:shadow-xl transition-all duration-500 transform hover:scale-[1.01]">
+    <div className="bg-white/95 rounded-xl shadow-lg border border-white/30 overflow-hidden hover:shadow-xl transition-all duration-500 transform">
       <div className="p-6">
         <PostHeader post={post} />
-        <PostContent post={post} searchQuery={searchQuery} /> {/* <- Pass searchQuery */}
+        <PostContent post={post} searchQuery={searchQuery} /> 
       </div>
-
       <PostInteractions
         post={post}
         userInteractions={userInteractions}
@@ -105,7 +97,6 @@ const PostCard = ({
         comments={comments}
         userProfile={userProfile}
       />
-
       <CommentSection
         showComments={showComments}
         comments={comments}
