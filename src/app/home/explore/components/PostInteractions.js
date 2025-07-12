@@ -7,7 +7,8 @@ const PostInteractions = ({
   onInteraction, 
   showComments, 
   toggleComments, 
-  comments 
+  comments,
+  userProfile 
 }) => {
   const handleLikeDislike = async (type, postId, currentState) => {
     const oppositeType = type === 'like' ? 'dislike' : 'like';
@@ -20,6 +21,16 @@ const PostInteractions = ({
     
     // Then apply the current action
     await onInteraction(type, postId, currentState);
+  };
+
+  const handleBookmark = async () => {
+    if (!userProfile?.id) {
+      console.error('User not authenticated');
+      return;
+    }
+    
+    const isCurrentlyBookmarked = userInteractions[post.id]?.bookmark;
+    await onInteraction('bookmark', post.id, isCurrentlyBookmarked);
   };
 
   return (
@@ -59,7 +70,7 @@ const PostInteractions = ({
             }`}
           >
             <MessageCircle size={16} className="transition-transform duration-300 hover:scale-110" />
-            <span className="font-medium">{comments.length || post.comment_count || 0}</span>
+            <span className="font-medium">{comments?.length || post.comment_count || 0}</span>
             <div className="transition-transform duration-300">
               {showComments ? (
                 <ChevronUp size={14} />
@@ -72,7 +83,7 @@ const PostInteractions = ({
 
         <div className="flex items-center gap-4">
           <button 
-            onClick={() => onInteraction('bookmark', post.id, userInteractions[post.id]?.bookmark)}
+            onClick={handleBookmark}
             className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 ${
               userInteractions[post.id]?.bookmark 
                 ? 'bg-blue-100 text-blue-700 shadow-md' 

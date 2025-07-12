@@ -1,151 +1,122 @@
 'use client'
 
+import React, { useState } from 'react'
 import {
   Heart,
   ThumbsDown,
   Repeat,
   Bookmark,
   ChevronDown,
+  ChevronUp,
+  MessageCircle,
+  Eye,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase_client'
+import {
+  toggleLike,
+  toggleDislike,
+  toggleBookmark,
+  submitComment,
+  handleViewPost,
+} from '../utils/postActions'
 
-export default function PostCard({ post, user }) {
+export default function PlainPost({
+  post,
+  userInteractions,
+  onInteraction,
+  onComment,
+  onViewPost,
+  userProfile,
+  searchQuery,
+  showRecommendationScore,
+}) {
   const [showComments, setShowComments] = useState(false)
-  const [liked, setLiked] = useState(false)
-  const [disliked, setDisliked] = useState(false)
-  const [bookmarked, setBookmarked] = useState(false)
   const [comments, setComments] = useState([])
 
-  useEffect(() => {
-    const checkInteractions = async () => {
-      const user_id = user.id
-      const post_id = post.id
-
-      const { data: likes } = await supabase
-        .from('likes_dislikes')
-        .select('type')
-        .eq('post_id', post_id)
-        .eq('user_id', user_id)
-        .single()
-
-      const { data: bookmarks } = await supabase
-        .from('bookmarks')
-        .select('*')
-        .eq('post_id', post_id)
-        .eq('user_id', user_id)
-        .maybeSingle()
-
-      if (likes?.type === 'like') setLiked(true)
-      if (likes?.type === 'dislike') setDisliked(true)
-      if (bookmarks) setBookmarked(true)
-    }
-
-    checkInteractions()
-  }, [post.id, user.id])
-
-  const toggleLike = async () => {
-    const { error } = await supabase.from('likes_dislikes').upsert({
-      post_id: post.id,
-      user_id: user.id,
-      type: liked ? null : 'like',
-    })
-    if (!error) {
-      setLiked(!liked)
-      if (disliked) setDisliked(false)
-    }
+  // Highlight for search
+  function highlight(text, query) {
+    if (!query) return text
+    return text.split(new RegExp(`(${query})`, 'gi')).map((part, i) =>
+      part.toLowerCase() === query.toLowerCase()
+        ? <span key={i} className="bg-yellow-200 text-orange-700">{part}</span>
+        : part
+    )
   }
 
-  const toggleDislike = async () => {
-    const { error } = await supabase.from('likes_dislikes').upsert({
-      post_id: post.id,
-      user_id: user.id,
-      type: disliked ? null : 'dislike',
-    })
-    if (!error) {
-      setDisliked(!disliked)
-      if (liked) setLiked(false)
-    }
-  }
-
-  const toggleBookmark = async () => {
-    if (!bookmarked) {
-      await supabase.from('bookmarks').insert({
-        post_id: post.id,
-        user_id: user.id,
-      })
-    } else {
-      await supabase
-        .from('bookmarks')
-        .delete()
-        .eq('post_id', post.id)
-        .eq('user_id', user.id)
-    }
-    setBookmarked(!bookmarked)
-  }
-
-  const handleRepost = async () => {
-    const { data, error } = await supabase
-      .from('reposts')
-      .insert({ post_id: post.id, user_id: user.id })
-
-    if (error && error.code !== '23505') {
-      console.error('Repost failed:', error.message)
-    }
-  }
-
-  const toggleComments = async () => {
+  // Show comments
+  const handleToggleComments = async () => {
     if (!showComments) {
-      const { data, error } = await supabase
-        .from('comments')
-        .select('*')
-        .eq('post_id', post.id)
-        .order('created_at', { ascending: true })
-
-      if (!error) {
-        setComments(data)
-      }
+      const fetched = await submitComment(post.id, userProfile?.id, null, true) // fetch only
+      if (Array.isArray(fetched)) setComments(fetched)
     }
     setShowComments(!showComments)
   }
 
   return (
-    <div className="bg-white/90 p-5 rounded-xl shadow-md">
-      <div className="text-gray-700 text-sm mb-1 font-semibold">@{post.username}</div>
-      <p className="text-gray-900 font-medium whitespace-pre-line">{post.content}</p>
-
-      <div className="mt-4 flex items-center justify-between text-gray-600 text-sm">
-        <div className="flex gap-4">
+    <div className="bg-white/90 rounded-xl border border-white/30 p-5 mb-4 shadow hover:scale-105 transition-all">
+      {/* User/Avatar */}
+      <div className="flex items-center mb-2">
+        <div className="flex-shrink-0 w-9 h-9 rounded-full bg-white/30 border border-orange-200 mr-2" />
+        <div>
+          <span className="font-bold text-orange-700">{post.username || 'user'}</span>
+          <span className="ml-1 text-xs text-white/70">@{post.username || 'user'}</span>
+        </div>
+      </div>
+      {/* Content */}
+      <div className="text-lg text-orange-950 mb-2" style={{ wordBreak: 'break-word' }}>
+        {highlight(post.content, searchQuery)}
+      </div>
+      {/* Tags */}
+      {post.tags?.length > 0 && (
+        <div className="mb-2 flex flex-wrap gap-1">
+          {post.tags.map(tag => (
+            <span key={tag} className="bg-orange-200/60 text-orange-700 px-2 py-1 rounded-full text-xs font-semibold">{tag}</span>
+          ))}
+        </div>
+      )}
+      {/* Actions */}
+      <div className="flex items-center justify-between mt-4 text-xs text-white/90">
+        <div className="flex gap-2">
           <button
-            className={`flex items-center gap-1 hover:text-red-600 transition ${liked ? 'text-red-600' : ''}`}
-            onClick={toggleLike}
+            className={`flex items-center gap-1 px-2 py-1 rounded-full hover:bg-orange-100 hover:text-orange-700 transition ${userInteractions?.[post.id]?.like ? 'bg-orange-200 text-orange-700 font-bold' : 'bg-white/10 text-white'}`}
+            onClick={() => onInteraction('like', post.id, !!userInteractions?.[post.id]?.like)}
+            aria-label="Like"
           >
-            <Heart size={16} /> Like
+            <Heart size={16} /> {post.like_count || 0}
           </button>
           <button
-            className={`flex items-center gap-1 hover:text-blue-600 transition ${disliked ? 'text-blue-600' : ''}`}
-            onClick={toggleDislike}
+            className={`flex items-center gap-1 px-2 py-1 rounded-full hover:bg-red-100 hover:text-red-600 transition ${userInteractions?.[post.id]?.dislike ? 'bg-red-200 text-red-700 font-bold' : 'bg-white/10 text-white'}`}
+            onClick={() => onInteraction('dislike', post.id, !!userInteractions?.[post.id]?.dislike)}
+            aria-label="Dislike"
           >
-            <ThumbsDown size={16} /> Dislike
+            <ThumbsDown size={16} /> {post.dislike_count || 0}
           </button>
           <button
-            className="flex items-center gap-1 hover:text-green-600 transition"
-            onClick={handleRepost}
+            className="flex items-center gap-1 px-2 py-1 rounded-full hover:bg-green-100 hover:text-green-700 transition"
+            onClick={() => onViewPost(post.id)}
+            aria-label="View"
           >
-            <Repeat size={16} /> Repost
+            <Eye size={16} /> {post.view_count || 0}
           </button>
           <button
-            className={`flex items-center gap-1 hover:text-yellow-600 transition ${bookmarked ? 'text-yellow-600' : ''}`}
-            onClick={toggleBookmark}
+            className={`flex items-center gap-1 px-2 py-1 rounded-full hover:bg-blue-100 hover:text-blue-700 transition ${userInteractions?.[post.id]?.bookmark ? 'bg-blue-200 text-blue-700 font-bold' : 'bg-white/10 text-white'}`}
+            onClick={() => onInteraction('bookmark', post.id, !!userInteractions?.[post.id]?.bookmark)}
+            aria-label="Bookmark"
           >
-            <Bookmark size={16} /> Save
+            <Bookmark size={16} />
           </button>
         </div>
-        <button onClick={toggleComments} className="hover:text-gray-800 transition">
-          <ChevronDown size={18} />
+        {/* Comments toggle */}
+        <button onClick={handleToggleComments} className={`flex items-center gap-1 hover:text-orange-700 transition`}>
+          <MessageCircle size={16} />
+          <span>{post.comment_count || comments.length || 0}</span>
+          {showComments ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </button>
       </div>
-
+      {/* Recommendation score */}
+      {showRecommendationScore && typeof post._recommendationScore === 'number' && (
+        <div className="mt-2 text-xs text-orange-700 font-bold">Score: {post._recommendationScore.toFixed(2)}</div>
+      )}
+      {/* Comments Section */}
       {showComments && (
         <div className="mt-4 space-y-3">
           {comments.length === 0 ? (
