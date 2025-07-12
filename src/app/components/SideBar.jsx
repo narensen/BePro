@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import {
   Home,
   Search,
-  Bookmark,
+  AtomIcon,
   MessageSquare,
   PlusCircle,
   Settings,
@@ -72,7 +72,7 @@ export default function SideBar() {
   const navItems = [
     { name: 'Dashboard', icon: Home, href: '/home' },
     { name: 'Explore', icon: Search, href: '/home/explore' },
-    { name: 'Ada', icon: BookAIcon, href: '/home/ada' },
+    { name: 'Fermitor', icon: AtomIcon, href: '/fermitor' },
     { name: 'News', icon: NewspaperIcon, href: '/home/news' },
     { name: 'Communities', icon: MessageSquare, href: '/home/communities' },
     { name: 'Post', icon: PlusCircle, href: '/home/post' },
