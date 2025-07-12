@@ -217,7 +217,7 @@ export default function Explore() {
   }
 
   return (
-    <div className="flex">
+    <div className="flex font-mono">
       <div className="w-72 bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono fixed top-0 left-0 h-full z-30">
         <SideBar 
           user={user} 
@@ -230,14 +230,14 @@ export default function Explore() {
       </div>
 
       <div className="flex-1 ml-72 min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
-        <div className="max-w-2xl mx-auto px-6 py-8">
-          
-          <div className="mb-8 transform transition-all duration-700 opacity-0 translate-y-4" style={{ animation: 'fadeInUp 0.6s ease-out 0.1s both' }}>
-            <h1 className="text-3xl font-bold text-white mb-2">Explore</h1>
-            <p className="text-white/80">
+        <div className="sticky top-0 bg-white/20 backdrop-blur-md border-b border-white/30 p-4 z-10 ">
+            <h1 className="text-3xl font-bold mb-2">Explore</h1>
+            <p>
               Discover posts tailored for you
             </p>
           </div>
+
+        <div className="max-w-2xl mx-auto px-6 py-6">
 
           <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
