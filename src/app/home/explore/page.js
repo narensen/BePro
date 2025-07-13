@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '../../lib/supabase_client';
 import SideBar from '../../components/SideBar';
 import useUserStore from '../../store/useUserStore';
-import LoadingSpinner from '../explore/components/LoadingSpinner'
+import LoadingSpinner from '../explore/components/LoadingSpinner';
 import SearchBar from '../explore/components/SearchBar';
 import PostCard from '../explore/components/PostCard';
+import ProfileBar from './components/ProfileBar';
+import SortOptions from './components/SortOptions';
 import { usePostData } from '../explore/hooks/usePostData';
 import { handleViewPost } from '../explore/utils/viewsUtils';
 import {
@@ -21,10 +23,11 @@ import {
   getRecommendedPostsByCategory,
   calculateUserCringeTolerance 
 } from '../explore/utils/recommendationSystem';
+import '../explore/styles.css';
 
 export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortMode, setSortMode] = useState('recommended'); // recommended, trending, recent, lowCringe
+  const [sortMode, setSortMode] = useState('recommended');
   const [postInteractions, setPostInteractions] = useState([]);
   const router = useRouter();
   const { user } = useUserStore();
@@ -199,7 +202,7 @@ export default function Explore() {
   if (loading) {
     return (
       <div className="flex">
-        <div className="w-72 fixed bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono top-0 left-0 h-full z-30">
+        <div className="w-72 fixed gradient-primary font-mono top-0 left-0 h-full z-30">
           <SideBar 
             user={user} 
             username={user?.user_metadata?.username || 'user'} 
@@ -209,16 +212,18 @@ export default function Explore() {
             }} 
           />
         </div>
-        <div className="flex-1 ml-72 min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
+        <div className="flex-1 ml-72 mr-80 min-h-screen gradient-primary">
           <LoadingSpinner />
         </div>
+        <ProfileBar currentUser={userProfile} />
       </div>
     );
   }
 
   return (
-    <div className="flex font-mono">
-      <div className="w-72 bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono fixed top-0 left-0 h-full z-30">
+    <div className="flex font-mono bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 min-h-screen">
+      {/* Sidebar */}
+      <div className="w-72 gradient-primary font-mono fixed top-0 left-0 h-full z-30">
         <SideBar 
           user={user} 
           username={user?.user_metadata?.username || ''} 
@@ -229,47 +234,32 @@ export default function Explore() {
         />
       </div>
 
-      <div className="flex-1 ml-72 min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
-        <div className="sticky top-0 bg-white/20 backdrop-blur-md border-b border-white/30 p-4 z-10 ">
-            <h1 className="text-3xl font-bold mb-2">Explore</h1>
-            <p>
-              Discover posts tailored for you
-            </p>
+      {/* Main Content */}
+      <div className="flex-1 ml-72 mr-80 min-h-screen gradient-primary">
+        {/* Header */}
+        <div className="sticky top-0 glass-strong border-b border-white/30 p-4 z-10">
+          <h1 className="text-3xl font-bold mb-2 text-white">Explore</h1>
+          <p className="text-white/80">
+            Discover posts tailored for you
+          </p>
+        </div>
+
+        {/* Content */}
+        <div className="max-w-2xl mx-auto px-6 py-6">
+          {/* Search Bar */}
+          <div className="animate-fadeInUp mb-6">
+            <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           </div>
 
-        <div className="max-w-2xl mx-auto px-6 py-6">
-
-          <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-
           {/* Sort Options */}
-          <div className="mb-6 transform transition-all duration-700 opacity-0 translate-y-4" style={{ animation: 'fadeInUp 0.6s ease-out 0.2s both' }}>
-            <div className="flex flex-wrap gap-2">
-              {[
-                { key: 'recommended', label: 'For You', desc: 'Personalized recommendations' },
-                { key: 'trending', label: 'Trending', desc: 'Most engaged posts' },
-                { key: 'recent', label: 'Recent', desc: 'Latest posts' },
-                { key: 'lowCringe', label: 'Premium', desc: 'Low cringe, high quality' }
-              ].map((mode) => (
-                <button
-                  key={mode.key}
-                  onClick={() => setSortMode(mode.key)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                    sortMode === mode.key
-                      ? 'bg-white text-orange-600 shadow-lg scale-105'
-                      : 'bg-white/20 text-white hover:bg-white/30 hover:scale-105'
-                  }`}
-                  title={mode.desc}
-                >
-                  {mode.label}
-                </button>
-              ))}
-            </div>
+          <div className="animate-fadeInUp mb-6" style={{ animationDelay: '0.2s' }}>
+            <SortOptions sortMode={sortMode} setSortMode={setSortMode} />
           </div>
 
           {/* Posts */}
           <div className="space-y-6">
             {filteredPosts.length === 0 ? (
-              <div className="text-center py-12 bg-white/10 rounded-xl border border-white/20 transform transition-all duration-700 opacity-0 translate-y-4" style={{ animation: 'fadeInUp 0.6s ease-out 0.3s both' }}>
+              <div className="text-center py-12 card animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
                 <p className="text-white/80 text-lg">
                   {searchQuery ? 'No posts found matching your search' : 'No posts available for this category'}
                 </p>
@@ -283,8 +273,8 @@ export default function Explore() {
               filteredPosts.map((post, index) => (
                 <div 
                   key={post.id}
-                  className="transform transition-all duration-700 opacity-0 translate-y-4"
-                  style={{ animation: `fadeInUp 0.6s ease-out ${0.3 + index * 0.1}s both` }}
+                  className="animate-fadeInUp"
+                  style={{ animationDelay: `${0.3 + index * 0.1}s` }}
                 >
                   <PostCard
                     post={post}
@@ -303,81 +293,8 @@ export default function Explore() {
         </div>
       </div>
 
-      <style jsx global>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slideInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        * {
-          transition-property: transform, opacity, background-color, border-color, box-shadow, color, scale;
-          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .hover\\:scale-105:hover {
-          transform: scale(1.05);
-        }
-
-        .hover\\:scale-110:hover {
-          transform: scale(1.1);
-        }
-
-        .hover\\:scale-\\[1\\.01\\]:hover {
-          transform: scale(1.01);
-        }
-
-        ::-webkit-scrollbar {
-          width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.3);
-          border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 255, 255, 0.5);
-        }
-
-        button:focus,
-        input:focus,
-        textarea:focus {
-          outline: 2px solid rgba(245, 158, 11, 0.5);
-          outline-offset: 2px;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          *,
-          *::before,
-          *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-      `}</style>
+      {/* Profile Bar */}
+      <ProfileBar currentUser={userProfile} />
     </div>
   );
 }

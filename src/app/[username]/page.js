@@ -1,17 +1,30 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import { supabase } from "../lib/supabase_client";
+import useUserStore from "../store/useUserStore"; // ADD THIS
 import SideBar from "../components/SideBar";
+import FollowButton from "../components/FollowButton";
+import FollowersModal from "../components/FollowersModal";
+import { useFollowers } from "../utils/useFollowers";
 
 export default function ProfilePage({ params }) {
-  const { username } = params;
+  // Unwrap params using React.use()
+  const { username } = use(params);
+  
+  // Get current user from Zustand
+  const { user: currentUser } = useUserStore(); // ADD THIS
   
   const [user, setUser] = useState(null)
   const [userPosts, setUserPosts] = useState([])
   const [likedPosts, setLikedPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [followersModalOpen, setFollowersModalOpen] = useState(false)
+  const [followingModalOpen, setFollowingModalOpen] = useState(false)
+
+  // Use the followers hook
+  const { followerCount, followingCount, refetch: refetchFollowers } = useFollowers(user?.id);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -74,6 +87,11 @@ export default function ProfilePage({ params }) {
       fetchProfileData()
     }
   }, [username])
+
+  const handleFollowChange = (isNowFollowing) => {
+    // Refetch followers data when follow status changes
+    refetchFollowers();
+  };
 
   // Loading state
   if (loading) {
@@ -143,8 +161,15 @@ export default function ProfilePage({ params }) {
                   user.username?.charAt(0).toUpperCase() || 'U'
                 )}
               </div>
-              <div>
-                <h1 className="text-6xl font-black text-amber-300 mb-2">{user.username}</h1>
+              <div className="flex-1">
+                <div className="flex items-center space-x-4 mb-2">
+                  <h1 className="text-6xl font-black text-amber-300">{user.username}</h1>
+                  <FollowButton
+                    currentUserId={currentUser?.id}
+                    targetUserId={user.id}
+                    onFollowChange={handleFollowChange}
+                  />
+                </div>
                 <p className="text-2xl text-amber-200 mb-4">{user.email}</p>
                 <p className="text-amber-200/80 text-lg">
                   Joined {new Date(user.created_at).toLocaleDateString('en-US', { 
@@ -164,6 +189,24 @@ export default function ProfilePage({ params }) {
                 </div>
                 <div className="text-amber-200 text-lg">Posts</div>
               </div>
+              <button
+                onClick={() => setFollowersModalOpen(true)}
+                className="text-center hover:scale-105 transition-all duration-200 cursor-pointer"
+              >
+                <div className="text-4xl font-black text-amber-300">
+                  {followerCount || 0}
+                </div>
+                <div className="text-amber-200 text-lg hover:text-amber-100">Followers</div>
+              </button>
+              <button
+                onClick={() => setFollowingModalOpen(true)}
+                className="text-center hover:scale-105 transition-all duration-200 cursor-pointer"
+              >
+                <div className="text-4xl font-black text-amber-300">
+                  {followingCount || 0}
+                </div>
+                <div className="text-amber-200 text-lg hover:text-amber-100">Following</div>
+              </button>
               <div className="text-center">
                 <div className="text-4xl font-black text-amber-300">
                   {likedPosts?.length || 0}
@@ -196,7 +239,7 @@ export default function ProfilePage({ params }) {
             {/* User's Posts Column */}
             <div>
               <h2 className="text-3xl font-black text-gray-900 mb-8 drop-shadow-lg">
-                My Posts
+                {currentUser?.id === user.id ? 'My Posts' : `${user.username}'s Posts`}
                 <span className="text-gray-800 text-xl ml-3 font-medium">({userPosts?.length || 0})</span>
               </h2>
               
@@ -224,7 +267,9 @@ export default function ProfilePage({ params }) {
                 ) : (
                   <div className="text-center py-16 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 rounded-2xl border border-gray-700">
                     <div className="text-amber-300 text-xl mb-4 font-bold">No posts yet</div>
-                    <div className="text-amber-200">Time to start sharing your pro journey!</div>
+                    <div className="text-amber-200">
+                      {currentUser?.id === user.id ? 'Time to start sharing your pro journey!' : 'This user hasn\'t posted yet'}
+                    </div>
                   </div>
                 )}
               </div>
@@ -233,7 +278,7 @@ export default function ProfilePage({ params }) {
             {/* Liked Posts Column */}
             <div>
               <h2 className="text-3xl font-black text-gray-900 mb-8 drop-shadow-lg">
-                Liked Posts
+                {currentUser?.id === user.id ? 'Liked Posts' : `${user.username}'s Liked Posts`}
                 <span className="text-gray-800 text-xl ml-3 font-medium">({likedPosts?.length || 0})</span>
               </h2>
               
@@ -264,16 +309,34 @@ export default function ProfilePage({ params }) {
                 ) : (
                   <div className="text-center py-16 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 rounded-2xl border border-gray-700">
                     <div className="text-amber-300 text-xl mb-4 font-bold">No liked posts yet</div>
-                    <div className="text-amber-200">Start exploring and supporting other pros!</div>
+                    <div className="text-amber-200">
+                      {currentUser?.id === user.id ? 'Start exploring and supporting other pros!' : 'This user hasn\'t liked any posts yet'}
+                    </div>
                   </div>
                 )}
               </div>
             </div>
-
           </div>
-
         </div>
       </div>
+
+      {/* Followers Modal */}
+      <FollowersModal
+        userId={user?.id}
+        username={user?.username}
+        isOpen={followersModalOpen}
+        onClose={() => setFollowersModalOpen(false)}
+        type="followers"
+      />
+
+      {/* Following Modal */}
+      <FollowersModal
+        userId={user?.id}
+        username={user?.username}
+        isOpen={followingModalOpen}
+        onClose={() => setFollowingModalOpen(false)}
+        type="following"
+      />
     </div>
   );
 }

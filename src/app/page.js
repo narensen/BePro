@@ -120,7 +120,7 @@ export default function Home() {
 
         {user ? (
           <div className="absolute top-6 right-6 flex gap-3 z-20">
-            <button className="bg-gray-900 text-amber-300 px-5 py-3 rounded-xl font-bold shadow-lg hover:bg-gray-800 hover:scale-105 transition-all duration-300">
+            <button className="bg-gray-900 text-amber-300 px-5 py-3 rounded-xl font-bold shadow-lg hover:bg-gray-800 hover:scale-105 transition-all duration-300 cursor-pointer">
               <Link href="/home">Home</Link>
             </button>
             <button

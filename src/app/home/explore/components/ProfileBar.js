@@ -1,0 +1,355 @@
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { supabase } from '../../../lib/supabase_client';
+
+export default function ProfileBar({ currentUser }) {
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Calculate similarity score between two users
+  const calculateSimilarity = useCallback((user1, user2) => {
+    if (!user1 || !user2) return 0;
+    
+    let score = 0;
+    let maxScore = 0;
+
+    // Tags similarity (highest priority - 60%)
+    if (user1.tags && user2.tags && Array.isArray(user1.tags) && Array.isArray(user2.tags)) {
+      const tags1 = user1.tags;
+      const tags2 = user2.tags;
+      if (tags1.length > 0 && tags2.length > 0) {
+        const commonTags = tags1.filter(tag => tags2.includes(tag));
+        const tagSimilarity = commonTags.length / Math.max(tags1.length, tags2.length, 1);
+        score += tagSimilarity * 0.6;
+      }
+    }
+    maxScore += 0.6;
+
+    // Location similarity (second priority - 30%)
+    if (user1.location && user2.location && 
+        typeof user1.location === 'string' && typeof user2.location === 'string') {
+      const locationSimilarity = user1.location.toLowerCase().trim() === user2.location.toLowerCase().trim() ? 1 : 0;
+      score += locationSimilarity * 0.3;
+    }
+    maxScore += 0.3;
+
+    // University similarity (third priority - 10%)
+    if (user1.university && user2.university && 
+        typeof user1.university === 'string' && typeof user2.university === 'string') {
+      const universitySimilarity = user1.university.toLowerCase().trim() === user2.university.toLowerCase().trim() ? 1 : 0;
+      score += universitySimilarity * 0.1;
+    }
+    maxScore += 0.1;
+
+    return maxScore > 0 ? score / maxScore : 0;
+  }, []);
+
+  // Handle user profile navigation
+  const handleUserClick = (username) => {
+    if (username) {
+      router.push(`/${username}`);
+    }
+  };
+
+  // Fetch recommended users based on similarity
+  const fetchRecommendations = useCallback(async () => {
+    if (!currentUser?.id) {
+      console.warn('No current user ID provided');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // First, check if the profile table exists and is accessible
+      const { data: users, error } = await supabase
+        .from('profile')
+        .select('id, username, email, location, university, tags, avatar_url, created_at')
+        .neq('id', currentUser.id)
+        .limit(50);
+
+      if (error) {
+        console.error('Supabase error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        
+        // Set user-friendly error message
+        if (error.code === 'PGRST116') {
+          setError('Table not found. Please check your database setup.');
+        } else if (error.code === '42501') {
+          setError('Permission denied. Please check your RLS policies.');
+        } else {
+          setError(`Database error: ${error.message}`);
+        }
+        return;
+      }
+
+      if (!users || users.length === 0) {
+        setRecommendations([]);
+        return;
+      }
+
+      // Calculate similarity scores and sort
+      const usersWithScores = users.map(user => ({
+        ...user,
+        similarity: calculateSimilarity(currentUser, user)
+      }));
+
+      // Sort by similarity score and take top 5
+      const topRecommendations = usersWithScores
+        .sort((a, b) => b.similarity - a.similarity)
+        .slice(0, 5)
+        .filter(user => user.similarity > 0); // Only show users with some similarity
+
+      setRecommendations(topRecommendations);
+    } catch (error) {
+      console.error('Error fetching recommendations:', error);
+      setError('Failed to load recommendations. Please try again.');
+      setRecommendations([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [currentUser, calculateSimilarity]);
+
+  // Search users
+  const searchUsers = useCallback(async (query) => {
+    if (!query.trim()) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    try {
+      setIsSearching(true);
+      setError(null);
+      
+      const { data: users, error } = await supabase
+        .from('profile')
+        .select('id, username, email, location, university, tags, avatar_url, created_at')
+        .neq('id', currentUser?.id)
+        .or(`username.ilike.%${query}%,email.ilike.%${query}%,location.ilike.%${query}%,university.ilike.%${query}%`)
+        .limit(10);
+
+      if (error) {
+        console.error('Search error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        setError(`Search failed: ${error.message}`);
+        setSearchResults([]);
+        return;
+      }
+
+      setSearchResults(users || []);
+    } catch (error) {
+      console.error('Error searching users:', error);
+      setError('Search failed. Please try again.');
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  }, [currentUser?.id]);
+
+  // Debounced search
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      searchUsers(searchQuery);
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, searchUsers]);
+
+  // Fetch recommendations on mount
+  useEffect(() => {
+    fetchRecommendations();
+  }, [fetchRecommendations]);
+
+  const UserCard = ({ user, showSimilarity = false }) => {
+    if (!user) return null;
+    
+    return (
+      <div className="bg-gray-800 border border-gray-700 rounded-xl p-4 hover:bg-gray-700 transition-all duration-300 cursor-pointer shadow-lg">
+        <div 
+          className="flex items-center space-x-3"
+          onClick={() => handleUserClick(user.username)}
+        >
+          <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-yellow-400 rounded-full flex items-center justify-center flex-shrink-0">
+            {user.avatar_url ? (
+              <img 
+                src={user.avatar_url} 
+                alt={user.username || 'User'} 
+                className="w-full h-full rounded-full object-cover"
+              />
+            ) : (
+              <span className="text-white font-bold text-lg">
+                {user.username?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
+              </span>
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-amber-300 truncate text-lg hover:text-amber-200 transition-colors">
+              {user.username || user.email?.split('@')[0] || 'Anonymous'}
+            </p>
+            <p className="text-sm text-gray-400 truncate">
+              {user.location || 'Location not specified'}
+            </p>
+            {showSimilarity && user.similarity !== undefined && (
+              <div className="flex items-center mt-2">
+                <div className="w-20 h-2 bg-gray-600 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full transition-all duration-300"
+                    style={{ width: `${user.similarity * 100}%` }}
+                  />
+                </div>
+                <span className="text-xs text-gray-400 ml-2 font-medium">
+                  {Math.round(user.similarity * 100)}% match
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {/* Tags */}
+        {user.tags && Array.isArray(user.tags) && user.tags.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {user.tags.slice(0, 3).map((tag, index) => (
+              <span
+                key={index}
+                className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 text-xs rounded-full font-medium"
+              >
+                {tag}
+              </span>
+            ))}
+            {user.tags.length > 3 && (
+              <span className="text-xs text-gray-400 flex items-center px-2">
+                +{user.tags.length - 3} more
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div className="w-80 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 border-l-2 border-amber-400 h-full fixed right-0 top-0 overflow-y-auto shadow-2xl">
+      <div className="p-6">
+        {/* Header */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-black text-amber-300 mb-2">Discover People</h2>
+          <p className="text-gray-400 text-sm">Find and connect with others</p>
+        </div>
+
+        {/* Error Display */}
+        {error && (
+          <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl">
+            <p className="text-red-200 text-sm">{error}</p>
+            <button
+              onClick={() => setError(null)}
+              className="mt-2 text-red-300 hover:text-red-100 text-xs underline"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
+
+        {/* Search Bar */}
+        <div className="mb-8">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search users..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
+            />
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              {isSearching ? (
+                <div className="w-5 h-5 border-2 border-gray-400 border-t-amber-400 rounded-full animate-spin" />
+              ) : (
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Search Results */}
+        {searchQuery && (
+          <div className="mb-8">
+            <h3 className="text-xl font-bold text-amber-300 mb-4 flex items-center">
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Search Results
+            </h3>
+            {searchResults.length === 0 ? (
+              <div className="text-center py-8">
+                <svg className="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <p className="text-gray-400 text-sm">
+                  {isSearching ? 'Searching...' : 'No users found'}
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {searchResults.map((user) => (
+                  <UserCard key={user.id} user={user} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Recommendations */}
+        {!searchQuery && (
+          <div>
+            <h3 className="text-xl font-bold text-amber-300 mb-4 flex items-center">
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              People You May Know
+            </h3>
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <div className="w-8 h-8 border-2 border-gray-600 border-t-amber-400 rounded-full animate-spin mx-auto mb-4" />
+                  <p className="text-gray-400 text-sm">Finding recommendations...</p>
+                </div>
+              </div>
+            ) : recommendations.length === 0 ? (
+              <div className="text-center py-8">
+                <svg className="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <p className="text-gray-400 text-sm mb-2">No recommendations available</p>
+                <p className="text-gray-500 text-xs">
+                  Add more tags and profile information to get better suggestions!
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {recommendations.map((user) => (
+                  <UserCard key={user.id} user={user} showSimilarity={true} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
