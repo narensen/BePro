@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '../../lib/supabase_client'
-import SideBar from '../../components/SideBar'
-import useUserStore from '../../store/useUserStore'
+import { supabase } from '../lib/supabase_client'
+import SideBar from '../components/SideBar'
+import useUserStore from '../store/useUserStore'
 
 export default function BeProAI() {
   const router = useRouter()
@@ -38,7 +38,7 @@ export default function BeProAI() {
       <div className="min-h-screen pl-72"> {/* Push content to the right of the sidebar */}
   <div className="sticky top-0 bg-white/20 backdrop-blur-md border-b border-white/30 p-4 z-10">
     <h1 className="text-3xl font-black text-gray-900">
-      BePro AI
+      Fermitor
     </h1>
   </div>
 </div>
