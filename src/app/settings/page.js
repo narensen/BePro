@@ -519,7 +519,7 @@ export default function SettingsPage() {
                   </div>
                   <div>
                     <label className="block text-amber-200 text-sm font-bold mb-2">
-                      X (Twitter) URL
+                      X URL
                     </label>
                     <input
                       type="url"
@@ -554,19 +554,6 @@ export default function SettingsPage() {
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors"
                       placeholder="Your University"
-                    />
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-amber-200 text-sm font-bold mb-2">
-                      Work Experience
-                    </label>
-                    <textarea
-                      name="work_experience"
-                      value={formData.work_experience || ''}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors"
-                      rows={3}
-                      placeholder="Describe your work experience"
                     />
                   </div>
                 </div>
