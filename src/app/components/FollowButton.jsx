@@ -1,24 +1,67 @@
-// components/FollowButton.js
 import { useState, useEffect } from 'react';
 import { useFollowUser } from '../utils/useFollowUser';
 import { supabase } from '../lib/supabase_client';
+import useUserStore from '../store/useUserStore';
 
-const FollowButton = ({ currentUserId, targetUserId, onFollowChange }) => {
+const FollowButton = ({ targetUserId, targetUsername, onFollowChange }) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [checkingStatus, setCheckingStatus] = useState(true);
   const { followUser, unfollowUser, loading, error } = useFollowUser();
+  const { user, username: currentUsername } = useUserStore();
 
-  // Check follow status on component mount and when user IDs change
+  // Get current user ID from the store or fetch it
+  const [currentUserId, setCurrentUserId] = useState(null);
+
+  // Fetch current user ID when component mounts
   useEffect(() => {
-    const checkStatus = async () => {
-      if (!currentUserId || !targetUserId || currentUserId === targetUserId) {
+    const getCurrentUserId = async () => {
+      if (!currentUsername) {
+        setCurrentUserId(null);
+        return;
+      }
+
+      try {
+        const { data: currentUser, error } = await supabase
+          .from('profile')
+          .select('id')
+          .eq('username', currentUsername)
+          .single();
+
+        if (error) {
+          console.error('Error fetching current user ID:', error);
+          setCurrentUserId(null);
+        } else {
+          setCurrentUserId(currentUser.id);
+        }
+      } catch (err) {
+        console.error('Error getting current user ID:', err);
+        setCurrentUserId(null);
+      }
+    };
+
+    getCurrentUserId();
+  }, [currentUsername]);
+
+  // Check follow status when we have both user IDs
+  useEffect(() => {
+    const checkFollowStatus = async () => {
+      // Reset state first
+      setCheckingStatus(true);
+      setIsFollowing(false);
+
+      // Early return conditions
+      if (!currentUserId || !targetUserId) {
+        setCheckingStatus(false);
+        return;
+      }
+
+      // If it's the same user, no need to check follow status
+      if (currentUserId === targetUserId) {
         setCheckingStatus(false);
         return;
       }
 
       try {
-        setCheckingStatus(true);
-        
         const { data, error } = await supabase
           .from('followers')
           .select('id')
@@ -40,7 +83,7 @@ const FollowButton = ({ currentUserId, targetUserId, onFollowChange }) => {
       }
     };
 
-    checkStatus();
+    checkFollowStatus();
   }, [currentUserId, targetUserId]);
 
   const handleFollowToggle = async () => {
@@ -49,13 +92,26 @@ const FollowButton = ({ currentUserId, targetUserId, onFollowChange }) => {
       return;
     }
 
-    console.log('Follow toggle initiated:', { currentUserId, targetUserId, isFollowing });
+    // Double-check we're not trying to follow ourselves
+    if (currentUserId === targetUserId) {
+      console.error('Cannot follow yourself');
+      return;
+    }
+
+    console.log('Follow toggle initiated:', { 
+      currentUserId, 
+      targetUserId, 
+      targetUsername,
+      isFollowing 
+    });
 
     let success;
     if (isFollowing) {
-      success = await unfollowUser(currentUserId, targetUserId);
+      // Use targetUserId or targetUsername for unfollow
+      success = await unfollowUser(targetUserId || targetUsername);
     } else {
-      success = await followUser(currentUserId, targetUserId);
+      // Use targetUserId or targetUsername for follow
+      success = await followUser(targetUserId || targetUsername);
     }
 
     console.log('Operation result:', { success, error });
@@ -66,20 +122,13 @@ const FollowButton = ({ currentUserId, targetUserId, onFollowChange }) => {
       onFollowChange?.(newFollowState);
     } else {
       console.error('Follow/unfollow operation failed. Error from hook:', error);
-      // You might want to show a toast notification here
     }
   };
 
   // Early returns for different states
-  if (currentUserId === targetUserId) {
-    return (
-      <div className="text-amber-200/60 text-sm italic">
-        Your profile
-      </div>
-    );
-  }
-
-  if (!currentUserId) {
+  
+  // If we don't have current user info, show login prompt
+  if (!currentUsername || !currentUserId) {
     return (
       <div className="text-amber-200/60 text-sm italic">
         Login to follow
@@ -87,6 +136,16 @@ const FollowButton = ({ currentUserId, targetUserId, onFollowChange }) => {
     );
   }
 
+  // If it's the current user's own profile, show "Your profile"
+  if (currentUserId === targetUserId || currentUsername === targetUsername) {
+    return (
+      <div className="text-amber-200/60 text-sm italic">
+        
+      </div>
+    );
+  }
+
+  // If still checking follow status, show loading
   if (checkingStatus) {
     return (
       <div className="w-24 h-10 bg-gradient-to-r from-gray-800 to-gray-900 rounded-full animate-pulse border border-gray-700 flex items-center justify-center">

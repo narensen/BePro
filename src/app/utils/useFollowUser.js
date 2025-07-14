@@ -1,83 +1,101 @@
-// utils/useFollowUser.js
 import { useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase_client';
+import useUserStore from '../store/useUserStore';
 
 export const useFollowUser = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { user, username } = useUserStore();
 
-  const followUser = useCallback(async (currentUserId, targetUserId) => {
+  // Helper function to get user ID from identifier
+  const getUserId = useCallback(async (identifier) => {
+    if (!identifier) return null;
+
+    // Check if identifier is already a UUID
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
+    
+    if (isUUID) {
+      // Verify the UUID exists in the profile table
+      const { data, error } = await supabase
+        .from('profile')
+        .select('id')
+        .eq('id', identifier)
+        .single();
+      
+      if (error || !data) {
+        console.error('User ID not found in profile table:', identifier);
+        return null;
+      }
+      return identifier;
+    } else {
+      // Look up by username
+      const { data, error } = await supabase
+        .from('profile')
+        .select('id')
+        .eq('username', identifier)
+        .single();
+      
+      if (error || !data) {
+        console.error('Username not found in profile table:', identifier);
+        return null;
+      }
+      return data.id;
+    }
+  }, []);
+
+  // Helper function to get current user ID
+  const getCurrentUserId = useCallback(async () => {
+    if (!username) return null;
+
+    const { data, error } = await supabase
+      .from('profile')
+      .select('id')
+      .eq('username', username)
+      .single();
+
+    if (error || !data) {
+      console.error('Current user not found:', error);
+      return null;
+    }
+    return data.id;
+  }, [username]);
+
+  const followUser = useCallback(async (targetUserIdentifier) => {
     try {
       setLoading(true);
       setError(null);
 
-      // Add validation
-      if (!currentUserId || !targetUserId) {
-        const errorMsg = 'User IDs are required';
-        console.error(errorMsg, { currentUserId, targetUserId });
-        setError(errorMsg);
+      if (!targetUserIdentifier) {
+        setError('Target user identifier is required');
         return false;
       }
 
+      if (!username) {
+        setError('You must be logged in to follow users');
+        return false;
+      }
+
+      // Get current user ID
+      const currentUserId = await getCurrentUserId();
+      if (!currentUserId) {
+        setError('Current user not found. Please log in again.');
+        return false;
+      }
+
+      // Get target user ID
+      const targetUserId = await getUserId(targetUserIdentifier);
+      if (!targetUserId) {
+        setError('User not found');
+        return false;
+      }
+
+      // Check if trying to follow yourself
       if (currentUserId === targetUserId) {
-        const errorMsg = 'Cannot follow yourself';
-        console.error(errorMsg);
-        setError(errorMsg);
+        setError('Cannot follow yourself');
         return false;
       }
 
-      console.log('Attempting to follow:', { 
-        currentUserId: currentUserId, 
-        targetUserId: targetUserId,
-        currentUserIdType: typeof currentUserId,
-        targetUserIdType: typeof targetUserId
-      });
-
-      // Verify both users exist before attempting to follow
-      console.log('Checking if current user exists in profile table...');
-      const { data: currentUser, error: currentUserError } = await supabase
-        .from('profile')
-        .select('id')
-        .eq('id', currentUserId)
-        .single();
-
-      console.log('Current user check result:', { currentUser, currentUserError });
-
-      if (currentUserError || !currentUser) {
-        console.error('Current user not found in profile table:', {
-          error: currentUserError,
-          currentUserId: currentUserId,
-          errorCode: currentUserError?.code
-        });
-        
-        if (currentUserError?.code === 'PGRST116') {
-          setError('User profile not found. Please try logging out and back in.');
-        } else {
-          setError('User session invalid. Please log in again.');
-        }
-        return false;
-      }
-
-      console.log('Checking if target user exists in profile table...');
-      const { data: targetUser, error: targetUserError } = await supabase
-        .from('profile')
-        .select('id')
-        .eq('id', targetUserId)
-        .single();
-
-      console.log('Target user check result:', { targetUser, targetUserError });
-
-      if (targetUserError || !targetUser) {
-        console.error('Target user not found in profile table:', {
-          error: targetUserError,
-          targetUserId: targetUserId,
-          errorCode: targetUserError?.code
-        });
-        setError('User not found.');
-        return false;
-      }
-
-      // Check if already following first to prevent duplicates
+      // Check if already following
       const { data: existingFollow, error: checkError } = await supabase
         .from('followers')
         .select('id')
@@ -85,7 +103,6 @@ export const useFollowUser = () => {
         .eq('following_id', targetUserId)
         .single();
 
-      // Only ignore "no rows returned" error for the check
       if (checkError && checkError.code !== 'PGRST116') {
         console.error('Error checking existing follow:', checkError);
         setError('Failed to check follow status');
@@ -93,115 +110,106 @@ export const useFollowUser = () => {
       }
 
       if (existingFollow) {
-        console.log('Already following this user');
+        // Already following, return success
         return true;
       }
 
-      console.log('Attempting to insert follow relationship...');
-      const { data, error } = await supabase
+      // Create follow relationship
+      const { error: insertError } = await supabase
         .from('followers')
-        .insert([
-          {
-            follower_id: currentUserId,
-            following_id: targetUserId
-          }
-        ])
-        .select();
-
-      if (error) {
-        console.error('Supabase follow error:', error);
-        console.error('Insert attempt details:', {
+        .insert([{
           follower_id: currentUserId,
-          following_id: targetUserId,
-          errorCode: error.code,
-          errorMessage: error.message
-        });
+          following_id: targetUserId
+        }]);
+
+      if (insertError) {
+        console.error('Error creating follow relationship:', insertError);
         
         // Handle specific error types
-        let errorMessage = 'Failed to follow user';
-        
-        if (error.code === '23503') { // Foreign key constraint violation
-          if (error.message.includes('followers_follower_id_fkey')) {
-            errorMessage = 'Your user profile is invalid. Please log out and back in.';
-          } else if (error.message.includes('followers_following_id_fkey')) {
-            errorMessage = 'User not found.';
+        if (insertError.code === '23505') {
+          // Unique constraint violation - already following
+          return true;
+        } else if (insertError.code === '23503') {
+          // Foreign key constraint violation
+          if (insertError.message.includes('followers_follower_id_fkey')) {
+            setError('Your profile is invalid. Please log out and back in.');
           } else {
-            errorMessage = 'Database constraint error.';
+            setError('User not found.');
           }
-        } else if (error.code === '23505') { // Unique constraint violation
-          errorMessage = 'Already following this user.';
-        } else if (error.message) {
-          errorMessage = error.message;
+        } else {
+          setError(insertError.message || 'Failed to follow user');
         }
-        
-        setError(errorMessage);
         return false;
       }
 
-      console.log('Follow successful:', data);
       return true;
     } catch (err) {
       console.error('Unexpected error following user:', err);
-      
-      const errorMessage = err?.message || err?.toString() || 'Unknown error occurred';
-      setError(errorMessage);
+      setError(err?.message || 'An unexpected error occurred');
       return false;
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [username, getCurrentUserId, getUserId]);
 
-  const unfollowUser = useCallback(async (currentUserId, targetUserId) => {
+  const unfollowUser = useCallback(async (targetUserIdentifier) => {
     try {
       setLoading(true);
       setError(null);
 
-      if (!currentUserId || !targetUserId) {
-        const errorMsg = 'User IDs are required for unfollow';
-        console.error(errorMsg, { currentUserId, targetUserId });
-        setError(errorMsg);
+      if (!targetUserIdentifier) {
+        setError('Target user identifier is required');
         return false;
       }
 
-      console.log('Attempting to unfollow:', { currentUserId, targetUserId });
+      if (!username) {
+        setError('You must be logged in to unfollow users');
+        return false;
+      }
 
-      const { error } = await supabase
+      // Get current user ID
+      const currentUserId = await getCurrentUserId();
+      if (!currentUserId) {
+        setError('Current user not found. Please log in again.');
+        return false;
+      }
+
+      // Get target user ID
+      const targetUserId = await getUserId(targetUserIdentifier);
+      if (!targetUserId) {
+        setError('User not found');
+        return false;
+      }
+
+      // Delete follow relationship
+      const { error: deleteError } = await supabase
         .from('followers')
         .delete()
         .eq('follower_id', currentUserId)
         .eq('following_id', targetUserId);
 
-      if (error) {
-        console.error('Supabase unfollow error:', error);
-        console.error('Error details:', {
-          message: error.message || 'Unknown error',
-          details: error.details || 'No details',
-          hint: error.hint || 'No hint',
-          code: error.code || 'No code'
-        });
-        
-        const errorMessage = error.message || error.details || 'Failed to unfollow user';
-        setError(errorMessage);
+      if (deleteError) {
+        console.error('Error deleting follow relationship:', deleteError);
+        setError(deleteError.message || 'Failed to unfollow user');
         return false;
       }
 
-      console.log('Unfollow successful');
       return true;
     } catch (err) {
       console.error('Unexpected error unfollowing user:', err);
-      console.error('Error type:', typeof err);
-      console.error('Error string:', String(err));
-      
-      const errorMessage = err?.message || err?.toString() || 'Unknown error occurred';
-      setError(errorMessage);
+      setError(err?.message || 'An unexpected error occurred');
       return false;
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [username, getCurrentUserId, getUserId]);
 
   const checkFollowStatus = useCallback(async (currentUserId, targetUserId) => {
     try {
+      if (!currentUserId || !targetUserId) {
+        return false;
+      }
+
       const { data, error } = await supabase
         .from('followers')
         .select('id')
@@ -211,8 +219,9 @@ export const useFollowUser = () => {
 
       if (error && error.code !== 'PGRST116') {
         console.error('Error checking follow status:', error);
-        throw error;
+        return false;
       }
+      
       return !!data;
     } catch (err) {
       console.error('Error checking follow status:', err);

@@ -170,7 +170,7 @@ export default function ProfilePage({ params }) {
                     onFollowChange={handleFollowChange}
                   />
                 </div>
-                <p className="text-2xl text-amber-200 mb-4">{user.email}</p>
+                <p className="text-2xl text-amber-200 mb-4">{user.name}</p>
                 <p className="text-amber-200/80 text-lg">
                   Joined {new Date(user.created_at).toLocaleDateString('en-US', { 
                     year: 'numeric', 

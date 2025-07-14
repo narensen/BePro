@@ -176,10 +176,10 @@ export default function ProfileBar({ currentUser }) {
   }, [fetchRecommendations]);
 
   const UserCard = ({ user, showSimilarity = false }) => {
-    if (!user) return null;
+    if (!user) return null; 
     
     return (
-      <div className="bg-gray-800 border border-gray-700 rounded-xl p-4 hover:bg-gray-700 transition-all duration-300 cursor-pointer shadow-lg">
+      <div className="bg-white rounded-xl p-4 hover:scale-105 transition-all duration-300 cursor-pointer shadow-lg">
         <div 
           className="flex items-center space-x-3"
           onClick={() => handleUserClick(user.username)}
@@ -198,11 +198,8 @@ export default function ProfileBar({ currentUser }) {
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-bold text-amber-300 truncate text-lg hover:text-amber-200 transition-colors">
+            <p className="font-bold truncate text-lg hover:text-amber-600 transition-colors">
               {user.username || user.email?.split('@')[0] || 'Anonymous'}
-            </p>
-            <p className="text-sm text-gray-400 truncate">
-              {user.location || 'Location not specified'}
             </p>
             {showSimilarity && user.similarity !== undefined && (
               <div className="flex items-center mt-2">
@@ -243,12 +240,12 @@ export default function ProfileBar({ currentUser }) {
   };
 
   return (
-    <div className="w-80 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 border-l-2 border-amber-400 h-full fixed right-0 top-0 overflow-y-auto shadow-2xl">
+    <div className="w-80 bg-white/90 backdrop-blur-sm border-l-2 border-amber-400 h-full fixed right-0 top-0 overflow-y-auto shadow-2xl">
       <div className="p-6">
         {/* Header */}
         <div className="mb-6">
-          <h2 className="text-2xl font-black text-amber-300 mb-2">Discover People</h2>
-          <p className="text-gray-400 text-sm">Find and connect with others</p>
+          <h2 className="text-2xl font-black mb-2">Discover People</h2>
+          <p className="text-gray-600 text-sm">Find and connect with others</p>
         </div>
 
         {/* Error Display */}
@@ -272,7 +269,7 @@ export default function ProfileBar({ currentUser }) {
               placeholder="Search users..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 bg-black/80 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               {isSearching ? (
@@ -317,7 +314,7 @@ export default function ProfileBar({ currentUser }) {
         {/* Recommendations */}
         {!searchQuery && (
           <div>
-            <h3 className="text-xl font-bold text-amber-300 mb-4 flex items-center">
+            <h3 className="text-xl font-bold mb-4 flex items-center">
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
