@@ -1,12 +1,9 @@
 'use client'
-
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase_client'
 import SideBar from '../components/SideBar'
 import { useRouter } from 'next/navigation'
 import { Camera, Upload, X, Loader2, Search, Tag } from 'lucide-react'
-
-// Import the structured tag system
 import { availableTags } from '../../app/profile/build/availableTags'
 
 export default function SettingsPage() {
@@ -19,12 +16,17 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile')
   const router = useRouter()
 
-  // Form states
+  // Complete form state with new fields
   const [formData, setFormData] = useState({
     email: '',
     fullName: '',
     tags: [],
-    avatar_url: ''
+    avatar_url: '',
+    github_url: '',
+    x_url: '',
+    location: '',
+    university: '',
+    work_experience: ''
   })
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -45,14 +47,13 @@ export default function SettingsPage() {
     const fetchUserData = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
-        
         if (!session) {
           router.push('/auth')
           return
         }
 
         setUser(session.user)
-        
+
         // Fetch profile from database
         const { data: profileData } = await supabase
           .from('profile')
@@ -66,18 +67,22 @@ export default function SettingsPage() {
             email: profileData.email || '',
             fullName: session.user.user_metadata?.full_name || '',
             tags: profileData.tags || [],
-            avatar_url: profileData.avatar_url || ''
+            avatar_url: profileData.avatar_url || '',
+            github_url: profileData.github_url || '',
+            x_url: profileData.x_url || '',
+            location: profileData.location || '',
+            university: profileData.university || '',
+            work_experience: profileData.work_experience || ''
           })
-          
+
           // Convert tag names to tag IDs for the structured system
           const tagIds = profileData.tags?.map(tagName => {
             const tag = availableTags.find(t => t.name === tagName)
             return tag ? tag.id : null
           }).filter(Boolean) || []
-          
+
           setSelectedTags(tagIds)
         }
-
       } catch (error) {
         console.error('Error fetching user data:', error)
         showMessage('Error loading user data', 'error')
@@ -145,15 +150,12 @@ export default function SettingsPage() {
         showMessage('Image size must be less than 5MB', 'error')
         return
       }
-
       // Check file type
       if (!file.type.startsWith('image/')) {
         showMessage('Please select an image file', 'error')
         return
       }
-
       setAvatarFile(file)
-      
       // Create preview
       const reader = new FileReader()
       reader.onload = (e) => {
@@ -173,8 +175,6 @@ export default function SettingsPage() {
       const fileName = `${Date.now()}.${fileExt}`
       const filePath = `${user.id}/${fileName}` // ✅ This matches ProfileBuilder structure
 
-      console.log('Uploading file:', filePath, 'to avatars bucket')
-
       // Upload file to avatars bucket under the user's UID folder
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('avatars')
@@ -184,7 +184,6 @@ export default function SettingsPage() {
         })
 
       if (uploadError) {
-        console.error('Upload error details:', uploadError)
         if (uploadError.message?.includes('The resource you requested could not be found')) {
           throw new Error('Storage bucket not accessible. Check RLS policies.')
         } else if (uploadError.message?.includes('not allowed') || uploadError.message?.includes('policy')) {
@@ -206,15 +205,11 @@ export default function SettingsPage() {
         .getPublicUrl(uploadData.path)
 
       if (urlError) {
-        console.error('Public URL error:', urlError)
         throw new Error('Failed to get image URL')
       }
 
-      console.log('Avatar uploaded successfully:', publicUrl)
       return publicUrl
-
     } catch (error) {
-      console.error('Avatar upload error:', error)
       showMessage(error.message || 'Failed to upload avatar. Please try again.', 'error')
       return null
     } finally {
@@ -234,7 +229,6 @@ export default function SettingsPage() {
   const handleProfileUpdate = async (e) => {
     e.preventDefault()
     setUpdating(true)
-
     try {
       // Upload avatar if a new one was selected
       let uploadedAvatarUrl = formData.avatar_url
@@ -263,28 +257,28 @@ export default function SettingsPage() {
           avatar_url: uploadedAvatarUrl
         }
       })
-
       if (authError) {
-        console.error('Auth update error:', authError)
         throw new Error(authError.message || 'Failed to update user authentication')
       }
 
-      // Update profile in database
+      // Only send updated fields (not empty/unchanged)
       const updateData = {
         email: formData.email,
         tags: selectedTagNames,
-        avatar_url: uploadedAvatarUrl
+        avatar_url: uploadedAvatarUrl,
+        github_url: formData.github_url || null,
+        x_url: formData.x_url || null,
+        location: formData.location || null,
+        university: formData.university || null,
+        work_experience: formData.work_experience || null
       }
-      
-      console.log('Updating profile with data:', updateData)
-      
+
       const { error: profileError } = await supabase
         .from('profile')
         .update(updateData)
-        .eq('email', user.email) // Use email instead of id for consistency
+        .eq('email', user.email)
 
       if (profileError) {
-        console.error('Profile update error:', profileError)
         throw new Error(profileError.message || 'Failed to update profile')
       }
 
@@ -295,25 +289,19 @@ export default function SettingsPage() {
         tags: selectedTagNames
       }))
 
-      // Update profile state
       setProfile(prev => ({
         ...prev,
         ...updateData
       }))
 
-      // Reset avatar upload states
       setAvatarFile(null)
       setAvatarPreview(null)
-
       showMessage('Profile updated successfully!', 'success')
     } catch (error) {
-      console.error('Error updating profile:', error)
-      
       let errorMessage = 'Error updating profile'
       if (error instanceof Error) {
         errorMessage = error.message
       }
-      
       showMessage(errorMessage, 'error')
     } finally {
       setUpdating(false)
@@ -350,7 +338,6 @@ export default function SettingsPage() {
         confirmPassword: ''
       })
     } catch (error) {
-      console.error('Error updating password:', error)
       showMessage(error.message || 'Error updating password', 'error')
     } finally {
       setUpdating(false)
@@ -370,11 +357,9 @@ export default function SettingsPage() {
 
         // Sign out user
         await supabase.auth.signOut()
-        
         showMessage('Account deleted successfully', 'success')
         router.push('/')
       } catch (error) {
-        console.error('Error deleting account:', error)
         showMessage('Error deleting account', 'error')
       }
     }
@@ -402,20 +387,17 @@ export default function SettingsPage() {
       <div className="flex-1 pl-72 min-h-screen">
         <div className="max-w-6xl mx-auto py-12 px-8">
           
-          {/* Page Header */}
           <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-2xl rounded-2xl p-8 mb-8 border border-gray-700">
             <h1 className="text-4xl font-black mb-2">Settings</h1>
             <p className="text-amber-200 text-lg">Manage your account preferences and profile information</p>
           </div>
 
-          {/* Message Display */}
           {message && (
             <div className={`mb-6 p-4 rounded-xl ${messageType === 'success' ? 'bg-green-500/20 text-green-300 border border-green-500/30' : 'bg-red-500/20 text-red-300 border border-red-500/30'}`}>
               {message}
             </div>
           )}
 
-          {/* Tab Navigation */}
           <div className="mb-8">
             <div className="flex space-x-4 bg-gray-900/50 p-2 rounded-xl">
               {['profile', 'password', 'account'].map((tab) => (
@@ -434,7 +416,6 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* Profile Tab */}
           {activeTab === 'profile' && (
             <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-2xl rounded-2xl p-8 border border-gray-700">
               <h2 className="text-2xl font-black mb-6">Profile Information</h2>
@@ -462,7 +443,6 @@ export default function SettingsPage() {
                         </span>
                       )}
                     </div>
-                    
                     {(avatarPreview || formData.avatar_url) && (
                       <button
                         type="button"
@@ -473,7 +453,6 @@ export default function SettingsPage() {
                       </button>
                     )}
                   </div>
-
                   <div className="flex gap-2">
                     <label className="cursor-pointer bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors border border-amber-500/30">
                       <Camera size={16} />
@@ -487,7 +466,6 @@ export default function SettingsPage() {
                         className="hidden"
                       />
                     </label>
-                    
                     {avatarUploading && (
                       <div className="flex items-center gap-2 text-amber-300">
                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -495,7 +473,6 @@ export default function SettingsPage() {
                       </div>
                     )}
                   </div>
-                  
                   <p className="text-xs text-amber-200 mt-2">
                     JPG, PNG, GIF up to 5MB
                   </p>
@@ -515,7 +492,6 @@ export default function SettingsPage() {
                       required
                     />
                   </div>
-                  
                   <div>
                     <label className="block text-amber-200 text-sm font-bold mb-2">
                       Full Name
@@ -526,6 +502,71 @@ export default function SettingsPage() {
                       value={formData.fullName}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-amber-200 text-sm font-bold mb-2">
+                      GitHub URL
+                    </label>
+                    <input
+                      type="url"
+                      name="github_url"
+                      value={formData.github_url || ''}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors"
+                      placeholder="https://github.com/yourprofile"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-amber-200 text-sm font-bold mb-2">
+                      X (Twitter) URL
+                    </label>
+                    <input
+                      type="url"
+                      name="x_url"
+                      value={formData.x_url || ''}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors"
+                      placeholder="https://x.com/yourprofile"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-amber-200 text-sm font-bold mb-2">
+                      Location
+                    </label>
+                    <input
+                      type="text"
+                      name="location"
+                      value={formData.location || ''}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors"
+                      placeholder="City, Country"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-amber-200 text-sm font-bold mb-2">
+                      University
+                    </label>
+                    <input
+                      type="text"
+                      name="university"
+                      value={formData.university || ''}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors"
+                      placeholder="Your University"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-amber-200 text-sm font-bold mb-2">
+                      Work Experience
+                    </label>
+                    <textarea
+                      name="work_experience"
+                      value={formData.work_experience || ''}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors"
+                      rows={3}
+                      placeholder="Describe your work experience"
                     />
                   </div>
                 </div>
@@ -604,7 +645,6 @@ export default function SettingsPage() {
                       ))}
                     </div>
                   </div>
-                  
                   <p className="text-xs text-amber-200 mt-2">
                     Select up to 6 interests to personalize your experience ({selectedTags.length}/6)
                   </p>
@@ -632,7 +672,6 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {/* Password Tab */}
           {activeTab === 'password' && (
             <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-2xl rounded-2xl p-8 border border-gray-700">
               <h2 className="text-2xl font-black mb-6">Change Password</h2>
@@ -652,7 +691,6 @@ export default function SettingsPage() {
                     minLength={6}
                   />
                 </div>
-                
                 <div>
                   <label className="block text-amber-200 text-sm font-bold mb-2">
                     Confirm New Password
@@ -667,7 +705,6 @@ export default function SettingsPage() {
                     minLength={6}
                   />
                 </div>
-
                 <button
                   type="submit"
                   disabled={updating}
@@ -679,11 +716,9 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {/* Account Tab */}
           {activeTab === 'account' && (
             <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-2xl rounded-2xl p-8 border border-gray-700">
               <h2 className="text-2xl font-black mb-6">Account Management</h2>
-              
               <div className="space-y-6">
                 <div className="bg-red-500/20 text-red-300 p-6 rounded-xl border border-red-500/30">
                   <h3 className="text-xl font-bold mb-4">Danger Zone</h3>
@@ -697,7 +732,6 @@ export default function SettingsPage() {
                     Delete Account
                   </button>
                 </div>
-
                 <div className="bg-blue-500/20 text-blue-300 p-6 rounded-xl border border-blue-500/30">
                   <h3 className="text-xl font-bold mb-4">Export Data</h3>
                   <p className="mb-4">

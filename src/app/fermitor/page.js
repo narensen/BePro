@@ -42,7 +42,6 @@ export default function BeProAI() {
     </h1>
   </div>
 </div>
-
     </div>
   )
 }
