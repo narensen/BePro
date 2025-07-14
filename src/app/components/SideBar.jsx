@@ -11,7 +11,7 @@ import {
   PlusCircle,
   Settings,
   BookAIcon,
-  NewspaperIcon,
+  SearchCode,
   User,
   LogOut,
 } from 'lucide-react';
@@ -73,7 +73,7 @@ export default function SideBar() {
     { name: 'Dashboard', icon: Home, href: '/home' },
     { name: 'Explore', icon: Search, href: '/home/explore' },
     { name: 'Fermitor', icon: AtomIcon, href: '/fermitor' },
-    { name: 'News', icon: NewspaperIcon, href: '/home/news' },
+    { name: 'Seeker', icon: SearchCode, href: '/seeker' },
     { name: 'Communities', icon: MessageSquare, href: '/home/communities' },
     { name: 'Post', icon: PlusCircle, href: '/home/post' },
   ];
