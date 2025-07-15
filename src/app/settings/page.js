@@ -380,7 +380,7 @@ export default function SettingsPage() {
 
   return (
     <div className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 min-h-screen font-sans">
-      <div className="w-72 fixed bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 top-0 left-0 h-full z-30 border-r border-gray-700">
+      <div className="w-72 fixed bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 min-h-screen top-0 left-0 h-full z-30 border-r border-gray-700">
         <SideBar user={profile} username={profile?.username || 'user'} />
       </div>
       

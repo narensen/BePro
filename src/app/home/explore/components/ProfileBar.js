@@ -7,9 +7,14 @@ export default function ProfileBar({ currentUser }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
+  const [allRecommendations, setAllRecommendations] = useState([]); // Store all fetched recommendations
   const [loading, setLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState(null);
+  const [showCount, setShowCount] = useState(5); // How many recommendations to show
+  const [searchOffset, setSearchOffset] = useState(0); // For search pagination
+  const [hasMoreSearch, setHasMoreSearch] = useState(true); // Whether there are more search results
+  const [loadingMore, setLoadingMore] = useState(false); // Loading state for "show more"
 
   // Calculate similarity score between two users
   const calculateSimilarity = useCallback((user1, user2) => {
@@ -67,12 +72,11 @@ export default function ProfileBar({ currentUser }) {
       setLoading(true);
       setError(null);
       
-      // First, check if the profile table exists and is accessible
       const { data: users, error } = await supabase
         .from('profile')
         .select('id, username, email, location, university, tags, avatar_url, created_at')
         .neq('id', currentUser.id)
-        .limit(50);
+        .limit(100); // Fetch more users for better recommendations
 
       if (error) {
         console.error('Supabase error details:', {
@@ -82,7 +86,6 @@ export default function ProfileBar({ currentUser }) {
           code: error.code
         });
         
-        // Set user-friendly error message
         if (error.code === 'PGRST116') {
           setError('Table not found. Please check your database setup.');
         } else if (error.code === '42501') {
@@ -94,6 +97,7 @@ export default function ProfileBar({ currentUser }) {
       }
 
       if (!users || users.length === 0) {
+        setAllRecommendations([]);
         setRecommendations([]);
         return;
       }
@@ -104,26 +108,29 @@ export default function ProfileBar({ currentUser }) {
         similarity: calculateSimilarity(currentUser, user)
       }));
 
-      // Sort by similarity score and take top 5
-      const topRecommendations = usersWithScores
+      // Sort by similarity score and filter users with some similarity
+      const sortedRecommendations = usersWithScores
         .sort((a, b) => b.similarity - a.similarity)
-        .slice(0, 5)
-        .filter(user => user.similarity > 0); // Only show users with some similarity
+        .filter(user => user.similarity > 0);
 
-      setRecommendations(topRecommendations);
+      setAllRecommendations(sortedRecommendations);
+      setRecommendations(sortedRecommendations.slice(0, showCount));
     } catch (error) {
       console.error('Error fetching recommendations:', error);
       setError('Failed to load recommendations. Please try again.');
+      setAllRecommendations([]);
       setRecommendations([]);
     } finally {
       setLoading(false);
     }
-  }, [currentUser, calculateSimilarity]);
+  }, [currentUser, calculateSimilarity, showCount]);
 
-  // Search users
-  const searchUsers = useCallback(async (query) => {
+  // Search users with pagination
+  const searchUsers = useCallback(async (query, offset = 0, append = false) => {
     if (!query.trim()) {
       setSearchResults([]);
+      setSearchOffset(0);
+      setHasMoreSearch(true);
       setIsSearching(false);
       return;
     }
@@ -137,6 +144,7 @@ export default function ProfileBar({ currentUser }) {
         .select('id, username, email, location, university, tags, avatar_url, created_at')
         .neq('id', currentUser?.id)
         .or(`username.ilike.%${query}%,email.ilike.%${query}%,location.ilike.%${query}%,university.ilike.%${query}%`)
+        .range(offset, offset + 9) // Fetch 10 results (0-9)
         .limit(10);
 
       if (error) {
@@ -147,23 +155,50 @@ export default function ProfileBar({ currentUser }) {
           code: error.code
         });
         setError(`Search failed: ${error.message}`);
-        setSearchResults([]);
+        if (!append) setSearchResults([]);
         return;
       }
 
-      setSearchResults(users || []);
+      const newResults = users || [];
+      setHasMoreSearch(newResults.length === 10); // If we got 10 results, there might be more
+      
+      if (append) {
+        setSearchResults(prev => [...prev, ...newResults]);
+      } else {
+        setSearchResults(newResults);
+      }
+      
+      setSearchOffset(offset + newResults.length);
     } catch (error) {
       console.error('Error searching users:', error);
       setError('Search failed. Please try again.');
-      setSearchResults([]);
+      if (!append) setSearchResults([]);
     } finally {
       setIsSearching(false);
     }
   }, [currentUser?.id]);
 
+  // Load more search results
+  const loadMoreSearchResults = useCallback(async () => {
+    if (!hasMoreSearch || isSearching || !searchQuery.trim()) return;
+    
+    setLoadingMore(true);
+    await searchUsers(searchQuery, searchOffset, true);
+    setLoadingMore(false);
+  }, [hasMoreSearch, isSearching, searchQuery, searchOffset, searchUsers]);
+
+  // Show more recommendations
+  const showMoreRecommendations = useCallback(() => {
+    const newShowCount = showCount + 5;
+    setShowCount(newShowCount);
+    setRecommendations(allRecommendations.slice(0, newShowCount));
+  }, [showCount, allRecommendations]);
+
   // Debounced search
   useEffect(() => {
     const timeoutId = setTimeout(() => {
+      setSearchOffset(0);
+      setHasMoreSearch(true);
       searchUsers(searchQuery);
     }, 300);
 
@@ -174,6 +209,13 @@ export default function ProfileBar({ currentUser }) {
   useEffect(() => {
     fetchRecommendations();
   }, [fetchRecommendations]);
+
+  // Update recommendations when showCount changes
+  useEffect(() => {
+    if (allRecommendations.length > 0) {
+      setRecommendations(allRecommendations.slice(0, showCount));
+    }
+  }, [showCount, allRecommendations]);
 
   const UserCard = ({ user, showSimilarity = false }) => {
     if (!user) return null; 
@@ -238,6 +280,28 @@ export default function ProfileBar({ currentUser }) {
       </div>
     );
   };
+
+  const ShowMoreButton = ({ onClick, loading, text = "Show More" }) => (
+    <button
+      onClick={onClick}
+      disabled={loading}
+      className="w-full mt-4 py-3 px-4 bg-gradient-to-r from-yellow-400 to-orange-400 text-black font-bold rounded-xl hover:from-yellow-500 hover:to-orange-500 transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+    >
+      {loading ? (
+        <>
+          <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+          <span>Loading...</span>
+        </>
+      ) : (
+        <>
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          <span>{text}</span>
+        </>
+      )}
+    </button>
+  );
 
   return (
     <div className="w-80 bg-white/90 backdrop-blur-sm border-r border-gray-200/50 border-l-2 border-amber-400 h-full fixed right-0 top-0 overflow-y-auto shadow-2xl font-mono">
@@ -306,6 +370,13 @@ export default function ProfileBar({ currentUser }) {
                 {searchResults.map((user) => (
                   <UserCard key={user.id} user={user} />
                 ))}
+                {hasMoreSearch && (
+                  <ShowMoreButton 
+                    onClick={loadMoreSearchResults}
+                    loading={loadingMore}
+                    text="Load More Results"
+                  />
+                )}
               </div>
             )}
           </div>
@@ -342,6 +413,13 @@ export default function ProfileBar({ currentUser }) {
                 {recommendations.map((user) => (
                   <UserCard key={user.id} user={user} showSimilarity={true} />
                 ))}
+                {recommendations.length < allRecommendations.length && (
+                  <ShowMoreButton 
+                    onClick={showMoreRecommendations}
+                    loading={false}
+                    text={`Show More (+${Math.min(5, allRecommendations.length - recommendations.length)})`}
+                  />
+                )}
               </div>
             )}
           </div>
