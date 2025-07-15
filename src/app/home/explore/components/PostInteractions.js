@@ -81,24 +81,9 @@ const PostInteractions = ({
           </button>
         </div>
 
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={handleBookmark}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 ${
-              userInteractions[post.id]?.bookmark 
-                ? 'bg-blue-100 text-blue-700 shadow-md' 
-                : 'hover:bg-gray-100 text-gray-600 hover:shadow-sm'
-            }`}
-          >
-            <Bookmark size={16} className={`transition-all duration-300 hover:scale-110 ${
-              userInteractions[post.id]?.bookmark ? 'fill-current' : ''
-            }`} />
-          </button>
-
-          <div className="flex items-center gap-1 text-gray-500 px-3 py-2">
-            <Eye size={16} className="transition-transform duration-300 hover:scale-110" />
-            <span className="font-medium">{post.view_count || 0}</span>
-          </div>
+        <div className="flex items-center gap-1 text-gray-500 px-3 py-2">
+          <Eye size={16} className="transition-transform duration-300 hover:scale-110" />
+          <span className="font-medium">{post.view_count || 0}</span>
         </div>
       </div>
     </div>

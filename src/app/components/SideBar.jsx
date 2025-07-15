@@ -10,7 +10,6 @@ import {
   MessageSquare,
   PlusCircle,
   Settings,
-  BookAIcon,
   SearchCode,
   User,
   LogOut,

@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
-import { Reply, ChevronDown, ChevronUp } from 'lucide-react';
+'use client'
+
+import React, { useState, useEffect } from 'react';
+import { Reply, ChevronDown, ChevronUp, Clock } from 'lucide-react';
 import { formatDate } from '../utils/dateUtils';
+import Link from 'next/link';
 
 const Comment = ({ 
   comment, 
@@ -8,11 +11,12 @@ const Comment = ({
   level = 0, 
   replies = [],
   onLoadReplies,
-  loadingReplies = false 
+  loadingReplies = false
 }) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replyText, setReplyText] = useState('');
   const [showReplies, setShowReplies] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState('');
 
   const handleReply = async () => {
     if (replyText.trim()) {
@@ -35,80 +39,108 @@ const Comment = ({
   const maxDepth = 3;
   const indentClass = level > 0 ? `ml-${Math.min(level * 4, 12)}` : '';
   
+  // Different background colors for different nesting levels
+  const getBackgroundColor = (level) => {
+    const colors = ['bg-white', 'bg-gray-50', 'bg-blue-50', 'bg-yellow-50'];
+    return colors[level] || colors[colors.length - 1];
+  };
+
+  // Different border colors for different nesting levels
+  const getBorderColor = (level) => {
+    const colors = ['border-gray-200', 'border-gray-300', 'border-blue-200', 'border-yellow-200'];
+    return colors[level] || colors[colors.length - 1];
+  };
+  
   return (
     <div className={`${indentClass} ${level > 0 ? 'border-l-2 border-gray-200 pl-4' : ''}`}>
-      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-            {comment.profile?.username?.charAt(0).toUpperCase() || 'U'}
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-900 text-sm">
-                @{comment.profile?.username || 'user'}
-              </span>
-              <span className="text-xs text-gray-500">
-                {formatDate(comment.created_at)}
-              </span>
+      <div className={`${getBackgroundColor(level)} rounded-xl p-4 border ${getBorderColor(level)} hover:shadow-md transition-all duration-300 transform hover:scale-[1.01]`}>
+        <div className="flex items-start mb-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <Link href={`/${comment.profile?.username}`}>
+                <span className="font-semibold text-gray-700 hover:text-amber-600 transition-colors duration-200 text-sm cursor-pointer">
+                  @{comment.profile?.username || 'user'}
+                </span>
+              </Link>
+              <div className="flex items-center gap-1 text-xs text-gray-500">
+                <span>{formatDate(comment.created_at)}</span>
+              </div>
             </div>
+            
             {comment.parent_comment_id && (
-              <span className="text-xs text-blue-600">
-                Replying to a comment
-              </span>
+              <div className="flex items-center gap-1 mb-2">
+                <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                <span className="text-xs text-amber-600 font-medium">
+                  Replying to a comment
+                </span>
+              </div>
             )}
           </div>
         </div>
         
-        <p className="text-gray-800 text-sm leading-relaxed mb-3">{comment.content}</p>
-        
-        <div className="flex items-center gap-4">
-          {level < maxDepth && (
-            <button
-              onClick={() => setShowReplyForm(!showReplyForm)}
-              className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors"
-            >
-              <Reply size={12} />
-              Reply
-            </button>
-          )}
+        <div>
+          <p className="text-gray-800 text-sm leading-relaxed mb-4 whitespace-pre-wrap">
+            {comment.content}
+          </p>
           
-          {replies.length > 0 && (
-            <button
-              onClick={toggleReplies}
-              className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors"
-            >
-              {showReplies ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-              {replies.length} {replies.length === 1 ? 'reply' : 'replies'}
-            </button>
-          )}
+          <div className="flex items-center gap-4">
+            {level < maxDepth && (
+              <button
+                onClick={() => setShowReplyForm(!showReplyForm)}
+                className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-amber-600 transition-all duration-200 px-2 py-1 rounded-lg hover:bg-amber-50 group"
+              >
+                <Reply size={12} className="group-hover:scale-110 transition-transform" />
+                <span className="font-medium">Reply</span>
+              </button>
+            )}
+            
+            {replies.length > 0 && (
+              <button
+                onClick={toggleReplies}
+                className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-amber-600 transition-all duration-200 px-2 py-1 rounded-lg hover:bg-amber-50 group"
+              >
+                {showReplies ? 
+                  <ChevronUp size={12} className="group-hover:scale-110 transition-transform" /> : 
+                  <ChevronDown size={12} className="group-hover:scale-110 transition-transform" />
+                }
+                <span className="font-medium">
+                  {replies.length} {replies.length === 1 ? 'reply' : 'replies'}
+                </span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Reply Form */}
       {showReplyForm && (
-        <div className="mt-3 ml-4">
-          <div className="flex gap-2">
-            <textarea
-              className="flex-1 border border-gray-300 rounded-lg p-2 text-sm resize-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-              rows={2}
-              placeholder={`Reply to @${comment.profile?.username || 'user'}...`}
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-            />
-            <div className="flex flex-col gap-1">
-              <button
-                onClick={handleReply}
-                className="bg-amber-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors disabled:opacity-50"
-                disabled={!replyText.trim()}
-              >
-                Reply
-              </button>
-              <button
-                onClick={() => setShowReplyForm(false)}
-                className="bg-gray-300 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-400 transition-colors"
-              >
-                Cancel
-              </button>
+        <div className="mt-3 ml-4 transform transition-all duration-300 animate-in slide-in-from-top-2">
+          <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <textarea
+                  className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition-all duration-200 hover:shadow-sm focus:shadow-md"
+                  rows={3}
+                  placeholder={`Reply to @${comment.profile?.username || 'user'}...`}
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                />
+                <div className="flex gap-2 mt-3">
+                  <button
+                    onClick={handleReply}
+                    className="bg-amber-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-amber-600 transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none font-medium"
+                    disabled={!replyText.trim()}
+                  >
+                    Reply
+                  </button>
+                  <button
+                    onClick={() => setShowReplyForm(false)}
+                    className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-200 transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -116,22 +148,31 @@ const Comment = ({
 
       {/* Nested Replies */}
       {showReplies && replies.length > 0 && (
-        <div className="mt-3 space-y-3">
-          {replies.map((reply) => (
-            <Comment
+        <div className="mt-4 space-y-3 animate-in slide-in-from-top-3 duration-300">
+          {replies.map((reply, index) => (
+            <div 
               key={reply.id}
-              comment={reply}
-              onReply={onReply}
-              level={level + 1}
-              replies={reply.replies || []}
-              onLoadReplies={onLoadReplies}
-            />
+              style={{
+                animation: `slideInUp 0.3s ease-out ${index * 0.1}s both`
+              }}
+            >
+              <Comment
+                comment={reply}
+                onReply={onReply}
+                level={level + 1}
+                replies={reply.replies || []}
+                onLoadReplies={onLoadReplies}
+              />
+            </div>
           ))}
         </div>
       )}
       
       {loadingReplies && showReplies && (
-        <div className="mt-3 ml-4 text-xs text-gray-500">Loading replies...</div>
+        <div className="mt-3 ml-4 text-xs text-gray-500 flex items-center gap-2 animate-pulse">
+          <div className="w-2 h-2 bg-amber-500 rounded-full animate-bounce"></div>
+          <span>Loading replies...</span>
+        </div>
       )}
     </div>
   );

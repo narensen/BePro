@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../../lib/supabase_client';
+import { formatDate } from '../utils/dateUtils';
 
 const PostHeader = ({ post }) => {
   const username = post.username;
@@ -55,13 +56,18 @@ const PostHeader = ({ post }) => {
           </span>
         )}
       </div>
-      <button
-        className="font-bold text-black/80 cursor-pointer"
-        onClick={() => window.open(`https://bepro.live/${username}`, "_blank")}
-      >
-        {`@${username}`}
-      </button>
-      {/* Add more post meta here if needed */}
+      <div className="flex items-center gap-2">
+        <button
+          className="font-bold text-black/80 cursor-pointer hover:underline"
+          onClick={() => window.open(`https://bepro.live/${username}`, "_blank")}
+        >
+          {`@${username}`}
+        </button>
+        <span className="text-gray-500 text-sm">·</span>
+        <span className="text-gray-500 text-sm">
+          {formatDate(post.created_at)}
+        </span>
+      </div>
     </div>
   );
 };
