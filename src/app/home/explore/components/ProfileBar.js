@@ -240,7 +240,7 @@ export default function ProfileBar({ currentUser }) {
   };
 
   return (
-    <div className="w-80 bg-white/90 backdrop-blur-sm border-l-2 border-amber-400 h-full fixed right-0 top-0 overflow-y-auto shadow-2xl">
+    <div className="w-80 bg-white/90 backdrop-blur-sm border-r border-gray-200/50 border-l-2 border-amber-400 h-full fixed right-0 top-0 overflow-y-auto shadow-2xl font-mono">
       <div className="p-6">
         {/* Header */}
         <div className="mb-6">
@@ -262,7 +262,7 @@ export default function ProfileBar({ currentUser }) {
         )}
 
         {/* Search Bar */}
-        <div className="mb-8">
+        <div className="mb-8 font-mono">
           <div className="relative">
             <input
               type="text"

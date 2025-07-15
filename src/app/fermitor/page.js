@@ -35,8 +35,8 @@ export default function BeProAI() {
         <SideBar user={user} username={username} onSignOut={handleSignOut} />
       </div>
 
-      <div className="min-h-screen pl-72"> {/* Push content to the right of the sidebar */}
-  <div className="sticky top-0 bg-white/20 backdrop-blur-md border-b border-white/30 p-4 z-10">
+      <div className="min-h-screen pl-72">
+  <div className="sticky top-0 p-4 z-10">
     <h1 className="text-3xl font-black text-gray-900">
       Fermitor
     </h1>

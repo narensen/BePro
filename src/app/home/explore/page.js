@@ -24,6 +24,7 @@ import {
   calculateUserCringeTolerance 
 } from '../explore/utils/recommendationSystem';
 import '../explore/styles.css';
+import Link from 'next/link';
 
 export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -201,7 +202,7 @@ export default function Explore() {
 
   if (loading) {
     return (
-      <div className="flex">
+      <div className="flex bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 min-h-screen">
         <div className="w-72 fixed gradient-primary font-mono top-0 left-0 h-full z-30">
           <SideBar 
             user={user} 
@@ -212,7 +213,7 @@ export default function Explore() {
             }} 
           />
         </div>
-        <div className="flex-1 ml-72 mr-80 min-h-screen gradient-primary">
+        <div className="flex-1 ml-72 mr-80 gradient-primary">
           <LoadingSpinner />
         </div>
         <ProfileBar currentUser={userProfile} />
@@ -235,11 +236,11 @@ export default function Explore() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 ml-72 mr-80 min-h-screen gradient-primary">
+      <div className="flex-1 ml-72 mr-80 min-h-screen gradient-primary ">
         {/* Header */}
-        <div className="sticky top-0 glass-strong border-b border-white/30 p-4 z-10">
-          <h1 className="text-3xl font-bold mb-2 text-white">Explore</h1>
-          <p className="text-white/80">
+        <div className="sticky top-0 glass-strong border-white/30 p-4">
+          <Link href="/home/explore"><h1 className="flex text-3xl font-bold mb-2 text-black">Explore</h1></Link>
+          <p className="text-black/60">
             Discover posts tailored for you
           </p>
         </div>
