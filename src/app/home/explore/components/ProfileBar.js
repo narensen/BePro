@@ -102,13 +102,11 @@ export default function ProfileBar({ currentUser }) {
         return;
       }
 
-      // Calculate similarity scores and sort
       const usersWithScores = users.map(user => ({
         ...user,
         similarity: calculateSimilarity(currentUser, user)
       }));
 
-      // Sort by similarity score and filter users with some similarity
       const sortedRecommendations = usersWithScores
         .sort((a, b) => b.similarity - a.similarity)
         .filter(user => user.similarity > 0);
@@ -125,7 +123,6 @@ export default function ProfileBar({ currentUser }) {
     }
   }, [currentUser, calculateSimilarity, showCount]);
 
-  // Search users with pagination
   const searchUsers = useCallback(async (query, offset = 0, append = false) => {
     if (!query.trim()) {
       setSearchResults([]);
