@@ -72,8 +72,8 @@ export default function SideBar() {
     { name: 'Dashboard', icon: Home, href: '/home' },
     { name: 'Explore', icon: Search, href: '/home/explore' },
     { name: 'Fermitor', icon: AtomIcon, href: '/fermitor' },
-    { name: 'Seeker', icon: SearchCode, href: '/seeker' },
-    { name: 'Communities', icon: MessageSquare, href: '/home/communities' },
+    { name: 'Communities', icon: SearchCode, href: '/home/communities' },
+    { name: 'Messages', icon: MessageSquare, href: '/messages' },
     { name: 'Post', icon: PlusCircle, href: '/home/post' },
   ];
 
