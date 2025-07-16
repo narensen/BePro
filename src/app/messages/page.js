@@ -1,5 +1,6 @@
+
 export default function Messages() {
     return (
-        <h1>Messages</h1>
+        <h1 className="flex justify-center text-center"> Messages</h1>
     )
-}   
+}
