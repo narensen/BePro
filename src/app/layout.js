@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "BePro : Growth Skill OS",
+  title: "BePro : AI Career-pathing engine",
   description: "BePro",
 };
 
