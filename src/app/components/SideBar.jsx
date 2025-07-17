@@ -71,7 +71,7 @@ export default function SideBar() {
   const navItems = [
     { name: 'Dashboard', icon: Home, href: '/home' },
     { name: 'Explore', icon: Search, href: '/home/explore' },
-    { name: 'Fermitor', icon: AtomIcon, href: '/fermitor' },
+    { name: 'Codex', icon: AtomIcon, href: '/codex' },
     { name: 'Post', icon: PlusCircle, href: '/home/post' },
   ];
 
