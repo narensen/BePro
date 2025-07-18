@@ -16,7 +16,7 @@ export default function BeProAI() {
 
       if (error || !data?.session) {
         clearUserSession()
-        router.push('/') // 🔁 Redirect to login if session invalid
+        router.push('/')
       }
     }
 
@@ -35,10 +35,10 @@ export default function BeProAI() {
         <SideBar user={user} username={username} onSignOut={handleSignOut} />
       </div>
 
-      <div className="min-h-screen pl-72">
+      <div className="min-h-screen pl-72 flex justify-center">
   <div className="sticky top-0 p-4 z-10">
     <h1 className="text-3xl font-black text-gray-900">
-      Fermitor
+      Codex
     </h1>
   </div>
 </div>
