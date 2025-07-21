@@ -18,7 +18,7 @@ export default function Home() {
     setUserSession,
     setUsername,
     clearUserSession,
-    username // ✅ Zustand-driven username
+    username
   } = useUserStore()
 
   useEffect(() => {
