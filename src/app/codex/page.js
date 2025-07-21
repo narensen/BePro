@@ -15,7 +15,6 @@ function parseTaggedResponse(payload) {
   if (typeof payload === 'object' && payload !== null) {
     if (payload.missions) return payload.missions;
     if (Object.keys(payload).some(k => /^\d+$/.test(k))) return payload;
-    // Try to stringify and parse if it's an object
     payload = JSON.stringify(payload);
   }
 
