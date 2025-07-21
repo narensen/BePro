@@ -346,8 +346,8 @@ function markdownToHTML(md) {
 
 // Fixed RoadmapAngryBirds component with proper spacing
 function RoadmapAngryBirds({ roadmap }) {
-  if (!roadmap) return null;
   const [openIdx, setOpenIdx] = useState(0);
+  if (!roadmap) return null;
   let parsed = roadmap;
   // Parse the tagged format or existing object
   if (typeof roadmap !== 'object' || roadmap === null) {
