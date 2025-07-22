@@ -1,45 +1,21 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import useUserStore from '../store/useUserStore'
 import { supabase } from '../lib/supabase_client'
 import SideBar from '../components/SideBar'
 import { useRouter } from 'next/navigation'
 
 export default function Home() {
-  const [user, setUser] = useState(null)
-  const [username, setUsername] = useState('')
   const router = useRouter()
 
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data, error } = await supabase.auth.getSession()
-      if (error) {
-        console.error('Error fetching session:', error)
-        return
-      }
-
-      const session = data?.session
-      if (session?.user) {
-        const currentUser = session.user
-        setUser(currentUser)
-        setUsername(currentUser.user_metadata?.username || 'User')
-
-        // Check if user has completed profile
-        const { data: profile, error: profileError } = await supabase
-          .from('profile')
-          .select('id')
-          .eq('email', currentUser.email)
-          .maybeSingle()
-
-        if (!profile || profileError) {
-          console.warn('No profile found for user. Redirecting to build.')
-          router.push('/profile/build')
-        }
-      }
-    }
-
-    checkUser()
-  }, [router])
+  const {
+    user,
+    username,
+    setUserSession,
+    setUsername,
+    clearUserSession,
+  } = useUserStore();
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut()

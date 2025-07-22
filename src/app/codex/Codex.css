@@ -1,0 +1,73 @@
+/* === ANIMATABLE ANGLE PROPERTY === */
+@property --angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* === MAIN GLOW CONTAINER === */
+.glow-container {
+  width: 100%;
+  max-width: 640px;
+  height: 200px;
+  position: relative;
+  border-radius: 0.75rem;
+  padding: 2px;
+  background: transparent;
+}
+
+/* === STATIC BACKGROUND BORDER (SPINNING ONLY THE OUTLINE) === */
+.glow-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--angle),
+    #ff5f81,
+    #5870ff,
+    #44e0e6,
+    #ff5f81
+  );
+  animation: spin 4s linear infinite;
+  padding: 2px;
+  mask: 
+    linear-gradient(#000 0 0) content-box, 
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: destination-out;
+  filter: blur(20px);
+}
+
+/* === TEXTAREA CLEAN STYLES === */
+.glow-container textarea {
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  outline: none;
+  padding: 1rem;
+  font-size: 1rem;
+  font-family: monospace;
+  resize: none;
+  border-radius: 0.75rem;
+  z-index: 1;
+  position: relative;
+  box-shadow: none;
+  transition: box-shadow 0.2s ease;
+}
+
+/* === ANIMATION === */
+@keyframes spin {
+  from {
+    --angle: 0deg;
+  }
+  to {
+    --angle: 360deg;
+  }
+}
