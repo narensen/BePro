@@ -1,12 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { supabase } from './client';
+import { supabase } from '../../lib/supabase_client';
 
-const CheckUsername = ({ username }) => {
-  const [userExists, setUserExists] = useState(null);
+export const checkUsername = ({ username, userExists, setUserExists }) => {
 
-  useEffect(() => {
     const check = async () => {
       const { data, error } = await supabase
         .from('codex')
@@ -24,5 +22,5 @@ const CheckUsername = ({ username }) => {
     };
 
     check();
-  }, [username]);
-};
+  }
+
