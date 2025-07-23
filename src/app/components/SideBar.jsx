@@ -10,7 +10,6 @@ import {
   MessageSquare,
   PlusCircle,
   Settings,
-  SearchCode,
   User,
   LogOut,
 } from 'lucide-react';
@@ -32,6 +31,8 @@ export default function SideBar() {
 
   const [loading, setLoading] = useState(!user);
   const [avatarUrl, setAvatarUrl] = useState('');
+  // 1. State to hold the unread message count
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -59,7 +60,6 @@ export default function SideBar() {
       if (error) {
         console.error('Error fetching profile:', error.message);
       } else if (data) {
-      
         setUsername(data.username || '');
         setAvatarUrl(data.avatar_url || '');
       }
@@ -67,6 +67,51 @@ export default function SideBar() {
 
     fetchUserProfile();
   }, [user, setUsername]);
+  
+  // 2. Effect to fetch count and subscribe to real-time updates
+  useEffect(() => {
+    if (!username) return;
+
+    // Function to fetch the initial count
+    const fetchUnreadCount = async () => {
+      const { count, error } = await supabase
+        .from('messages')
+        .select('*', { count: 'exact', head: true })
+        .eq('receiver_username', username)
+        .eq('is_read', false);
+
+      if (error) {
+        console.error('Error fetching unread message count:', error);
+      } else {
+        setUnreadCount(count ?? 0);
+      }
+    };
+
+    fetchUnreadCount();
+
+    // Set up a real-time subscription to the messages table
+    const channel = supabase
+      .channel('public:messages')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to INSERT, UPDATE, DELETE
+          schema: 'public',
+          table: 'messages',
+          filter: `receiver_username=eq.${username}`, // Only get updates for messages sent to the current user
+        },
+        () => {
+          // When a change occurs, re-fetch the count
+          fetchUnreadCount();
+        }
+      )
+      .subscribe();
+
+    // Cleanup function to remove the subscription when the component unmounts
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [username]); // Re-run this effect if the username changes
 
   const navItems = [
     { name: 'Dashboard', icon: Home, href: '/home' },
@@ -172,6 +217,12 @@ export default function SideBar() {
                     >
                       <Icon size={20} />
                       <span className="font-medium">{item.name}</span>
+                      {/* 3. Render the notification badge */}
+                      {item.name === 'Messages' && unreadCount > 0 && (
+                        <span className="ml-auto flex items-center justify-center bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5">
+                          {unreadCount}
+                        </span>
+                      )}
                     </div>
                   </Link>
                 );
