@@ -542,7 +542,7 @@ export default function MessagesPage() {
             {conversations.length === 0 ? (
               <div className="p-8 text-center text-gray-500">
                 <p className="text-sm">No conversations yet</p>
-                <p className="text-xs text-gray-400 mt-1">Start one with the '+' button.</p>
+                <p className="text-xs text-gray-400 mt-1">{`Start one with the '+' button.`}</p>
               </div>
             ) : (
               conversations.map((conversation) => (
