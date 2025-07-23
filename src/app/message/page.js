@@ -407,9 +407,6 @@ export default function MessagesPage() {
             {/* Connection Status */}
             <div className="flex items-center space-x-2 text-sm">
               <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
-              <span className="text-gray-700 font-medium">
-                {isConnected ? 'Connected' : 'Disconnected'}
-              </span>
               {!isConnected && (
                 <span className="text-xs text-gray-500">(Messages may not send)</span>
               )}
@@ -460,7 +457,7 @@ export default function MessagesPage() {
               
               {searchQuery && !isSearching && searchResults.length === 0 && (
                 <div className="text-center py-4 text-gray-500 text-sm">
-                  No users found matching "{searchQuery}"
+                  {`No users found matching "${searchQuery}"`}
                 </div>
               )}
             </div>
@@ -532,7 +529,7 @@ export default function MessagesPage() {
                       <p className="text-sm text-green-600">typing...</p>
                     )}
                     {!isConnected && (
-                      <p className="text-sm text-red-600">Offline - messages won't send</p>
+                      <p className="text-sm text-red-600">Offline</p>
                     )}
                   </div>
                 </div>
