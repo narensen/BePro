@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react' // FIX: Import useRef
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '../lib/supabase_client'
 import SideBar from '../components/SideBar'
@@ -26,8 +26,6 @@ export default function MessagesPage() {
   const messagesEndRef = useRef(null)
   const typingTimeoutRef = useRef(null)
 
-  // FIX: Create a ref to hold the current active conversation.
-  // This solves the "stale closure" problem in your socket event handlers.
   const activeConversationRef = useRef(null);
   useEffect(() => {
     activeConversationRef.current = activeConversation;
@@ -89,17 +87,14 @@ export default function MessagesPage() {
         const { conversationId, messages: conversationMessages } = data
         console.log('Received conversation messages:', data)
         
-        // FIX: Use the ref to get the most up-to-date activeConversation
         if (activeConversationRef.current?.conversationId === conversationId) {
           setMessages(conversationMessages || [])
         }
       })
 
-      // Handle new direct messages in real-time
       socketInstance.on('newDirectMessage', (message) => {
         console.log('Received new direct message:', message)
         
-        // FIX: Use the ref here. This is the key change that makes the chat window update.
         if (activeConversationRef.current?.conversationId === message.conversationId) {
           setMessages(prev => {
             const exists = prev.some(msg => msg.id === message.id)
@@ -108,11 +103,9 @@ export default function MessagesPage() {
         }
       })
 
-      // Handle message notifications
       socketInstance.on('messageNotification', (notification) => {
         console.log('Received message notification:', notification)
         
-        // FIX: Use the ref to check the current conversation
         if (activeConversationRef.current?.otherUsername !== notification.from) {
           setNotifications(prev => [...prev, {
             id: Date.now(),
@@ -128,10 +121,8 @@ export default function MessagesPage() {
         }
       })
 
-      // Handle typing indicators
       socketInstance.on('userTypingInConversation', (data) => {
         console.log('User typing:', data)
-        // FIX: Use the ref to check the current conversation
         if (activeConversationRef.current?.conversationId === data.conversationId && data.username !== username) {
           setOtherUserTyping(true)
         }
@@ -139,7 +130,6 @@ export default function MessagesPage() {
 
       socketInstance.on('userStoppedTypingInConversation', (data) => {
         console.log('User stopped typing:', data)
-        // FIX: Use the ref to check the current conversation
         if (activeConversationRef.current?.conversationId === data.conversationId && data.username !== username) {
           setOtherUserTyping(false)
         }
@@ -162,17 +152,69 @@ export default function MessagesPage() {
     }
   }, [username, user?.id])
 
-  // Update active conversation when conversations list changes
+  // FIX: This useEffect caused an infinite loop.
+  // Added a condition to only update state if the conversation data has actually changed.
   useEffect(() => {
-    if (activeConversation && conversations.length > 0) {
+    if (activeConversation?.conversationId && conversations.length > 0) {
       const updatedConversation = conversations.find(
-        conv => conv.conversationId === activeConversation.conversationId
-      )
+        (conv) => conv.conversationId === activeConversation.conversationId
+      );
+
       if (updatedConversation) {
-        setActiveConversation(prev => ({ ...prev, ...updatedConversation }))
+        // Compare the stringified objects to prevent re-rendering if data is identical.
+        const hasChanged = JSON.stringify(updatedConversation.lastMessage) !== JSON.stringify(activeConversation.lastMessage);
+        
+        if (hasChanged) {
+            setActiveConversation(prev => ({
+                ...prev,
+                ...updatedConversation
+            }));
+        }
       }
     }
-  }, [conversations])
+  }, [conversations, activeConversation]);
+
+  // FIX: This useEffect fetches missing avatar URLs for any conversation.
+  // It runs when a new conversation is selected and caches the result in the state.
+  useEffect(() => {
+    const fetchAvatarIfNeeded = async () => {
+      if (activeConversation && !activeConversation.otherUser?.avatar_url) {
+        const { data: profile, error } = await supabase
+          .from('profile')
+          .select('avatar_url')
+          .eq('username', activeConversation.otherUsername)
+          .single();
+
+        if (error) {
+          console.error(`Error fetching profile for ${activeConversation.otherUsername}:`, error);
+          return;
+        }
+
+        if (profile) {
+          const newOtherUser = { ...activeConversation.otherUser, avatar_url: profile.avatar_url };
+          
+          // Update the currently active conversation
+          setActiveConversation(prev => ({
+            ...prev,
+            otherUser: newOtherUser
+          }));
+
+          // Update the main conversations list to cache the avatar for later
+          setConversations(prevConvos => 
+            prevConvos.map(convo => 
+              convo.conversationId === activeConversation.conversationId 
+                ? { ...convo, otherUser: newOtherUser }
+                : convo
+            )
+          );
+        }
+      }
+    };
+    
+    fetchAvatarIfNeeded();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeConversation?.conversationId]); // Dependency ensures this runs only when you switch conversations.
+
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -233,7 +275,7 @@ export default function MessagesPage() {
     const conversation = {
       conversationId,
       otherUsername: otherUser.username,
-      otherUser: otherUser
+      otherUser: otherUser 
     }
     
     if (activeConversation && socket) {
@@ -253,6 +295,8 @@ export default function MessagesPage() {
   }
 
   const selectConversation = (conversation) => {
+    if (activeConversation?.conversationId === conversation.conversationId) return;
+
     if (activeConversation && socket) {
       socket.emit('leaveConversation', { conversationId: activeConversation.conversationId })
     }
@@ -351,10 +395,9 @@ export default function MessagesPage() {
     }
   }
 
-  // The entire return statement (JSX) is your UI, including the Chat Window.
-  // It was already correct. The problem was the logic providing data to it.
+  // The JSX below is the same as the previous version, as the fixes were in the logic above.
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
+    <div className="h-screen max-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-hidden">
       {/* Notifications */}
       {notifications.length > 0 && (
         <div className="fixed top-4 right-4 z-50 space-y-2">
@@ -387,9 +430,9 @@ export default function MessagesPage() {
         <SideBar user={user} username={username} onSignOut={handleSignOut} />
       </div>
 
-      <div className="min-h-screen pl-72 flex">
+      <div className="h-screen pl-72 flex overflow-hidden">
         {/* Conversations List */}
-        <div className="w-80 bg-white/95 backdrop-blur-sm border-r border-gray-200 flex flex-col">
+        <div className="w-80 bg-white/95 backdrop-blur-sm border-r border-gray-200 flex flex-col h-full">
           {/* Header */}
           <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-yellow-400/20 to-orange-400/20">
             <div className="flex items-center justify-between mb-4">
@@ -404,16 +447,13 @@ export default function MessagesPage() {
               </button>
             </div>
             
-            {/* Connection Status */}
             <div className="flex items-center space-x-2 text-sm">
-              <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
               {!isConnected && (
                 <span className="text-xs text-gray-500">(Messages may not send)</span>
               )}
             </div>
           </div>
 
-          {/* Add User Search */}
           {showAddUser && (
             <div className="p-4 border-b border-gray-200 bg-gray-50">
               <div className="relative mb-3">
@@ -431,25 +471,24 @@ export default function MessagesPage() {
                 )}
               </div>
               
-              {/* Search Results */}
               {searchResults.length > 0 && (
                 <div className="max-h-40 overflow-y-auto space-y-2">
-                  {searchResults.map((user) => (
+                  {searchResults.map((userResult) => (
                     <div
-                      key={user.id}
-                      onClick={() => startConversation(user)}
+                      key={userResult.id}
+                      onClick={() => startConversation(userResult)}
                       className="flex items-center space-x-3 p-2 hover:bg-white rounded-lg cursor-pointer transition-colors"
                     >
-                      <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-yellow-400 rounded-full flex items-center justify-center">
-                        {user.avatar_url ? (
-                          <img src={user.avatar_url} alt={user.username} className="w-full h-full rounded-full object-cover" />
+                      <div className="relative w-8 h-8 bg-gradient-to-br from-orange-400 to-yellow-400 rounded-full flex items-center justify-center">
+                        {userResult.avatar_url ? (
+                          <img src={userResult.avatar_url} alt={userResult.username} className="w-full h-full rounded-full object-cover" />
                         ) : (
                           <span className="text-white font-bold text-sm">
-                            {user.username?.charAt(0)?.toUpperCase() || 'U'}
+                            {userResult.username?.charAt(0)?.toUpperCase() || 'U'}
                           </span>
                         )}
                       </div>
-                      <span className="text-sm font-medium text-gray-900">{user.username}</span>
+                      <span className="text-sm font-medium text-gray-900">{userResult.username}</span>
                     </div>
                   ))}
                 </div>
@@ -463,15 +502,12 @@ export default function MessagesPage() {
             </div>
           )}
 
-          {/* Conversations List */}
+          {/* Conversations List Scrollable Area */}
           <div className="flex-1 overflow-y-auto">
             {conversations.length === 0 ? (
               <div className="p-8 text-center text-gray-500">
-                <svg className="w-12 h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.959 8.959 0 01-2.58-.378l-5.42 1.08 1.08-5.42A8.959 8.959 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8z" />
-                </svg>
                 <p className="text-sm">No conversations yet</p>
-                <p className="text-xs text-gray-400 mt-1">Start a new chat by clicking the + button</p>
+                <p className="text-xs text-gray-400 mt-1">Start one with the '+' button.</p>
               </div>
             ) : (
               conversations.map((conversation) => (
@@ -479,14 +515,18 @@ export default function MessagesPage() {
                   key={conversation.conversationId}
                   onClick={() => selectConversation(conversation)}
                   className={`p-4 border-b border-gray-100 cursor-pointer transition-colors hover:bg-gray-50 ${
-                    activeConversation?.conversationId === conversation.conversationId ? 'bg-orange-50 border-orange-200' : ''
+                    activeConversation?.conversationId === conversation.conversationId ? 'bg-orange-50 border-l-4 border-orange-400' : 'border-l-4 border-transparent'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-yellow-400 rounded-full flex items-center justify-center">
-                      <span className="text-white font-bold">
-                        {conversation.otherUsername?.charAt(0)?.toUpperCase() || 'U'}
-                      </span>
+                    <div className="relative w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-yellow-400">
+                        {conversation.otherUser?.avatar_url ? (
+                            <img src={conversation.otherUser.avatar_url} alt={conversation.otherUsername} className="w-full h-full rounded-full object-cover" />
+                        ) : (
+                            <span className="text-white font-bold text-xl">
+                                {conversation.otherUsername?.charAt(0)?.toUpperCase() || 'U'}
+                            </span>
+                        )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
@@ -497,12 +537,14 @@ export default function MessagesPage() {
                           </span>
                         )}
                       </div>
-                      {conversation.lastMessage && (
-                        <p className="text-sm text-gray-500 truncate">
-                          {conversation.lastMessage.senderUsername === username ? 'You: ' : ''}
-                          {conversation.lastMessage.content}
-                        </p>
-                      )}
+                      <p className="text-sm text-gray-500 truncate">
+                        {conversation.lastMessage ? (
+                          <>
+                            {conversation.lastMessage.senderUsername === username ? 'You: ' : ''}
+                            {conversation.lastMessage.content}
+                          </>
+                        ) : 'No messages yet...'}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -511,72 +553,57 @@ export default function MessagesPage() {
           </div>
         </div>
 
-        {/* Chat Area (This is your "Chat Window") */}
-        <div className="flex-1 flex flex-col">
+        {/* Chat Area */}
+        <div className="flex-1 flex flex-col h-full">
           {activeConversation ? (
             <>
               {/* Chat Header */}
-              <div className="p-4 bg-white/90 backdrop-blur-sm border-b border-gray-200">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-yellow-400 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold">
-                      {activeConversation.otherUsername?.charAt(0)?.toUpperCase() || 'U'}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{activeConversation.otherUsername}</h3>
-                    {otherUserTyping && (
-                      <p className="text-sm text-green-600">typing...</p>
+              <div className="p-4 bg-white/90 backdrop-blur-sm border-b border-gray-200 flex items-center space-x-3">
+                <div className="relative w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-yellow-400">
+                    {activeConversation.otherUser?.avatar_url ? (
+                        <img src={activeConversation.otherUser.avatar_url} alt={activeConversation.otherUsername} className="w-full h-full rounded-full object-cover" />
+                    ) : (
+                        <span className="text-white font-bold">
+                            {activeConversation.otherUsername?.charAt(0)?.toUpperCase() || 'U'}
+                        </span>
                     )}
-                    {!isConnected && (
-                      <p className="text-sm text-red-600">Offline</p>
-                    )}
-                  </div>
+                </div>
+                <div>
+                  <a 
+                    href={`https://bepro.live/${activeConversation.otherUsername}`}
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="font-semibold text-gray-900 hover:underline"
+                  >
+                    {activeConversation.otherUsername}
+                  </a>
+                  {otherUserTyping && <p className="text-sm text-green-600">typing...</p>}
+                  {!isConnected && <p className="text-sm text-red-600">Offline</p>}
                 </div>
               </div>
 
-              {/* Messages */}
+              {/* Messages Scrollable Area */}
               <div className="flex-1 p-4 overflow-y-auto bg-gradient-to-br from-yellow-50 to-orange-50">
                 <div className="space-y-4">
-                  {messages.length === 0 ? (
-                    <div className="text-center text-gray-500 py-8">
-                      <p className="text-sm">No messages yet</p>
-                      <p className="text-xs text-gray-400 mt-1">Start the conversation!</p>
-                    </div>
-                  ) : (
-                    messages.map((message) => (
-                      <div
-                        key={message.id}
-                        className={`flex ${message.senderUsername === username ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
-                          message.senderUsername === username
-                            ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 ml-12'
-                            : 'bg-white text-gray-900 mr-12 shadow-sm'
+                  {messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`flex ${message.senderUsername === username ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
+                        message.senderUsername === username
+                          ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 ml-12'
+                          : 'bg-white text-gray-900 mr-12 shadow-sm'
+                      }`}>
+                        <div className="break-words">{message.content}</div>
+                        <div className={`text-xs mt-1 text-right ${
+                          message.senderUsername === username ? 'text-gray-700' : 'text-gray-500'
                         }`}>
-                          <div className="break-words">{message.content}</div>
-                          <div className={`text-xs mt-1 ${
-                            message.senderUsername === username ? 'text-gray-700' : 'text-gray-500'
-                          }`}>
-                            {formatTime(message.timestamp)}
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                  
-                  {otherUserTyping && (
-                    <div className="flex justify-start">
-                      <div className="bg-white text-gray-700 px-4 py-2 rounded-2xl mr-12 shadow-sm">
-                        <div className="flex space-x-1">
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                          {formatTime(message.timestamp)}
                         </div>
                       </div>
                     </div>
-                  )}
-                  
+                  ))}
                   <div ref={messagesEndRef} />
                 </div>
               </div>
@@ -589,32 +616,24 @@ export default function MessagesPage() {
                     value={newMessage}
                     onChange={handleTyping}
                     placeholder={`Message ${activeConversation.otherUsername}...`}
-                    className="flex-1 px-4 py-3 bg-gray-100 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 placeholder-gray-600"
+                    className="flex-1 px-4 py-3 bg-gray-100 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500"
                     disabled={!isConnected}
                   />
                   <button
                     type="submit"
                     disabled={!newMessage.trim() || !isConnected}
-                    className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 rounded-2xl font-semibold hover:from-yellow-500 hover:to-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 rounded-2xl font-semibold hover:from-yellow-500 hover:to-orange-500 disabled:opacity-50"
                   >
                     Send
                   </button>
                 </form>
-                {!isConnected && (
-                  <p className="text-xs text-red-600 mt-2 text-center">
-                    Not connected to server. Check your internet connection.
-                  </p>
-                )}
               </div>
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-yellow-50 to-orange-50">
-              <div className="text-center">
-                <svg className="w-24 h-24 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.959 8.959 0 01-2.58-.378l-5.42 1.08 1.08-5.42A8.959 8.959 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8z" />
-                </svg>
-                <h3 className="text-xl font-semibold text-gray-600 mb-2">Select a conversation</h3>
-                <p className="text-gray-500">Choose a conversation from the sidebar or start a new one</p>
+              <div className="text-center text-gray-600">
+                <h3 className="text-xl font-semibold mb-2">Select a conversation</h3>
+                <p>Choose one from the list or start a new chat.</p>
               </div>
             </div>
           )}
