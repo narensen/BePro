@@ -16,6 +16,7 @@
     "@supabase/supabase-js": "^2.49.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "express": "^5.1.0",
     "framer-motion": "^12.23.3",
     "lucide-react": "^0.511.0",
     "next": "15.3.3",
@@ -23,6 +24,9 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "shadcn": "^2.9.2",
+    "socket": "^1.0.65",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "tailwind-merge": "^3.3.1",
     "zustand": "^5.0.6"
   },

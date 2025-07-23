@@ -72,6 +72,7 @@ export default function SideBar() {
     { name: 'Dashboard', icon: Home, href: '/home' },
     { name: 'Explore', icon: Search, href: '/home/explore' },
     { name: 'Codex', icon: AtomIcon, href: '/codex' },
+    { name: 'Messages', icon: MessageSquare, href: '/message' },
     { name: 'Post', icon: PlusCircle, href: '/home/post' },
   ];
 
