@@ -43,28 +43,39 @@ const useMousePosition = () => {
   return mousePosition;
 };
 
+// ---
+// FIX 1: Optimized useOnScreen Hook
+// - Destructured options to create stable dependencies for the useEffect hook.
+// - This prevents the IntersectionObserver from being recreated on every parent render.
+// - Added logic to disconnect the observer once the element is visible for better performance.
+// ---
 const useOnScreen = (options = {}) => {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
+  const { threshold = 0.1 } = options;
 
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setIsVisible(true);
-      }
-    }, { threshold: 0.1, ...options });
-
     const currentRef = ref.current;
-    if (currentRef) {
-      observer.observe(currentRef);
+    if (!currentRef) {
+      return;
     }
 
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect(); // Disconnect after becoming visible
+        }
+      },
+      { threshold }
+    );
+
+    observer.observe(currentRef);
+
     return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
+      observer.disconnect();
     };
-  }, [options]);
+  }, [ref, threshold]); // Use stable dependencies
 
   return [ref, isVisible];
 };
@@ -104,33 +115,44 @@ const AIMentorFeedback = ({ isTyping, text, feedback }) => {
   );
 };
 
-// Interactive Demo Component
-const InteractiveDemo = () => {
-  const [code, setCode] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const [currentFeedback, setCurrentFeedback] = useState(null);
-  
-  const feedbackRules = [
+// ---
+// FIX 2: Moved feedbackRules outside the component
+// - This prevents the array from being recreated on every render, improving performance.
+// ---
+const feedbackRules = [
     { pattern: /function\s+\w+\(\s*\)\s*{/, message: "Excellent! Clean function declaration. Consider adding parameter types for better maintainability.", type: 'success' },
     { pattern: /var\s+/, message: "Hold on! Use 'let' or 'const' instead of 'var' for better scope control and modern JS practices.", type: 'correction' },
     { pattern: /console\.log\(/, message: "Perfect for debugging! Remember to remove console.logs before production deployment.", type: 'success' },
     { pattern: /=\s*=(?!=)/, message: "Stop right there! Use '===' for strict equality to avoid type coercion issues.", type: 'correction' },
     { pattern: /\bif\s*\(.*\)\s*{/, message: "Great conditional logic! Make sure to handle edge cases and error conditions.", type: 'success' },
     { pattern: /class\s+\w+/, message: "Nice! Object-oriented approach. Consider using composition over inheritance when possible.", type: 'success' }
-  ];
+];
+
+// Interactive Demo Component
+const InteractiveDemo = () => {
+  const [code, setCode] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [currentFeedback, setCurrentFeedback] = useState(null);
   
+  // ---
+  // FIX 3: Corrected feedback logic
+  // - The effect now correctly sets feedback to null if no rules match the current code.
+  // - This prevents stale feedback from remaining on screen after code is changed or deleted.
+  // ---
   useEffect(() => {
     if (!code) {
       setCurrentFeedback(null);
       return;
     }
     
+    let matchedRule = null;
     for (const rule of feedbackRules) {
       if (rule.pattern.test(code)) {
-        setCurrentFeedback(rule);
+        matchedRule = rule;
         break;
       }
     }
+    setCurrentFeedback(matchedRule); // This will set to null if no rule was matched
   }, [code]);
   
   const handleInputChange = (e) => {
@@ -589,3 +611,7 @@ export default function App() {
         .animate-float {
           animation: float 6s ease-in-out infinite;
         }
+      `}</style>
+    </main>
+  );
+}
