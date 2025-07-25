@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Brain, Sparkles, AlertTriangle } from 'lucide-react';
 
+// AIMentorFeedback component remains the same
 const AIMentorFeedback = ({ feedback }) => {
   if (!feedback) return null;
 
@@ -16,7 +17,7 @@ const AIMentorFeedback = ({ feedback }) => {
               <Brain className="w-4 h-4 text-white" />
             </div>
             <div>
-              <p className="text-xs font-bold text-amber-400 mb-1">AI Mentor</p>
+              <p className="text-xs font-bold text-amber-400 mb-1">Codex</p>
               <p className="text-sm leading-tight">{feedback.message}</p>
             </div>
           </div>
@@ -26,49 +27,61 @@ const AIMentorFeedback = ({ feedback }) => {
   );
 };
 
+
 export const InteractiveDemo = () => {
   const [code, setCode] = useState('');
   const [currentFeedback, setCurrentFeedback] = useState(null);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // Optional: for loading state
 
+  // This useEffect hook now implements debouncing
   useEffect(() => {
-    // Stop polling if there's no code
+    // If there's no code, clear feedback and do nothing
     if (!code.trim()) {
       setCurrentFeedback(null);
       setError(null);
       return;
     }
 
-    const fetchFeedback = async () => {
-      try {
-        const response = await fetch(`/mentor?input=${encodeURIComponent(code)}`);
-        
-        // This checks for server errors (like 500, 404 etc.)
-        if (!response.ok) {
-          throw new Error(`Server responded with status: ${response.status}`);
-        }
-        
-        // This will fail if the server sends back something that isn't valid JSON
-        const data = await response.json();
-        setCurrentFeedback(data);
-        setError(null); // Clear any previous errors on success
+    setIsLoading(true); // Set loading state
 
-      } catch (err) {
-        console.error("AI Mentor request failed:", err);
-        setError("Failed to process AI Mentor response. Please try again.");
-        setCurrentFeedback(null);
-      }
+    // Set a timer to fetch feedback after 1 second of inactivity
+    const handler = setTimeout(() => {
+      const fetchFeedback = async () => {
+        try {
+          const response = await fetch(`https://bepro-mentor.onrender.com/mentor?input=${encodeURIComponent(code)}`);
+          
+          if (!response.ok) {
+            // Try to get a more specific error message from the backend
+            const errorData = await response.json().catch(() => null);
+            const detail = errorData?.detail || `Server responded with status: ${response.status}`;
+            throw new Error(detail);
+          }
+          
+          const data = await response.json();
+          setCurrentFeedback(data);
+          setError(null);
+
+        } catch (err) {
+          console.error("Codex request failed:", err);
+          setError(err.message || "Failed to process Codex response. Please try again.");
+          setCurrentFeedback(null);
+        } finally {
+          setIsLoading(false); // Unset loading state
+        }
+      };
+
+      fetchFeedback();
+    }, 1000); // 1-second delay after user stops typing
+
+    // This is the cleanup function. It runs every time the 'code' changes.
+    // It clears the previous timeout, so the API call only happens once the user pauses.
+    return () => {
+      clearTimeout(handler);
+      setIsLoading(false);
     };
 
-    // Initial call so you don't have to wait 3.5s for the first feedback
-    fetchFeedback(); 
-
-    const intervalId = setInterval(fetchFeedback, 3500);
-
-    // Cleanup function to stop the interval when the component is removed
-    return () => clearInterval(intervalId);
-
-  }, [code]); // The effect re-runs if the 'code' in the textarea changes
+  }, [code]); // The effect re-runs every time the 'code' changes
 
   return (
     <div className="relative">
@@ -79,10 +92,12 @@ export const InteractiveDemo = () => {
             <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
             <div className="w-4 h-4 bg-green-500 rounded-full"></div>
           </div>
-          <span className="ml-4 text-gray-400 text-sm font-mono">main.js - AI Mentor Active</span>
+          <span className="ml-4 text-gray-400 text-sm font-mono">main.js - Codex Active</span>
           <div className="ml-auto flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-green-400 text-xs font-medium">Live</span>
+            <div className={`w-2 h-2 rounded-full ${isLoading ? 'bg-yellow-400 animate-pulse' : 'bg-green-400'}`}></div>
+            <span className={`text-xs font-medium ${isLoading ? 'text-yellow-400' : 'text-green-400'}`}>
+              {isLoading ? 'Thinking...' : 'Live'}
+            </span>
           </div>
         </div>
         
@@ -100,11 +115,8 @@ export const InteractiveDemo = () => {
         
         <div className="mt-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
-              <Brain className="w-4 h-4 text-white" />
-            </div>
             <div>
-              <p className="text-amber-400 text-sm font-bold">AI Mentor</p>
+              <p className="text-amber-400 text-sm font-bold">Codex</p>
               <p className="text-gray-400 text-xs">Continuously Watching</p>
             </div>
           </div>
@@ -115,10 +127,6 @@ export const InteractiveDemo = () => {
             </div>
           )}
         </div>
-      </div>
-      
-      <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg animate-bounce">
-        <Sparkles className="w-4 h-4 text-white" />
       </div>
     </div>
   );
