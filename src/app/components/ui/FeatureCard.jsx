@@ -18,7 +18,7 @@ export const FeatureCard = ({ icon, title, description, delay = 0 }) => {
           </div>
         </div>
         <h3 className="text-2xl font-bold text-white mb-4 text-center">{title}</h3>
-        <p className="text-gray-300 text-center leading-relaxed">{description}</p>
+        <p className="text-black/80 text-center leading-relaxed">{description}</p>
       </div>
     </div>
   );
