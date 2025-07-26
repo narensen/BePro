@@ -635,9 +635,7 @@ export default function MessagesPage() {
                     {activeConversation.otherUsername}
                   </a>
                   {otherUserTyping && <p className="text-xs lg:text-sm text-green-600">typing...</p>}
-                  }
                   {!isConnected && <p className="text-xs lg:text-sm text-red-600">Offline</p>}
-                  }
                 </div>
               </div>
 
