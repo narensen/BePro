@@ -127,5 +127,26 @@ html {
   }
   body {
     @apply bg-background text-foreground;
+    /* Add padding bottom for mobile bottom navigation */
+    padding-bottom: env(safe-area-inset-bottom);
   }
+  
+  /* Mobile bottom navigation spacing */
+  @media (max-width: 1023px) {
+    body {
+      padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    }
+  }
+  
+  /* Smooth transitions for all interactive elements */
+  .transition-smooth {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Enhanced z-index management */
+  .z-sidebar-mobile-btn { z-index: 100; }
+  .z-sidebar-overlay { z-index: 60; }
+  .z-sidebar-desktop { z-index: 70; }
+  .z-sidebar-toggle { z-index: 80; }
+  .z-bottom-nav { z-index: 90; }
 }

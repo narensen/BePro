@@ -219,7 +219,7 @@ export default function Explore() {
       <SideBar onCollapseChange={setIsCollapsed} />
 
       {/* Main Content - Mobile First */}
-      <div className={`transition-all duration-300 min-h-screen ${isCollapsed ? 'lg:ml-20' : 'lg:ml-72'}`}>
+      <div className={`transition-all duration-500 ease-in-out min-h-screen pb-20 lg:pb-0 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-72'}`}>
         {/* Mobile Header */}
         <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-4 mt-16 lg:mt-0">
           <div className="flex items-center justify-between">

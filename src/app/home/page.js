@@ -34,7 +34,7 @@ export default function Home() {
       {/* Mobile Sidebar */}
       <SideBar user={user} username={username} onSignOut={handleSignOut} onCollapseChange={setIsCollapsed} />
 
-      <div className={`transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-72'}`}>
+      <div className={`transition-all duration-500 ease-in-out pb-20 lg:pb-0 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-72'}`}>
         <header className="sticky top-0 z-30 border-gray-200/50 p-4 lg:pt-4 mt-16 lg:mt-0">
           <div className="flex justify-end max-w-6xl">
             <div className="flex items-end">

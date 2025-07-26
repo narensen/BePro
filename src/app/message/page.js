@@ -461,7 +461,7 @@ export default function MessagesPage() {
       {/* Mobile-First Sidebar */}
       <SideBar onCollapseChange={setIsCollapsed} />
 
-      <div className={`h-screen flex overflow-hidden transition-all duration-300 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
+      <div className={`h-screen flex overflow-hidden transition-all duration-500 ease-in-out pb-20 lg:pb-0 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
         {/* Mobile: Show either conversations list OR chat */}
         {/* Desktop: Show both side by side */}
         

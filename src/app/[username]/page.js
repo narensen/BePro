@@ -153,7 +153,7 @@ export default function ProfilePage({ params }) {
       <SideBar onCollapseChange={setIsCollapsed} />
       
       {/* Main Content */}
-      <div className={`transition-all duration-300 min-h-screen ${isCollapsed ? 'lg:ml-20' : 'lg:ml-72'}`}>
+      <div className={`transition-all duration-500 ease-in-out min-h-screen pb-20 lg:pb-0 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-72'}`}>
         {/* Content Container */}
         <div className="px-3 lg:px-8 py-4 lg:py-12 mt-16 lg:mt-0">
           <div className="max-w-4xl mx-auto">

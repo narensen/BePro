@@ -117,8 +117,18 @@ export default function SideBar({ onCollapseChange }) {
     };
   }, [username]); // Re-run this effect if the username changes
 
-  // Notify parent component when collapse state changes
   useEffect(() => {
+    // Persist collapse state in localStorage
+    const savedCollapseState = localStorage.getItem('sidebar-collapsed');
+    if (savedCollapseState !== null) {
+      setIsCollapsed(JSON.parse(savedCollapseState));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save collapse state to localStorage
+    localStorage.setItem('sidebar-collapsed', JSON.stringify(isCollapsed));
+    // Notify parent component when collapse state changes
     if (onCollapseChange) {
       onCollapseChange(isCollapsed);
     }
@@ -137,12 +147,20 @@ export default function SideBar({ onCollapseChange }) {
     { name: 'Profile', icon: User, href: `/${username}` },
   ];
 
+  const handleToggleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+
+  const handleMobileNavClick = (href) => {
+    router.push(href);
+    setIsMobileOpen(false);
+  };
   return (
     <>
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg border border-gray-200/50"
+        className="lg:hidden fixed top-4 left-4 z-[100] p-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg border border-gray-200/50 transition-all duration-300 hover:scale-105"
       >
         {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
@@ -158,16 +176,16 @@ export default function SideBar({ onCollapseChange }) {
       {/* Sidebar */}
       <div className={`
         h-screen font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex flex-col fixed z-40
-        ${isCollapsed ? 'w-20' : 'w-72'}
+        ${isCollapsed ? 'w-20' : 'w-72'} 
         ${isMobileOpen ? 'fixed left-0 top-0' : 'fixed left-0 top-0 -translate-x-full lg:translate-x-0'}
-        transition-all duration-300 ease-in-out
+        transition-all duration-500 ease-in-out
       `}>
         {/* Toggle Button - Desktop Only */}
         <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="hidden lg:flex absolute -right-3 top-6 w-6 h-6 bg-white border border-gray-200 rounded-full items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 z-[60] hover:scale-110"
+          onClick={handleToggleCollapse}
+          className="hidden lg:flex absolute -right-3 top-6 w-6 h-6 bg-white border border-gray-200 rounded-full items-center justify-center shadow-md hover:shadow-lg transition-all duration-500 z-[80] hover:scale-110"
         >
-          <div className={`w-2 h-2 border-r-2 border-b-2 border-gray-600 transform transition-transform duration-300 ${isCollapsed ? 'rotate-45' : '-rotate-135'}`} />
+          <div className={`w-2 h-2 border-r-2 border-b-2 border-gray-600 transform transition-transform duration-500 ${isCollapsed ? 'rotate-45' : '-rotate-135'}`} />
         </button>
 
       <div className="p-6 border-b border-gray-200/30">
@@ -260,7 +278,7 @@ export default function SideBar({ onCollapseChange }) {
                         className={`absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md ${
                           isCollapsed ? 'rounded-xl' : ''
                         }`}
-                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 35, duration: 0.6 }}
                       />
                     )}
                     <div
@@ -332,7 +350,7 @@ export default function SideBar({ onCollapseChange }) {
                         className={`absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md ${
                           isCollapsed ? 'rounded-xl' : ''
                         }`}
-                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 35, duration: 0.6 }}
                       />
                     )}
                     {content}
@@ -355,6 +373,48 @@ export default function SideBar({ onCollapseChange }) {
         </>
       )}
     </div>
+
+     {/* Mobile Bottom Navigation Bar */}
+     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-white/95 backdrop-blur-sm border-t border-gray-200/50 shadow-2xl">
+       <div className="flex items-center justify-around py-2 px-4">
+         {navItems.slice(0, 5).map((item) => {
+           const isActive = pathname === item.href;
+           const Icon = item.icon;
+           return (
+             <button
+               key={item.name}
+               onClick={() => handleMobileNavClick(item.href)}
+               className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 relative ${
+                 isActive 
+                   ? 'text-amber-600 scale-110' 
+                   : 'text-gray-600 hover:text-gray-800 active:scale-95'
+               }`}
+             >
+               <div className="relative">
+                 <Icon size={20} />
+                 {item.name === 'Messages' && unreadCount > 0 && (
+                   <span className="absolute -top-2 -right-2 flex items-center justify-center bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4">
+                     {unreadCount > 9 ? '9+' : unreadCount}
+                   </span>
+                 )}
+               </div>
+               <span className={`text-xs mt-1 font-medium transition-all duration-300 ${
+                 isActive ? 'text-amber-600' : 'text-gray-500'
+               }`}>
+                 {item.name === 'Dashboard' ? 'Home' : item.name}
+               </span>
+               {isActive && (
+                 <motion.div
+                   layoutId="mobile-active-indicator"
+                   className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-amber-600 rounded-full"
+                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                 />
+               )}
+             </button>
+           );
+         })}
+       </div>
+     </div>
     </>
   );
 }
