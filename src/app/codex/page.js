@@ -59,12 +59,6 @@ export default function Codex() {
       {/* Main Content - Mobile Optimized */}
       <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
         {/* Mobile Header */}
-        <div className="hidden lg:block sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6">
-          <div className="text-center lg:text-left">
-            <h1 className="font-bold text-2xl lg:text-3xl text-gray-900">Codex</h1>
-            <p className="text-sm lg:text-base text-black/60 mt-1">Your Career-pathing Engine</p>
-          </div>
-        </div>
 
         {/* Content Container */}
         <div className="px-3 lg:px-8 py-4 lg:py-8">

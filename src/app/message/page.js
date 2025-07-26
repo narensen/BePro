@@ -900,7 +900,7 @@ export default function MessagesPage() {
               </div>
 
               {/* Message Input */}
-              <div className="p-4 bg-white/90 backdrop-blur-sm border-t border-gray-200 pb-24">
+              <div className="p-4 bg-white/90 backdrop-blur-sm border-t border-gray-200 pb-6">
                 <form onSubmit={sendMessage} className="flex space-x-3">
                   <input
                     type="text"

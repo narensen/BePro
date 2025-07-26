@@ -168,17 +168,6 @@ export default function CreatePost() {
       {/* Main Content - Mobile Optimized */}
       <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
         {/* Mobile Header */}
-        <div className="hidden lg:block sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6">
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-2 lg:gap-3 mb-2 lg:mb-4">
-              <div className="p-2 lg:p-3 bg-black/90 rounded-xl lg:rounded-2xl">
-                <Sparkles className="w-6 h-6 lg:w-8 lg:h-8 text-amber-300" />
-              </div>
-              <h1 className="text-2xl lg:text-4xl font-black text-gray-900">Create Post</h1>
-            </div>
-            <p className="text-gray-800 text-sm lg:text-lg font-medium">Share your thoughts with the community</p>
-          </div>
-        </div>
 
         {/* Content Container */}
         <div className="px-3 lg:px-6 py-4 lg:py-8">

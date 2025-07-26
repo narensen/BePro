@@ -274,7 +274,7 @@ export default function Explore() {
       </div>
 
       {/* Desktop Profile Bar */}
-      <div className="hidden lg:block">
+      <div className="hidden xl:block">
         <ProfileBar currentUser={userProfile} />
       </div>
     </div>

@@ -305,84 +305,11 @@ export default function SideBar() {
     </div>
 
      {/* Mobile Top Navigation Bar */}
-     <div className="lg:hidden fixed top-0 left-0 right-0 z-[90] bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
-       <div className="flex items-center justify-between py-3 px-4">
-         {/* Empty space for balance */}
-         <div></div>
-         
-         {/* Profile Menu */}
-         {user && (
-           <div className="relative">
-             <button
-               onClick={() => setShowProfileMenu(!showProfileMenu)}
-               className="flex items-center gap-2 p-2 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 shadow-md hover:scale-105 transition-all duration-300"
-             >
-               <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden">
-                 {avatarUrl ? (
-                   <img
-                     src={avatarUrl}
-                     alt={`${username}'s avatar`}
-                     className="w-full h-full object-cover"
-                   />
-                 ) : (
-                   <span className="text-white font-bold text-sm">
-                     {username?.charAt(0).toUpperCase() || 'U'}
-                   </span>
-                 )}
-               </div>
-               <ChevronDown size={16} className={`transition-transform duration-300 ${showProfileMenu ? 'rotate-180' : ''}`} />
-             </button>
-             
-             {/* Profile Dropdown */}
-             {showProfileMenu && (
-               <>
-                 <div 
-                   className="fixed inset-0 z-40"
-                   onClick={() => setShowProfileMenu(false)}
-                 />
-                 <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200/50 z-50">
-                   <div className="p-3 border-b border-gray-200/30">
-                     <p className="font-bold text-gray-900 text-sm">{username}</p>
-                     <p className="text-gray-600 text-xs">{user.email}</p>
-                   </div>
-                   <div className="p-2">
-                     <button
-                       onClick={() => handleProfileMenuClick(`/${username}`)}
-                       className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-left"
-                     >
-                       <User size={18} />
-                       <span className="font-medium">Profile</span>
-                     </button>
-                     <button
-                       onClick={() => handleProfileMenuClick('/settings')}
-                       className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-left"
-                     >
-                       <Settings size={18} />
-                       <span className="font-medium">Settings</span>
-                     </button>
-                     <button
-                       onClick={() => {
-                         handleSignOut();
-                         setShowProfileMenu(false);
-                       }}
-                       className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 text-red-600 transition-colors text-left"
-                     >
-                       <LogOut size={18} />
-                       <span className="font-medium">Logout</span>
-                     </button>
-                   </div>
-                 </div>
-               </>
-             )}
-           </div>
-         )}
-       </div>
-     </div>
 
      {/* Mobile Bottom Navigation Bar */}
-     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-white/95 backdrop-blur-sm border-t border-gray-200/50 shadow-2xl">
+     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-white/95 backdrop-blur-sm border-t border-gray-200/50 shadow-2xl pb-safe">
        <div className="flex items-center justify-around py-2 px-4">
-         {navItems.slice(0, 5).map((item) => {
+         {[...navItems.slice(0, 4), { name: 'Profile', icon: User, href: `/${username}` }].map((item) => {
            const isActive = pathname === item.href;
            const Icon = item.icon;
            return (
@@ -406,7 +333,7 @@ export default function SideBar() {
                <span className={`text-xs mt-1 font-medium transition-all duration-300 ${
                  isActive ? 'text-amber-600' : 'text-gray-500'
                }`}>
-                 {item.name === 'Dashboard' ? 'Home' : item.name}
+                 {item.name === 'Dashboard' ? 'Home' : item.name === 'Profile' ? 'Profile' : item.name}
                </span>
                {isActive && (
                  <motion.div
