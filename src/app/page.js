@@ -21,6 +21,10 @@ import { FloatingElement } from '@/app/components/ui/FloatingElement';
 import { CodexIcon } from '@/app/components/icons/CodexIcon';
 import { FortressIcon } from '@/app/components/icons/FortressIcon';
 
+// Note: For full responsiveness, ensure that the imported components 
+// (Header, HeroSection, InteractiveDemo, CtaSection, Footer, etc.) 
+// are also built with responsive design principles in mind.
+
 export default function LandingPage() {
   const [loading, setLoading] = useState(true);
   const { user, setUserSession, clearUserSession } = useUserStore();
@@ -61,7 +65,9 @@ export default function LandingPage() {
   }
 
   return (
+    // overflow-x-hidden is crucial for preventing horizontal scroll on mobile
     <main className="relative bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 overflow-x-hidden font-mono">
+      {/* This mouse-following effect is decorative. It gracefully degrades on touch devices. */}
       <div 
         className="fixed inset-0 opacity-30 pointer-events-none transition-all duration-300"
         style={{
@@ -69,19 +75,29 @@ export default function LandingPage() {
         }}
       />
       
-      <FloatingElement delay={0} className="absolute top-20 left-10 opacity-20"><Code2 className="w-16 h-16 text-white" /></FloatingElement>
-      <FloatingElement delay={2} className="absolute top-40 right-20 opacity-20"><Brain className="w-12 h-12 text-white" /></FloatingElement>
-      <FloatingElement delay={4} className="absolute bottom-40 left-20 opacity-20"><Target className="w-14 h-14 text-white" /></FloatingElement>
+      {/* Responsive Floating Elements: Adjusted size and position for smaller screens */}
+      <FloatingElement delay={0} className="absolute top-16 left-4 md:top-20 md:left-10 opacity-20">
+        <Code2 className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-white" />
+      </FloatingElement>
+      <FloatingElement delay={2} className="absolute top-40 right-4 md:right-20 opacity-20">
+        <Brain className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white" />
+      </FloatingElement>
+      <FloatingElement delay={4} className="absolute bottom-40 left-4 md:left-20 opacity-20">
+        <Target className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-white" />
+      </FloatingElement>
       
       <Header user={user} onAuthAction={handleAuthAction} onSignOut={handleSignOut} />
 
       <HeroSection user={user} onAuthAction={handleAuthAction} />
 
-      <AnimatedSection className="py-32 px-4" background="bg-white/10 backdrop-blur-xl">
+      {/* Responsive Section Padding: Reduced vertical padding on mobile (py-20) and increased on larger screens (sm:py-24, md:py-32) */}
+      <AnimatedSection className="py-20 sm:py-24 md:py-32 px-4 sm:px-6" background="bg-white/10 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-7xl font-black mb-8 text-gray-900">Meet Your <span className="text-white">AI Mentor</span></h2>
-            <p className="max-w-4xl mx-auto text-xl md:text-2xl text-gray-800 leading-relaxed font-bold">
+          {/* Responsive Margins: Reduced bottom margin on mobile (mb-12) and increased on larger screens (md:mb-20) */}
+          <div className="text-center mb-12 md:mb-20">
+            {/* Responsive Typography: Added more breakpoints for smoother font size scaling */}
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 md:mb-8 text-gray-900">Meet Your <span className="text-white">AI Mentor</span></h2>
+            <p className="max-w-4xl mx-auto text-lg sm:text-xl md:text-2xl text-gray-800 leading-relaxed font-bold">
               Like having a senior developer watching over your shoulder. Your AI mentor provides instant feedback and guides you towards mastery.
             </p>
           </div>
@@ -89,24 +105,25 @@ export default function LandingPage() {
         </div>
       </AnimatedSection>
       
-      <AnimatedSection className="py-32 px-4" background="bg-gray-900/20 backdrop-blur-xl">
+      <AnimatedSection className="py-20 sm:py-24 md:py-32 px-4 sm:px-6" background="bg-gray-900/20 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-5xl md:text-7xl font-black mb-8 text-white">The Illusion of Progress</h2>
-          <p className="max-w-4xl mx-auto text-xl md:text-2xl text-gray-900 leading-relaxed font-bold">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 md:mb-8 text-white">The Illusion of Progress</h2>
+          <p className="max-w-4xl mx-auto text-lg sm:text-xl md:text-2xl text-gray-900 leading-relaxed font-bold">
             You&apos;ve done everything they told you to. You&apos;ve taken the courses. You&apos;ve collected the certificates. 
             And yet, you are still at the bottom of the mountain.
           </p>
         </div>
       </AnimatedSection>
 
-      <AnimatedSection id="codex" className="py-32 px-4" background="bg-white/10 backdrop-blur-xl">
+      <AnimatedSection id="codex" className="py-20 sm:py-24 md:py-32 px-4 sm:px-6" background="bg-white/10 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-7xl font-black mb-8 text-gray-900">The <span className="text-white">Codex</span>: Your AI Mentor</h2>
-            <p className="max-w-4xl mx-auto text-xl md:text-2xl text-gray-800 leading-relaxed font-bold">
+          <div className="text-center mb-12 md:mb-20">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 md:mb-8 text-gray-900">The <span className="text-white">Codex</span>: Your AI Mentor</h2>
+            <p className="max-w-4xl mx-auto text-lg sm:text-xl md:text-2xl text-gray-800 leading-relaxed font-bold">
              The Codex deconstructs the path to any elite tech role and creates a personalized, step-by-step roadmap for your conquest.
             </p>
           </div>
+          {/* This grid is already responsive: it stacks on mobile and becomes 3 columns on medium screens and up. This is a great pattern. */}
           <div className="grid md:grid-cols-3 gap-8">
             <FeatureCard icon={<CodexIcon />} title="Deconstruction" description="The Codex analyzes thousands of data points to generate a master blueprint of the exact skills and projects required." delay={0} />
             <FeatureCard icon={<CodexIcon />} title="Prescription" description="You receive a single, focused mission each week. The Codex provides the curated resources you need to win." delay={200} />
@@ -115,11 +132,11 @@ export default function LandingPage() {
         </div>
       </AnimatedSection>
 
-      <AnimatedSection id="fortress" className="py-32 px-4" background="bg-gray-900/20 backdrop-blur-xl">
+      <AnimatedSection id="fortress" className="py-20 sm:py-24 md:py-32 px-4 sm:px-6" background="bg-gray-900/20 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-20">
-                <h2 className="text-5xl md:text-7xl font-black mb-8 text-white">The <span className="text-gray-900">Community Fortress</span></h2>
-                <p className="max-w-4xl mx-auto text-xl md:text-2xl text-gray-900 leading-relaxed font-bold">
+            <div className="text-center mb-12 md:mb-20">
+                <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 md:mb-8 text-white">The <span className="text-gray-900">Community Fortress</span></h2>
+                <p className="max-w-4xl mx-auto text-lg sm:text-xl md:text-2xl text-gray-900 leading-relaxed font-bold">
                     Compete, collaborate, and conquer alongside the best commanders from your own college.
                 </p>
             </div>
@@ -131,10 +148,10 @@ export default function LandingPage() {
         </div>
       </AnimatedSection>
 
-      <AnimatedSection id="philosophy" className="py-32 px-4" background="bg-white/10 backdrop-blur-xl">
+      <AnimatedSection id="philosophy" className="py-20 sm:py-24 md:py-32 px-4 sm:px-6" background="bg-white/10 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-5xl md:text-7xl font-black mb-12 text-white">This Is Not For Everyone.</h2>
-          <p className="max-w-4xl mx-auto text-xl md:text-2xl text-gray-800 leading-relaxed font-bold">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-8 md:mb-12 text-white">This Is Not For Everyone.</h2>
+          <p className="max-w-4xl mx-auto text-lg sm:text-xl md:text-2xl text-gray-800 leading-relaxed font-bold">
             We are not for the casual learner; we are for the <span className="text-gray-900">obsessed builder</span>. We are not for the 95% who seek comfort; we are for the <span className="text-white">5% who seek the throne</span>.
           </p>
         </div>
@@ -144,6 +161,7 @@ export default function LandingPage() {
       
       <Footer />
 
+      {/* No changes needed here. Animations are not screen-size dependent. */}
       <style jsx>{`
         @keyframes fade-in-down { 0% { opacity: 0; transform: translateY(-30px); } 100% { opacity: 1; transform: translateY(0); } }
         @keyframes fade-in-up { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
