@@ -113,7 +113,31 @@ export default function Codex() {
         {/* Mobile Header */}
 
         {showMissionInterface && Object.keys(missions).length > 0 ? (
-          <MissionInterface missions={missions} username={username} />
+          <>
+            {/* Desktop Mission Interface */}
+            <div className="hidden lg:block">
+              <MissionInterface missions={missions} username={username} />
+            </div>
+            
+            {/* Mobile Roadmap Grid */}
+            <div className="lg:hidden px-3 py-4">
+              <motion.div
+                className="text-center mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+              >
+                <div className="mb-6">
+                  <h1 className="text-3xl font-black text-gray-900 mb-2">Your Roadmap</h1>
+                  <p className="text-gray-600">Tap missions to view details</p>
+                </div>
+                
+                <div className="mt-6">
+                  <RoadmapGrid missions={missions} />
+                </div>
+              </motion.div>
+            </div>
+          </>
         ) : (
           <div className="px-3 lg:px-8 py-4 lg:py-8">
             <motion.div
