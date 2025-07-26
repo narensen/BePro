@@ -305,7 +305,7 @@ export default function SideBar() {
     </div>
 
      {/* Mobile Top Navigation Bar */}
-     <div className="lg:hidden fixed top-0 left-0 right-0 z-[90]">
+     <div className="lg:hidden fixed top-0 left-0 right-0 z-[90] bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
        <div className="flex items-center justify-between py-3 px-4">
          {/* Empty space for balance */}
          <div></div>

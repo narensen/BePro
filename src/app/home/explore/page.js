@@ -218,43 +218,43 @@ export default function Explore() {
       <SideBar />
 
       {/* Main Content - Mobile First */}
-      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72 flex flex-col">
+      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
         {/* Content Container - Clean and Centered */}
-        <div className="flex-1 flex items-center justify-center px-3 lg:px-6 py-4 lg:py-6">
-          <div className="w-full max-w-3xl">
+        <div className="px-3 lg:px-6 py-4 lg:py-6 min-h-screen lg:flex lg:items-center lg:justify-center">
+          <div className="w-full max-w-4xl lg:mx-auto">
             {/* Clean Title Section */}
-            <div className="mb-8 text-center">
+            <div className="mb-8 text-center lg:mb-12">
               <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-3">Explore</h1>
               <p className="text-lg text-gray-700 font-medium">Discover posts tailored for you</p>
             </div>
             
             {/* Search and Sort Section */}
-            <div className="mb-6 space-y-4">
+            <div className="mb-6 lg:mb-8 space-y-4">
               <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
               <SortOptions sortMode={sortMode} setSortMode={setSortMode} />
             </div>
 
             {/* Posts Section */}
-            <div className="space-y-6">
+            <div className="space-y-6 lg:space-y-8">
               {filteredPosts.length === 0 ? (
-                <div className="text-center py-20 bg-white/95 backdrop-blur-sm rounded-3xl shadow-xl border border-white/30">
-                  <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center">
-                    <svg className="w-8 h-8 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="text-center py-20 lg:py-32 bg-white/95 backdrop-blur-sm rounded-3xl shadow-xl border border-white/30">
+                  <div className="w-20 h-20 lg:w-24 lg:h-24 mx-auto mb-6 lg:mb-8 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 lg:w-10 lg:h-10 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                  <h3 className="text-xl lg:text-2xl font-bold text-gray-800 mb-2 lg:mb-4">
                     {searchQuery ? 'No posts found matching your search' : 'No posts available for this category'}
                   </h3>
                   {sortMode === 'recommended' && (
-                    <p className="text-gray-600 text-base mt-2">
+                    <p className="text-gray-600 text-base lg:text-lg mt-2">
                       Interact with more posts to improve your recommendations!
                     </p>
                   )}
                 </div>
               ) : (
                 filteredPosts.map((post, index) => (
-                  <div key={post.id} className="animate-fadeInUp" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <div key={post.id} className="animate-fadeInUp lg:max-w-3xl lg:mx-auto" style={{ animationDelay: `${index * 0.1}s` }}>
                     <PostCard
                       post={post}
                       userInteractions={userInteractions}
