@@ -134,7 +134,8 @@ html {
   /* Mobile bottom navigation spacing */
   @media (max-width: 1023px) {
     body {
-      padding-bottom: calc(80px + env(safe-area-inset-bottom));
+      padding-bottom: calc(70px + env(safe-area-inset-bottom));
+      padding-top: calc(60px + env(safe-area-inset-top));
     }
   }
   

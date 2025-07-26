@@ -218,9 +218,9 @@ export default function Explore() {
       <SideBar />
 
       {/* Main Content - Mobile First */}
-      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 lg:pb-0 lg:ml-72">
+      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
         {/* Mobile Header */}
-        <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-4 mt-16 lg:mt-0">
+        <div className="hidden lg:block sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-4">
           <div className="flex items-center justify-between">
             <div>
               <Link href="/home/explore">
@@ -230,42 +230,18 @@ export default function Explore() {
                 Discover posts tailored for you
               </p>
             </div>
-            
-            {/* Mobile People Button */}
-            <button
-              onClick={() => setShowProfileBar(!showProfileBar)}
-              className="lg:hidden bg-gray-900 text-amber-300 px-3 py-2 rounded-lg font-bold text-sm"
-            >
-              People
-            </button>
           </div>
         </div>
 
-        {/* Mobile Profile Bar Overlay */}
-        {showProfileBar && (
-          <div className="lg:hidden fixed inset-0 z-50 bg-black/50 pt-16" onClick={() => setShowProfileBar(false)}>
-            <div className="absolute right-0 top-16 h-[calc(100vh-4rem)] w-80 max-w-[90vw] bg-white transform transition-transform">
-              <div className="p-4 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-bold">Discover People</h2>
-                  <button
-                    onClick={() => setShowProfileBar(false)}
-                    className="p-2 hover:bg-gray-100 rounded-lg"
-                  >
-                    ✕
-                  </button>
-                </div>
-              </div>
-              <div className="h-[calc(100%-5rem)] overflow-y-auto">
-                <ProfileBar currentUser={userProfile} />
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Content Container - Mobile Optimized */}
-        <div className="px-3 lg:px-6 py-4 lg:py-6">
-          <div className="max-w-2xl mx-auto lg:mr-80">
+        <div className="px-3 lg:px-6 py-4 lg:py-6 max-w-4xl mx-auto">
+          <div className="max-w-2xl mx-auto">
+            {/* Mobile Title */}
+            <div className="lg:hidden mb-6 text-center">
+              <h1 className="text-3xl font-black text-gray-900 mb-2">Explore</h1>
+              <p className="text-gray-600">Discover posts tailored for you</p>
+            </div>
+            
             {/* Mobile-First Search Bar */}
             <div className="mb-4">
               <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -279,7 +255,7 @@ export default function Explore() {
             {/* Posts - Mobile Optimized */}
             <div className="space-y-4 lg:space-y-6">
               {filteredPosts.length === 0 ? (
-                <div className="text-center py-12 bg-white/90 rounded-xl shadow-lg">
+                <div className="text-center py-12 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-white/30">
                   <p className="text-gray-600 text-base lg:text-lg">
                     {searchQuery ? 'No posts found matching your search' : 'No posts available for this category'}
                   </p>

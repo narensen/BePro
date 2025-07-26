@@ -460,12 +460,12 @@ export default function MessagesPage() {
       {/* Mobile-First Sidebar */}
       <SideBar />
 
-      <div className="h-screen flex overflow-hidden transition-all duration-300 ease-in-out pb-20 lg:pb-0 lg:pl-72">
+      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
         {/* Mobile: Show either conversations list OR chat */}
         {/* Desktop: Show both side by side */}
         
         {/* Conversations List - Mobile Conditional, Desktop Always Visible */}
-        <div className={`mt-16 lg:mt-0 ${
+        <div className={`${
           showConversationsList ? 'flex' : 'hidden lg:flex'
         } w-full lg:w-80 bg-white/95 backdrop-blur-sm border-r border-gray-200 flex-col h-full`}>
           {/* Header */}
@@ -611,9 +611,11 @@ export default function MessagesPage() {
                 {/* Mobile Back Button */}
                 <button
                   onClick={goBackToConversations}
-                  className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
+                  className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                  ←
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
                 </button>
                 
                 <div className="relative w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-yellow-400">

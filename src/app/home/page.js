@@ -34,7 +34,7 @@ export default function Home() {
       <SideBar user={user} username={username} onSignOut={handleSignOut} />
 
       <div className="transition-all duration-300 ease-in-out pb-20 lg:pb-0 lg:ml-72">
-        <header className="sticky top-0 z-30 border-gray-200/50 p-4 lg:pt-4 mt-16 lg:mt-0">
+        <header className="hidden lg:block sticky top-0 z-30 border-gray-200/50 p-4 lg:pt-4">
           <div className="flex justify-end max-w-6xl">
             <div className="flex items-end">
               {user && (
@@ -46,8 +46,14 @@ export default function Home() {
           </div>
         </header>
 
-        <main className="p-4 sm:p-6 min-h-[calc(100vh-80px)] flex items-center justify-center">
+        <main className="p-4 sm:p-6 pt-16 lg:pt-4 min-h-[calc(100vh-80px)] flex items-center justify-center">
           <div className="text-center">
+            {/* Mobile Title */}
+            <div className="lg:hidden mb-8">
+              <h1 className="text-3xl font-black text-gray-900 mb-2">Dashboard</h1>
+              <p className="text-gray-600">Welcome to your BePro dashboard</p>
+            </div>
+            
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-12 shadow-xl border border-gray-200 max-w-md mx-auto mb-20">
 
               {user ? (

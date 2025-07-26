@@ -166,9 +166,9 @@ export default function CreatePost() {
       <SideBar />
 
       {/* Main Content - Mobile Optimized */}
-      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 lg:pb-0 lg:ml-72">
+      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
         {/* Mobile Header */}
-        <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6 mt-16 lg:mt-0">
+        <div className="hidden lg:block sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6">
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 lg:gap-3 mb-2 lg:mb-4">
               <div className="p-2 lg:p-3 bg-black/90 rounded-xl lg:rounded-2xl">
@@ -183,6 +183,17 @@ export default function CreatePost() {
         {/* Content Container */}
         <div className="px-3 lg:px-6 py-4 lg:py-8">
           <div className="max-w-3xl mx-auto">
+            {/* Mobile Title */}
+            <div className="lg:hidden mb-6 text-center">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <div className="p-2 bg-black/90 rounded-xl">
+                  <Sparkles className="w-6 h-6 text-amber-300" />
+                </div>
+                <h1 className="text-3xl font-black text-gray-900">Create Post</h1>
+              </div>
+              <p className="text-gray-600">Share your thoughts with the community</p>
+            </div>
+            
             <div className="bg-white/95 backdrop-blur-sm rounded-2xl lg:rounded-3xl shadow-2xl p-4 lg:p-8">
               {error && (
                 <div className="mb-4 lg:mb-6 p-3 lg:p-4 bg-red-50 border border-red-200 rounded-xl">

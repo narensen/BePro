@@ -387,9 +387,9 @@ export default function SettingsPage() {
       <SideBar />
       
       {/* Main Content */}
-      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 lg:pb-0 lg:ml-72">
+      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
         {/* Mobile Header */}
-        <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6 mt-16 lg:mt-0">
+        <div className="hidden lg:block sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6">
           <div className="text-center lg:text-left">
             <h1 className="text-2xl lg:text-4xl font-black text-gray-900 mb-1 lg:mb-2">Settings</h1>
             <p className="text-amber-600 text-sm lg:text-lg font-medium">Manage your account preferences and profile information</p>
@@ -399,6 +399,12 @@ export default function SettingsPage() {
         {/* Content Container */}
         <div className="px-3 lg:px-8 py-4 lg:py-8">
           <div className="max-w-4xl mx-auto">
+            {/* Mobile Title */}
+            <div className="lg:hidden mb-6 text-center">
+              <h1 className="text-3xl font-black text-gray-900 mb-2">Settings</h1>
+              <p className="text-amber-600 font-medium">Manage your account preferences and profile information</p>
+            </div>
+            
             {message && (
               <div className={`mb-4 lg:mb-6 p-3 lg:p-4 rounded-xl ${messageType === 'success' ? 'bg-green-500/20 text-green-700 border border-green-500/30' : 'bg-red-500/20 text-red-700 border border-red-500/30'}`}>
                 <p className="text-sm lg:text-base font-medium text-center">{message}</p>

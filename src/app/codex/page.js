@@ -57,9 +57,9 @@ export default function Codex() {
       <SideBar />
 
       {/* Main Content - Mobile Optimized */}
-      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 lg:pb-0 lg:ml-72">
+      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
         {/* Mobile Header */}
-        <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6 mt-16 lg:mt-0">
+        <div className="hidden lg:block sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6">
           <div className="text-center lg:text-left">
             <h1 className="font-bold text-2xl lg:text-3xl text-gray-900">Codex</h1>
             <p className="text-sm lg:text-base text-black/60 mt-1">Your Career-pathing Engine</p>
@@ -74,6 +74,12 @@ export default function Codex() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
+            {/* Mobile Title */}
+            <div className="lg:hidden mb-6">
+              <h1 className="text-3xl font-black text-gray-900 mb-2">Codex</h1>
+              <p className="text-gray-600">Your Career-pathing Engine</p>
+            </div>
+            
             <p className="text-3xl lg:text-6xl font-bold text-black mb-2 lg:mb-4">
               Welcome, {upper_User}!
             </p>

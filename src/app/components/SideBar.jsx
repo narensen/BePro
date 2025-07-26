@@ -14,6 +14,7 @@ import {
   LogOut,
   Menu,
   X,
+  ChevronDown,
 } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react';
 import useUserStore from '../store/useUserStore';
@@ -23,6 +24,7 @@ export default function SideBar() {
   const pathname = usePathname();
   const router = useRouter();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const {
     user,
@@ -134,30 +136,15 @@ export default function SideBar() {
     setIsMobileOpen(false);
   };
 
+  const handleProfileMenuClick = (href) => {
+    router.push(href);
+    setShowProfileMenu(false);
+  };
   return (
     <>
-      {/* Mobile Menu Button */}
-      <button
-        onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-4 left-4 z-[100] p-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg border border-gray-200/50 transition-all duration-300 hover:scale-105"
-      >
-        {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-
-      {/* Mobile Overlay */}
-      {isMobileOpen && (
-        <div 
-          className="lg:hidden fixed inset-0 bg-black/50 z-40"
-          onClick={() => setIsMobileOpen(false)}
-        />
-      )}
 
       {/* Sidebar */}
-      <div className={`
-        h-screen font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex flex-col fixed z-[70] w-72
-        ${isMobileOpen ? 'fixed left-0 top-0' : 'fixed left-0 top-0 -translate-x-full lg:translate-x-0'}
-        transition-all duration-300 ease-in-out
-      `}>
+      <div className="hidden lg:flex h-screen font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex-col fixed z-[70] w-72 left-0 top-0">
 
       <div className="p-6 border-b border-gray-200/30">
         <Link href="/home">
@@ -231,7 +218,6 @@ export default function SideBar() {
                     href={item.href}
                     key={item.name}
                     className="block relative"
-                    onClick={() => setIsMobileOpen(false)}
                   >
                     {isActive && (
                       <motion.div
@@ -290,7 +276,6 @@ export default function SideBar() {
                     key={item.name} 
                     href={item.href} 
                     className="block relative"
-                    onClick={() => setIsMobileOpen(false)}
                   >
                     {isActive && (
                       <motion.div
@@ -306,7 +291,6 @@ export default function SideBar() {
                     key={item.name} 
                     onClick={() => {
                       item.action();
-                      setIsMobileOpen(false);
                     }} 
                     className="block relative w-full text-left"
                   >
@@ -319,6 +303,83 @@ export default function SideBar() {
         </>
       )}
     </div>
+
+     {/* Mobile Top Navigation Bar */}
+     <div className="lg:hidden fixed top-0 left-0 right-0 z-[90] bg-transparent backdrop-blur-sm border-b border-gray-200/50 shadow-sm">
+       <div className="flex items-center justify-between py-3 px-4">
+         {/* Logo */}
+         <Link href="/home">
+           <h1 className="text-2xl font-black text-gray-900">BePro</h1>
+         </Link>
+         
+         {/* Profile Menu */}
+         {user && (
+           <div className="relative">
+             <button
+               onClick={() => setShowProfileMenu(!showProfileMenu)}
+               className="flex items-center gap-2 p-2 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200/50 shadow-sm hover:scale-105 transition-all duration-300"
+             >
+               <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden">
+                 {avatarUrl ? (
+                   <img
+                     src={avatarUrl}
+                     alt={`${username}'s avatar`}
+                     className="w-full h-full object-cover"
+                   />
+                 ) : (
+                   <span className="text-white font-bold text-sm">
+                     {username?.charAt(0).toUpperCase() || 'U'}
+                   </span>
+                 )}
+               </div>
+               <ChevronDown size={16} className={`transition-transform duration-300 ${showProfileMenu ? 'rotate-180' : ''}`} />
+             </button>
+             
+             {/* Profile Dropdown */}
+             {showProfileMenu && (
+               <>
+                 <div 
+                   className="fixed inset-0 z-40"
+                   onClick={() => setShowProfileMenu(false)}
+                 />
+                 <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200/50 z-50">
+                   <div className="p-3 border-b border-gray-200/30">
+                     <p className="font-bold text-gray-900 text-sm">{username}</p>
+                     <p className="text-gray-600 text-xs">{user.email}</p>
+                   </div>
+                   <div className="p-2">
+                     <button
+                       onClick={() => handleProfileMenuClick(`/${username}`)}
+                       className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-left"
+                     >
+                       <User size={18} />
+                       <span className="font-medium">Profile</span>
+                     </button>
+                     <button
+                       onClick={() => handleProfileMenuClick('/settings')}
+                       className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 transition-colors text-left"
+                     >
+                       <Settings size={18} />
+                       <span className="font-medium">Settings</span>
+                     </button>
+                     <button
+                       onClick={() => {
+                         handleSignOut();
+                         setShowProfileMenu(false);
+                       }}
+                       className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 text-red-600 transition-colors text-left"
+                     >
+                       <LogOut size={18} />
+                       <span className="font-medium">Logout</span>
+                     </button>
+                   </div>
+                 </div>
+               </>
+             )}
+           </div>
+         )}
+       </div>
+     </div>
 
      {/* Mobile Bottom Navigation Bar */}
      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-white/95 backdrop-blur-sm border-t border-gray-200/50 shadow-2xl">
