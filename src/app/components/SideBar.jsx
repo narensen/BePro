@@ -19,7 +19,7 @@ import { useEffect, useState } from 'react';
 import useUserStore from '../store/useUserStore';
 import { supabase } from '../lib/supabase_client';
 
-export default function SideBar() {
+export default function SideBar({ onCollapseChange }) {
   const pathname = usePathname();
   const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -117,6 +117,13 @@ export default function SideBar() {
     };
   }, [username]); // Re-run this effect if the username changes
 
+  // Notify parent component when collapse state changes
+  useEffect(() => {
+    if (onCollapseChange) {
+      onCollapseChange(isCollapsed);
+    }
+  }, [isCollapsed, onCollapseChange]);
+
   const navItems = [
     { name: 'Dashboard', icon: Home, href: '/home' },
     { name: 'Explore', icon: Search, href: '/home/explore' },
@@ -158,9 +165,9 @@ export default function SideBar() {
         {/* Toggle Button - Desktop Only */}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="hidden lg:block absolute -right-3 top-6 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow z-[60]"
+          className="hidden lg:flex absolute -right-3 top-6 w-6 h-6 bg-white border border-gray-200 rounded-full items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 z-[60] hover:scale-110"
         >
-          <div className={`w-2 h-2 border-r-2 border-b-2 border-gray-600 transform transition-transform ${isCollapsed ? 'rotate-45' : '-rotate-135'}`} />
+          <div className={`w-2 h-2 border-r-2 border-b-2 border-gray-600 transform transition-transform duration-300 ${isCollapsed ? 'rotate-45' : '-rotate-135'}`} />
         </button>
 
       <div className="p-6 border-b border-gray-200/30">

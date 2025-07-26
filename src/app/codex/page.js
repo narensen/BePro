@@ -21,6 +21,7 @@ export default function Codex() {
   const [loading, setLoading] = useState(false);
   const [userExists, setUserExists] = useState(null);
   const [missions, setMissions] = useState([]);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -54,10 +55,10 @@ export default function Codex() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
       {/* Mobile-First Sidebar */}
-      <SideBar />
+      <SideBar onCollapseChange={setIsCollapsed} />
 
       {/* Main Content - Mobile Optimized */}
-      <div className="lg:ml-72 min-h-screen">
+      <div className={`transition-all duration-300 min-h-screen ${isCollapsed ? 'lg:ml-20' : 'lg:ml-72'}`}>
         {/* Mobile Header */}
         <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6 mt-16 lg:mt-0">
           <div className="text-center lg:text-left">

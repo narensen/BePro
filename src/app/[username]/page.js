@@ -23,6 +23,7 @@ export default function ProfilePage({ params }) {
   const [followersModalOpen, setFollowersModalOpen] = useState(false)
   const [followingModalOpen, setFollowingModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('posts')
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   // Use the followers hook
   const { followerCount, followingCount, refetch: refetchFollowers } = useFollowers(user?.id);
@@ -149,10 +150,10 @@ export default function ProfilePage({ params }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
       {/* Mobile-First Sidebar */}
-      <SideBar />
+      <SideBar onCollapseChange={setIsCollapsed} />
       
       {/* Main Content */}
-      <div className="lg:ml-72 min-h-screen">
+      <div className={`transition-all duration-300 min-h-screen ${isCollapsed ? 'lg:ml-20' : 'lg:ml-72'}`}>
         {/* Content Container */}
         <div className="px-3 lg:px-8 py-4 lg:py-12 mt-16 lg:mt-0">
           <div className="max-w-4xl mx-auto">

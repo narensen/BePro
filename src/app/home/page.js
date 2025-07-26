@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import useUserStore from '../store/useUserStore'
 import { supabase } from '../lib/supabase_client'
 import SideBar from '../components/SideBar'
@@ -8,6 +9,7 @@ import { useRouter } from 'next/navigation'
 
 export default function Home() {
   const router = useRouter()
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   const {
     user,
@@ -27,13 +29,13 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-x-hidden relative">
       {/* Desktop Sidebar */}
       <div className="hidden lg:block fixed left-0 top-0 h-full z-40 w-72">
-        <SideBar user={user} username={username} onSignOut={handleSignOut} />
+        <SideBar user={user} username={username} onSignOut={handleSignOut} onCollapseChange={setIsCollapsed} />
       </div>
 
       {/* Mobile Sidebar */}
-      <SideBar user={user} username={username} onSignOut={handleSignOut} />
+      <SideBar user={user} username={username} onSignOut={handleSignOut} onCollapseChange={setIsCollapsed} />
 
-      <div className="lg:ml-72">
+      <div className={`transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-72'}`}>
         <header className="sticky top-0 z-30 border-gray-200/50 p-4 lg:pt-4 mt-16 lg:mt-0">
           <div className="flex justify-end max-w-6xl">
             <div className="flex items-end">
