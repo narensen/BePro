@@ -222,9 +222,9 @@ export default function Explore() {
   }
 
   return (
-    <div className="flex font-mono bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 min-h-screen">
+    <div className="flex font-mono bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 min-h-screen overflow-x-hidden">
       {/* Sidebar */}
-      <div className="w-72 gradient-primary font-mono fixed top-0 left-0 h-full z-30">
+      <div className="hidden lg:block w-72 gradient-primary font-mono fixed top-0 left-0 h-full z-30">
         <SideBar 
           user={user} 
           username={user?.user_metadata?.username || ''} 
@@ -235,10 +235,20 @@ export default function Explore() {
         />
       </div>
 
+      {/* Mobile Sidebar */}
+      <SideBar 
+        user={user} 
+        username={user?.user_metadata?.username || ''} 
+        onSignOut={async () => { 
+          await supabase.auth.signOut(); 
+          router.push('/'); 
+        }} 
+      />
+
       {/* Main Content */}
-      <div className="flex-1 ml-72 mr-80 min-h-screen gradient-primary ">
+      <div className="flex-1 lg:ml-72 xl:mr-80 min-h-screen gradient-primary">
         {/* Header */}
-        <div className="sticky top-0 glass-strong border-white/30 p-4">
+        <div className="sticky top-0 glass-strong border-white/30 p-4 lg:pt-4 pt-16">
           <Link href="/home/explore"><h1 className="flex text-3xl font-bold mb-2 text-black">Explore</h1></Link>
           <p className="text-black/60">
             Discover posts tailored for you
@@ -246,7 +256,7 @@ export default function Explore() {
         </div>
 
         {/* Content */}
-        <div className="max-w-2xl mx-auto px-6 py-6">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6">
           {/* Search Bar */}
           <div className="animate-fadeInUp mb-6">
             <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -295,7 +305,9 @@ export default function Explore() {
       </div>
 
       {/* Profile Bar */}
-      <ProfileBar currentUser={userProfile} />
+      <div className="hidden xl:block">
+        <ProfileBar currentUser={userProfile} />
+      </div>
     </div>
   );
 }

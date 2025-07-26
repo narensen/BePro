@@ -24,17 +24,21 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
-      <div className="fixed left-0 top-0 h-full z-30 w-72">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-x-hidden">
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block fixed left-0 top-0 h-full z-30 w-72">
         <SideBar user={user} username={username} onSignOut={handleSignOut} />
       </div>
 
-      <div className="ml-72">
-        <header className="sticky top-0 z-20 border-gray-200/50 p-4">
+      {/* Mobile Sidebar */}
+      <SideBar user={user} username={username} onSignOut={handleSignOut} />
+
+      <div className="lg:ml-72">
+        <header className="sticky top-0 z-20 border-gray-200/50 p-4 lg:pt-4 pt-16">
           <div className="flex justify-end max-w-6xl">
             <div className="flex items-end">
               {user && (
-                <div className="relative top-4 left-12 bg-gray-900 text-amber-300 px-4 py-2 rounded-xl font-bold shadow-lg">
+                <div className="relative top-4 left-4 sm:left-12 bg-gray-900 text-amber-300 px-3 sm:px-4 py-2 rounded-xl font-bold shadow-lg text-sm sm:text-base">
                   Pro Member
                 </div>
               )}
@@ -42,25 +46,25 @@ export default function Home() {
           </div>
         </header>
 
-        <main className="p-6 min-h-[calc(100vh-80px)] flex items-center justify-center">
+        <main className="p-4 sm:p-6 min-h-[calc(100vh-80px)] flex items-center justify-center">
           <div className="text-center">
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-12 shadow-xl border border-gray-200 max-w-md mx-auto mb-20">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-12 shadow-xl border border-gray-200 max-w-md mx-auto mb-20">
 
               {user ? (
                 <>
-                  <h2 className="text-2xl font-black text-gray-900 mb-4">
+                  <h2 className="text-xl sm:text-2xl font-black text-gray-900 mb-4">
                     Welcome to Your Dashboard
                   </h2>
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-sm sm:text-base text-gray-600 mb-6">
                     Your personalized experience is being prepared. Stay tuned for exciting features coming soon!
                   </p>
                 </>
               ) : (
                 <>
-                  <h2 className="text-2xl font-black text-gray-900 mb-4">
+                  <h2 className="text-xl sm:text-2xl font-black text-gray-900 mb-4">
                     Welcome to BePro
                   </h2>
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-sm sm:text-base text-gray-600 mb-6">
                     Please log in to access your dashboard.
                   </p>
                 </>

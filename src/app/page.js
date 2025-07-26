@@ -2,28 +2,24 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Code2, Brain, Target } from 'lucide-react';
+import { Code2, Brain, Target, Menu, X } from 'lucide-react';
 
 import { supabase } from '@/app/lib/supabase_client';
 import useUserStore from '@/app/store/useUserStore';
 import { useMousePosition } from '@/app/hooks/useMousePosition';
 
 import { LoadingScreen } from '@/app/components/ui/LoadingScreen';
-import { Header } from '@/app/components/ui/Header';
-import { HeroSection } from '@/app/components/ui/HeroSection';
+import ResponsiveHeader from '@/app/components/ui/ResponsiveHeader';
+import ResponsiveHeroSection from '@/app/components/ui/ResponsiveHeroSection';
 import { AnimatedSection } from '@/app/components/ui/AnimatedSection';
-import { InteractiveDemo } from '@/app/components/ui/InteractiveDemo';
-import { FeatureCard } from '@/app/components/ui/FeatureCard';
-import { CtaSection } from '@/app/components/ui/CtaSection';
-import { Footer } from '@/app/components/ui/Footer';
+import ResponsiveInteractiveDemo from '@/app/components/ui/ResponsiveInteractiveDemo';
+import ResponsiveFeatureCard from '@/app/components/ui/ResponsiveFeatureCard';
+import ResponsiveCtaSection from '@/app/components/ui/ResponsiveCtaSection';
+import ResponsiveFooter from '@/app/components/ui/ResponsiveFooter';
 import { FloatingElement } from '@/app/components/ui/FloatingElement';
 
 import { CodexIcon } from '@/app/components/icons/CodexIcon';
 import { FortressIcon } from '@/app/components/icons/FortressIcon';
-
-// Note: For full responsiveness, ensure that the imported components 
-// (Header, HeroSection, InteractiveDemo, CtaSection, Footer, etc.) 
-// are also built with responsive design principles in mind.
 
 export default function LandingPage() {
   const [loading, setLoading] = useState(true);
@@ -86,9 +82,9 @@ export default function LandingPage() {
         <Target className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-white" />
       </FloatingElement>
       
-      <Header user={user} onAuthAction={handleAuthAction} onSignOut={handleSignOut} />
+      <ResponsiveHeader user={user} onAuthAction={handleAuthAction} onSignOut={handleSignOut} />
 
-      <HeroSection user={user} onAuthAction={handleAuthAction} />
+      <ResponsiveHeroSection user={user} onAuthAction={handleAuthAction} />
 
       {/* Responsive Section Padding: Reduced vertical padding on mobile (py-20) and increased on larger screens (sm:py-24, md:py-32) */}
       <AnimatedSection className="py-20 sm:py-24 md:py-32 px-4 sm:px-6" background="bg-white/10 backdrop-blur-xl">
@@ -101,7 +97,7 @@ export default function LandingPage() {
               Like having a senior developer watching over your shoulder. Your AI mentor provides instant feedback and guides you towards mastery.
             </p>
           </div>
-          <div className="max-w-4xl mx-auto"><InteractiveDemo /></div>
+          <div className="max-w-4xl mx-auto"><ResponsiveInteractiveDemo /></div>
         </div>
       </AnimatedSection>
       
@@ -125,9 +121,9 @@ export default function LandingPage() {
           </div>
           {/* This grid is already responsive: it stacks on mobile and becomes 3 columns on medium screens and up. This is a great pattern. */}
           <div className="grid md:grid-cols-3 gap-8">
-            <FeatureCard icon={<CodexIcon />} title="Deconstruction" description="The Codex analyzes thousands of data points to generate a master blueprint of the exact skills and projects required." delay={0} />
-            <FeatureCard icon={<CodexIcon />} title="Prescription" description="You receive a single, focused mission each week. The Codex provides the curated resources you need to win." delay={200} />
-            <FeatureCard icon={<CodexIcon />} title="Validation" description="Your AI Mentor evaluates your work, pushing you to improve. Your profile becomes a living record of your mastery." delay={400} />
+            <ResponsiveFeatureCard icon={<CodexIcon />} title="Deconstruction" description="The Codex analyzes thousands of data points to generate a master blueprint of the exact skills and projects required." delay={0} />
+            <ResponsiveFeatureCard icon={<CodexIcon />} title="Prescription" description="You receive a single, focused mission each week. The Codex provides the curated resources you need to win." delay={200} />
+            <ResponsiveFeatureCard icon={<CodexIcon />} title="Validation" description="Your AI Mentor evaluates your work, pushing you to improve. Your profile becomes a living record of your mastery." delay={400} />
           </div>
         </div>
       </AnimatedSection>
@@ -141,9 +137,9 @@ export default function LandingPage() {
                 </p>
             </div>
             <div className="grid md:grid-cols-3 gap-8">
-                <FeatureCard icon={<FortressIcon />} title="College-Specific" description="Join a private fortress accessible only to students from your university, verified by your college email." delay={0} />
-                <FeatureCard icon={<FortressIcon />} title="Inter-Community Raids" description="Participate in challenges against other universities to prove who forges the best commanders." delay={200} />
-                <FeatureCard icon={<FortressIcon />} title="Recruit Your Allies" description="Find your future co-founders within a high-trust network of the most ambitious builders on your campus." delay={400} />
+                <ResponsiveFeatureCard icon={<FortressIcon />} title="College-Specific" description="Join a private fortress accessible only to students from your university, verified by your college email." delay={0} />
+                <ResponsiveFeatureCard icon={<FortressIcon />} title="Inter-Community Raids" description="Participate in challenges against other universities to prove who forges the best commanders." delay={200} />
+                <ResponsiveFeatureCard icon={<FortressIcon />} title="Recruit Your Allies" description="Find your future co-founders within a high-trust network of the most ambitious builders on your campus." delay={400} />
             </div>
         </div>
       </AnimatedSection>
@@ -157,9 +153,9 @@ export default function LandingPage() {
         </div>
       </AnimatedSection>
 
-      <CtaSection user={user} onAuthAction={handleAuthAction} />
+      <ResponsiveCtaSection user={user} onAuthAction={handleAuthAction} />
       
-      <Footer />
+      <ResponsiveFooter />
 
       {/* No changes needed here. Animations are not screen-size dependent. */}
       <style jsx>{`

@@ -460,23 +460,26 @@ export default function MessagesPage() {
     <div className="h-screen max-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-hidden">
       {/* ... rest of your JSX is unchanged ... */}
       {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full z-30 w-72">
+      <div className="hidden lg:block fixed left-0 top-0 h-full z-30 w-72">
         <SideBar user={user} username={username} onSignOut={handleSignout} />
       </div>
 
+      {/* Mobile Sidebar */}
+      <SideBar user={user} username={username} onSignOut={handleSignout} />
+
       {/* The rest of your return statement remains exactly the same. */}
-       <div className="h-screen pl-72 flex overflow-hidden">
+       <div className="h-screen lg:pl-72 flex overflow-hidden">
         {/* Conversations List */}
-        <div className="w-80 bg-white/95 backdrop-blur-sm border-r border-gray-200 flex flex-col h-full">
+        <div className="w-full sm:w-80 lg:w-80 bg-white/95 backdrop-blur-sm border-r border-gray-200 flex flex-col h-full lg:pt-0 pt-16">
           {/* Header */}
           <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-yellow-400/20 to-orange-400/20">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-black text-gray-900">Messages</h2>
+              <h2 className="text-lg sm:text-xl font-black text-gray-900">Messages</h2>
               <button
                 onClick={() => setShowAddUser(!showAddUser)}
                 className="p-2 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
               </button>
@@ -596,7 +599,7 @@ export default function MessagesPage() {
         </div>
 
         {/* Chat Area */}
-        <div className="flex-1 flex flex-col h-full">
+        <div className="hidden sm:flex flex-1 flex-col h-full">
           {activeConversation ? (
             <>
               {/* Chat Header */}
@@ -658,13 +661,13 @@ export default function MessagesPage() {
                     value={newMessage}
                     onChange={handleTyping}
                     placeholder={`Message ${activeConversation.otherUsername}...`}
-                    className="flex-1 px-4 py-3 bg-gray-100 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-100 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm sm:text-base"
                     disabled={!isConnected}
                   />
                   <button
                     type="submit"
                     disabled={!newMessage.trim() || !isConnected}
-                    className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 rounded-2xl font-semibold hover:from-yellow-500 hover:to-orange-500 disabled:opacity-50"
+                    className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 rounded-2xl font-semibold hover:from-yellow-500 hover:to-orange-500 disabled:opacity-50 text-sm sm:text-base"
                   >
                     Send
                   </button>
@@ -674,7 +677,7 @@ export default function MessagesPage() {
           ) : (
             <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-yellow-50 to-orange-50">
               <div className="text-center text-gray-600">
-                <h3 className="text-xl font-semibold mb-2">Select a conversation</h3>
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">Select a conversation</h3>
                 <p>Choose one from the list or start a new chat.</p>
               </div>
             </div>

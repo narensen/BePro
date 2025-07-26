@@ -12,6 +12,8 @@ import {
   Settings,
   User,
   LogOut,
+  Menu,
+  X,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import useUserStore from '../store/useUserStore';
@@ -20,6 +22,8 @@ import { supabase } from '../lib/supabase_client';
 export default function SideBar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const {
     user,
@@ -127,16 +131,51 @@ export default function SideBar() {
   ];
 
   return (
-    <div className="h-screen w-72 font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex flex-col relative">
+    <>
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setIsMobileOpen(!isMobileOpen)}
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg border border-gray-200/50"
+      >
+        {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      {/* Mobile Overlay */}
+      {isMobileOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`
+        h-screen font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex flex-col relative z-40
+        ${isCollapsed ? 'w-20' : 'w-72'}
+        ${isMobileOpen ? 'fixed left-0 top-0' : 'fixed left-0 top-0 -translate-x-full lg:translate-x-0'}
+        transition-all duration-300 ease-in-out
+      `}>
+        {/* Toggle Button - Desktop Only */}
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="hidden lg:block absolute -right-3 top-6 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow z-50"
+        >
+          <div className={`w-2 h-2 border-r-2 border-b-2 border-gray-600 transform transition-transform ${isCollapsed ? 'rotate-45' : '-rotate-135'}`} />
+        </button>
+
       <div className="p-6 border-b border-gray-200/30">
         <Link href="/home">
-          <h1 className="text-3xl font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent cursor-pointer">
-            BePro
+          <h1 className={`font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent cursor-pointer transition-all duration-300 ${
+            isCollapsed ? 'text-xl' : 'text-3xl'
+          }`}>
+            {isCollapsed ? 'BP' : 'BePro'}
           </h1>
         </Link>
-        <p className="text-sm text-gray-600 font-medium mt-1">
-          Learn smart. Build loud. Get hired.
-        </p>
+        {!isCollapsed && (
+          <p className="text-sm text-gray-600 font-medium mt-1">
+            Learn smart. Build loud. Get hired.
+          </p>
+        )}
       </div>
 
       {loading ? (
@@ -147,15 +186,19 @@ export default function SideBar() {
         <div className="flex-1 flex items-center justify-center p-6">
           <button
             onClick={() => router.push('/')}
-            className="w-full text-center bg-gradient-to-r from-gray-900 to-gray-800 text-amber-300 font-bold px-5 py-3 rounded-2xl shadow-md hover:scale-105 transition-all"
+            className={`text-center bg-gradient-to-r from-gray-900 to-gray-800 text-amber-300 font-bold px-5 py-3 rounded-2xl shadow-md hover:scale-105 transition-all ${
+              isCollapsed ? 'text-xs' : 'w-full'
+            }`}
           >
-            Login
+            {isCollapsed ? 'Login' : 'Login'}
           </button>
         </div>
       ) : (
         <>
-          <div className="p-4 border-b border-gray-200/30">
-            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-400/20 to-yellow-400/20 rounded-xl">
+          <div className={`p-4 border-b border-gray-200/30 ${isCollapsed ? 'px-2' : ''}`}>
+            <div className={`flex items-center gap-3 p-3 bg-gradient-to-r from-amber-400/20 to-yellow-400/20 rounded-xl ${
+              isCollapsed ? 'justify-center' : ''
+            }`}>
               <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
                 {avatarUrl ? (
                   <img
@@ -181,16 +224,18 @@ export default function SideBar() {
                   </span>
                 )}
               </div>
-              <div className="flex-1">
+              {!isCollapsed && (
+                <div className="flex-1">
                 <p className="font-bold text-gray-900 text-sm">
                   {username || 'User'}
                 </p>
                 <p className="text-gray-600 text-xs">{user.email}</p>
               </div>
+              )}
             </div>
           </div>
 
-          <div className="flex-1 relative p-4 overflow-y-auto">
+          <div className={`flex-1 relative p-4 overflow-y-auto ${isCollapsed ? 'px-2' : ''}`}>
             <nav className="space-y-1 relative">
               {navItems.map((item) => {
                 const isActive = pathname === item.href;
@@ -200,11 +245,14 @@ export default function SideBar() {
                     href={item.href}
                     key={item.name}
                     className="block relative"
+                    onClick={() => setIsMobileOpen(false)}
                   >
                     {isActive && (
                       <motion.div
                         layoutId="active-pill"
-                        className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md"
+                        className={`absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md ${
+                          isCollapsed ? 'rounded-xl' : ''
+                        }`}
                         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                       />
                     )}
@@ -213,14 +261,20 @@ export default function SideBar() {
                         isActive
                           ? 'text-gray-900'
                           : 'text-gray-600 hover:text-gray-800 hover:scale-105 transition-all duration-200'
-                      }`}
+                      } ${isCollapsed ? 'justify-center rounded-xl' : ''}`}
                     >
                       <Icon size={20} />
-                      <span className="font-medium">{item.name}</span>
+                      {!isCollapsed && <span className="font-medium">{item.name}</span>}
                       {/* 3. Render the notification badge */}
-                      {item.name === 'Messages' && unreadCount > 0 && (
+                      {!isCollapsed && item.name === 'Messages' && unreadCount > 0 && (
                         <span className="ml-auto flex items-center justify-center bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5">
                           {unreadCount}
+                        </span>
+                      )}
+                      {/* Collapsed state notification badge */}
+                      {isCollapsed && item.name === 'Messages' && unreadCount > 0 && (
+                        <span className="absolute -top-1 -right-1 flex items-center justify-center bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4">
+                          {unreadCount > 9 ? '9+' : unreadCount}
                         </span>
                       )}
                     </div>
@@ -231,7 +285,7 @@ export default function SideBar() {
           </div>
 
           {/* Bottom Buttons */}
-          <div className="p-4 border-t border-gray-200/30 cursor-pointer">
+          <div className={`p-4 border-t border-gray-200/30 cursor-pointer ${isCollapsed ? 'px-2' : ''}`}>
             <div className="space-y-1 cursor-pointer">
               {[...bottomItems,
                 {
@@ -251,26 +305,40 @@ export default function SideBar() {
                       isActive
                         ? 'text-gray-900'
                         : 'text-gray-600 hover:text-gray-800 transition-colors duration-300'
-                    }`}
+                    } ${isCollapsed ? 'justify-center rounded-xl' : ''}`}
                   >
                     <Icon size={20} />
-                    <span className="font-medium">{item.name}</span>
+                    {!isCollapsed && <span className="font-medium">{item.name}</span>}
                   </div>
                 );
 
                 return item.href ? (
-                  <Link key={item.name} href={item.href} className="block relative">
+                  <Link 
+                    key={item.name} 
+                    href={item.href} 
+                    className="block relative"
+                    onClick={() => setIsMobileOpen(false)}
+                  >
                     {isActive && (
                       <motion.div
                         layoutId="active-pill"
-                        className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md"
+                        className={`absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md ${
+                          isCollapsed ? 'rounded-xl' : ''
+                        }`}
                         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                       />
                     )}
                     {content}
                   </Link>
                 ) : (
-                  <button key={item.name} onClick={item.action} className="block relative w-full text-left">
+                  <button 
+                    key={item.name} 
+                    onClick={() => {
+                      item.action();
+                      setIsMobileOpen(false);
+                    }} 
+                    className="block relative w-full text-left"
+                  >
                     {content}
                   </button>
                 );
@@ -280,5 +348,6 @@ export default function SideBar() {
         </>
       )}
     </div>
+    </>
   );
 }
