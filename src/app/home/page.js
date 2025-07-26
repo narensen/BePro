@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useState } from 'react'
 import useUserStore from '../store/useUserStore'
 import { supabase } from '../lib/supabase_client'
 import SideBar from '../components/SideBar'
