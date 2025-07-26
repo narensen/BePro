@@ -619,9 +619,11 @@ export default function MessagesPage() {
                     {!isConnected && <p className="text-sm text-red-600">Offline</p>}
                   </div>
                 </div>
-      {/* Mobile-First Sidebar */}
+      {                    }
+/* Mobile-First Sidebar */}
                 {/* Messages Scrollable Area */}
-                <div className="flex-1 p-4 overflow-y-auto bg-gradient-to-br from-yellow-50 to-orange-50">
+                             }
+       <div className="flex-1 p-4 overflow-y-auto bg-gradient-to-br from-yellow-50 to-orange-50">
                   <div className="space-y-4">
                     {messages.map((message) => (
                       <div
@@ -854,9 +856,12 @@ export default function MessagesPage() {
                   >
                     {activeConversation.otherUsername}
                   </a>
-                  {otherUserTyping && <p className="text-xs lg:text-sm text-green-600">typing...</p>}
-                  {otherUserTyping && <p className="text-sm text-green-600">typing...</p>}
-                  {!isConnected && <p className="text-sm text-red-600">Offline</p>}
+                  {otherUserTyping && <p className="text-xs lg:te                  }
+xt-sm text-green-600">typing...</p>}
+                  {otherUserTyping && <p className="te                  }
+xt-sm text-green-600">typing...</p>}
+                  {!isConnected && <p className                  }
+="text-sm text-red-600">Offline</p>}
                   }
                 </div>
               </div>
