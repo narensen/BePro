@@ -607,11 +607,11 @@ export default function MessagesPage() {
           {activeConversation ? (
             <>
               {/* Chat Header */}
-              <div className="p-3 lg:p-4 bg-white/90 backdrop-blur-sm border-b border-gray-200 flex items-center space-x-3">
+              <div className="sticky top-0 z-20 p-3 lg:p-4 bg-white/95 backdrop-blur-sm border-b border-gray-200 flex items-center space-x-3 shadow-sm">
                 {/* Mobile Back Button */}
                 <button
                   onClick={goBackToConversations}
-                  className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

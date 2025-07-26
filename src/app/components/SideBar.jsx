@@ -305,19 +305,17 @@ export default function SideBar() {
     </div>
 
      {/* Mobile Top Navigation Bar */}
-     <div className="lg:hidden fixed top-0 left-0 right-0 z-[90] bg-gradient-to-r from-yellow-400/80 via-amber-400/80 to-orange-400/80 backdrop-blur-sm border-b border-white/20 shadow-sm">
+     <div className="lg:hidden fixed top-0 left-0 right-0 z-[90]">
        <div className="flex items-center justify-between py-3 px-4">
-         {/* Logo */}
-         <Link href="/home">
-           <h1 className="text-2xl font-black text-gray-900 drop-shadow-sm">BePro</h1>
-         </Link>
+         {/* Empty space for balance */}
+         <div></div>
          
          {/* Profile Menu */}
          {user && (
            <div className="relative">
              <button
                onClick={() => setShowProfileMenu(!showProfileMenu)}
-               className="flex items-center gap-2 p-2 rounded-xl bg-white/90 backdrop-blur-sm border border-white/30 shadow-md hover:scale-105 transition-all duration-300"
+               className="flex items-center gap-2 p-2 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 shadow-md hover:scale-105 transition-all duration-300"
              >
                <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden">
                  {avatarUrl ? (
