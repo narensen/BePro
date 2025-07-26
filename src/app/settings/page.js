@@ -42,7 +42,6 @@ export default function SettingsPage() {
   const [avatarFile, setAvatarFile] = useState(null)
   const [avatarPreview, setAvatarPreview] = useState(null)
   const [avatarUploading, setAvatarUploading] = useState(false)
-  const [isCollapsed, setIsCollapsed] = useState(false)
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -385,10 +384,10 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
       {/* Mobile-First Sidebar */}
-      <SideBar onCollapseChange={setIsCollapsed} />
+      <SideBar />
       
       {/* Main Content */}
-      <div className={`transition-all duration-500 ease-in-out min-h-screen pb-20 lg:pb-0 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-72'}`}>
+      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 lg:pb-0 lg:ml-72">
         {/* Mobile Header */}
         <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6 mt-16 lg:mt-0">
           <div className="text-center lg:text-left">

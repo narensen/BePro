@@ -25,7 +25,6 @@ export default function MessagesPage() {
   const [notifications, setNotifications] = useState([])
   const [unreadCounts, setUnreadCounts] = useState({});
   const [showConversationsList, setShowConversationsList] = useState(true)
-  const [isCollapsed, setIsCollapsed] = useState(false)
   const messagesEndRef = useRef(null)
   const typingTimeoutRef = useRef(null)
 
@@ -459,9 +458,9 @@ export default function MessagesPage() {
   return (
     <div className="h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-hidden relative">
       {/* Mobile-First Sidebar */}
-      <SideBar onCollapseChange={setIsCollapsed} />
+      <SideBar />
 
-      <div className={`h-screen flex overflow-hidden transition-all duration-500 ease-in-out pb-20 lg:pb-0 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
+      <div className="h-screen flex overflow-hidden transition-all duration-300 ease-in-out pb-20 lg:pb-0 lg:pl-72">
         {/* Mobile: Show either conversations list OR chat */}
         {/* Desktop: Show both side by side */}
         
