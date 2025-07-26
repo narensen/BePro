@@ -97,11 +97,11 @@ export default function ProfilePage({ params }) {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
+      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
         <SideBar />
-        <div className="pt-16 lg:pt-0 lg:ml-72 flex items-center justify-center min-h-screen">
+        <div className="lg:ml-72 flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="text-2xl lg:text-4xl font-black mb-4 lg:mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent animate-pulse">
+            <div className="text-2xl lg:text-4xl font-black mb-4 lg:mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent animate-pulse mt-16 lg:mt-0">
               BePro Profile
             </div>
             <div className="w-8 h-8 lg:w-10 lg:h-10 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin mx-auto"></div>
@@ -128,11 +128,11 @@ export default function ProfilePage({ params }) {
     const [headline, subline] = punchlines[randomIndex].split(". ");
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
+      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
         <SideBar />
-        <div className="pt-16 lg:pt-0 lg:ml-72 flex justify-center items-center min-h-screen px-4">
+        <div className="lg:ml-72 flex justify-center items-center min-h-screen px-4">
           <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-2xl rounded-2xl w-full max-w-md lg:max-w-2xl p-6 lg:p-12 flex flex-col justify-center items-center hover:scale-105 transition-all duration-300 border border-gray-700">
-            <h1 className="mb-6 lg:mb-10 text-2xl lg:text-3xl font-black">Error 404</h1>
+            <h1 className="mb-6 lg:mb-10 text-2xl lg:text-3xl font-black mt-16 lg:mt-0">Error 404</h1>
             <h1 className="text-xl lg:text-3xl font-black text-amber-300 text-center mb-3 lg:mb-4 transition-all duration-500">
               {headline}.
             </h1>
@@ -147,14 +147,14 @@ export default function ProfilePage({ params }) {
 
   // Main profile content
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
       {/* Mobile-First Sidebar */}
       <SideBar />
       
       {/* Main Content */}
-      <div className="pt-16 lg:pt-0 lg:ml-72 min-h-screen">
+      <div className="lg:ml-72 min-h-screen">
         {/* Content Container */}
-        <div className="px-3 lg:px-8 py-4 lg:py-12">
+        <div className="px-3 lg:px-8 py-4 lg:py-12 mt-16 lg:mt-0">
           <div className="max-w-4xl mx-auto">
             
             {/* Profile Header - Mobile Optimized */}

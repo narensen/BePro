@@ -52,14 +52,14 @@ export default function Codex() {
   }, [username]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
       {/* Mobile-First Sidebar */}
       <SideBar />
 
       {/* Main Content - Mobile Optimized */}
-      <div className="pt-16 lg:pt-0 lg:ml-72 min-h-screen">
+      <div className="lg:ml-72 min-h-screen">
         {/* Mobile Header */}
-        <div className="sticky top-16 lg:top-0 z-20 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6">
+        <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6 mt-16 lg:mt-0">
           <div className="text-center lg:text-left">
             <h1 className="font-bold text-2xl lg:text-3xl text-gray-900">Codex</h1>
             <p className="text-sm lg:text-base text-black/60 mt-1">Your Career-pathing Engine</p>

@@ -456,16 +456,16 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-hidden">
+    <div className="h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-hidden relative">
       {/* Mobile-First Sidebar */}
       <SideBar />
 
-      <div className="h-screen pt-16 lg:pt-0 lg:pl-72 flex overflow-hidden">
+      <div className="h-screen lg:pl-72 flex overflow-hidden">
         {/* Mobile: Show either conversations list OR chat */}
         {/* Desktop: Show both side by side */}
         
         {/* Conversations List - Mobile Conditional, Desktop Always Visible */}
-        <div className={`${
+        <div className={`mt-16 lg:mt-0 ${
           showConversationsList ? 'flex' : 'hidden lg:flex'
         } w-full lg:w-80 bg-white/95 backdrop-blur-sm border-r border-gray-200 flex-col h-full`}>
           {/* Header */}

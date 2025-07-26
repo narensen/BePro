@@ -367,11 +367,11 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
+      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
         <SideBar />
-        <div className="pt-16 lg:pt-0 lg:ml-72 flex items-center justify-center min-h-screen">
+        <div className="lg:ml-72 flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="text-2xl lg:text-4xl font-black mb-4 lg:mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent animate-pulse">
+            <div className="text-2xl lg:text-4xl font-black mb-4 lg:mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent animate-pulse mt-16 lg:mt-0">
               BePro Settings
             </div>
             <div className="w-8 h-8 lg:w-10 lg:h-10 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin mx-auto"></div>
@@ -382,14 +382,14 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
       {/* Mobile-First Sidebar */}
       <SideBar />
       
       {/* Main Content */}
-      <div className="pt-16 lg:pt-0 lg:ml-72 min-h-screen">
+      <div className="lg:ml-72 min-h-screen">
         {/* Mobile Header */}
-        <div className="sticky top-16 lg:top-0 z-20 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6">
+        <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6 mt-16 lg:mt-0">
           <div className="text-center lg:text-left">
             <h1 className="text-2xl lg:text-4xl font-black text-gray-900 mb-1 lg:mb-2">Settings</h1>
             <p className="text-amber-600 text-sm lg:text-lg font-medium">Manage your account preferences and profile information</p>

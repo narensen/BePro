@@ -213,14 +213,14 @@ export default function Explore() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
       {/* Mobile-First Sidebar */}
       <SideBar />
 
       {/* Main Content - Mobile First */}
-      <div className="pt-16 lg:pt-0 lg:ml-72 min-h-screen">
+      <div className="lg:ml-72 min-h-screen">
         {/* Mobile Header */}
-        <div className="sticky top-16 lg:top-0 z-20 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-4">
+        <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-4 mt-16 lg:mt-0">
           <div className="flex items-center justify-between">
             <div>
               <Link href="/home/explore">
@@ -243,8 +243,8 @@ export default function Explore() {
 
         {/* Mobile Profile Bar Overlay */}
         {showProfileBar && (
-          <div className="lg:hidden fixed inset-0 z-50 bg-black/50" onClick={() => setShowProfileBar(false)}>
-            <div className="absolute right-0 top-0 h-full w-80 max-w-[90vw] bg-white transform transition-transform">
+          <div className="lg:hidden fixed inset-0 z-50 bg-black/50 pt-16" onClick={() => setShowProfileBar(false)}>
+            <div className="absolute right-0 top-16 h-[calc(100vh-4rem)] w-80 max-w-[90vw] bg-white transform transition-transform">
               <div className="p-4 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-bold">Discover People</h2>
@@ -256,7 +256,7 @@ export default function Explore() {
                   </button>
                 </div>
               </div>
-              <div className="h-full overflow-y-auto pb-20">
+              <div className="h-[calc(100%-5rem)] overflow-y-auto">
                 <ProfileBar currentUser={userProfile} />
               </div>
             </div>

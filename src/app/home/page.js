@@ -24,9 +24,9 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-x-hidden relative">
       {/* Desktop Sidebar */}
-      <div className="hidden lg:block fixed left-0 top-0 h-full z-30 w-72">
+      <div className="hidden lg:block fixed left-0 top-0 h-full z-40 w-72">
         <SideBar user={user} username={username} onSignOut={handleSignOut} />
       </div>
 
@@ -34,7 +34,7 @@ export default function Home() {
       <SideBar user={user} username={username} onSignOut={handleSignOut} />
 
       <div className="lg:ml-72">
-        <header className="sticky top-0 z-20 border-gray-200/50 p-4 lg:pt-4 pt-16">
+        <header className="sticky top-0 z-30 border-gray-200/50 p-4 lg:pt-4 mt-16 lg:mt-0">
           <div className="flex justify-end max-w-6xl">
             <div className="flex items-end">
               {user && (

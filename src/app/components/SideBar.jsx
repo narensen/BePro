@@ -150,7 +150,7 @@ export default function SideBar() {
 
       {/* Sidebar */}
       <div className={`
-        h-screen font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex flex-col relative z-40
+        h-screen font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex flex-col fixed z-40
         ${isCollapsed ? 'w-20' : 'w-72'}
         ${isMobileOpen ? 'fixed left-0 top-0' : 'fixed left-0 top-0 -translate-x-full lg:translate-x-0'}
         transition-all duration-300 ease-in-out
@@ -158,7 +158,7 @@ export default function SideBar() {
         {/* Toggle Button - Desktop Only */}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="hidden lg:block absolute -right-3 top-6 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow z-50"
+          className="hidden lg:block absolute -right-3 top-6 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow z-[60]"
         >
           <div className={`w-2 h-2 border-r-2 border-b-2 border-gray-600 transform transition-transform ${isCollapsed ? 'rotate-45' : '-rotate-135'}`} />
         </button>
