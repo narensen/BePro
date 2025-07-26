@@ -127,13 +127,15 @@ html {
   }
   body {
     @apply bg-background text-foreground;
-    /* Add padding bottom for mobile bottom navigation */
+    /* Add padding for mobile navigation */
+    padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
   }
   
   /* Mobile bottom navigation spacing */
   @media (max-width: 1023px) {
     body {
+      padding-top: calc(60px + env(safe-area-inset-top));
       padding-bottom: calc(70px + env(safe-area-inset-bottom));
     }
   }

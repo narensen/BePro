@@ -142,6 +142,90 @@ export default function SideBar() {
   };
   return (
     <>
+      {/* Mobile Top Header with Profile */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-[100] bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 border-b border-white/20 shadow-lg">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center space-x-3">
+            <h1 className="text-xl font-black text-gray-900">BePro</h1>
+          </div>
+          
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => setShowProfileMenu(!showProfileMenu)}
+                className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30 hover:bg-white/30 transition-all duration-200"
+              >
+                <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt={`${username}'s avatar`}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : (
+                    <span className="text-white font-bold text-sm">
+                      {username?.charAt(0).toUpperCase() || 'U'}
+                    </span>
+                  )}
+                  {avatarUrl && (
+                    <span
+                      className="text-white font-bold text-sm hidden items-center justify-center w-full h-full"
+                      style={{ display: 'none' }}
+                    >
+                      {username?.charAt(0).toUpperCase() || 'U'}
+                    </span>
+                  )}
+                </div>
+                <svg className="w-4 h-4 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              {/* Mobile Profile Dropdown */}
+              {showProfileMenu && (
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-white/30 py-2 z-50">
+                  <button
+                    onClick={() => handleProfileMenuClick(`/${username}`)}
+                    className="w-full text-left px-4 py-3 text-gray-900 hover:bg-gray-100/50 transition-colors flex items-center space-x-3"
+                  >
+                    <User size={16} />
+                    <span className="font-medium">Profile</span>
+                  </button>
+                  <button
+                    onClick={() => handleProfileMenuClick('/settings')}
+                    className="w-full text-left px-4 py-3 text-gray-900 hover:bg-gray-100/50 transition-colors flex items-center space-x-3"
+                  >
+                    <Settings size={16} />
+                    <span className="font-medium">Settings</span>
+                  </button>
+                  <hr className="my-2 border-gray-200" />
+                  <button
+                    onClick={() => {
+                      handleSignOut();
+                      setShowProfileMenu(false);
+                    }}
+                    className="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 transition-colors flex items-center space-x-3"
+                  >
+                    <LogOut size={16} />
+                    <span className="font-medium">Logout</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={() => router.push('/auth')}
+              className="bg-gray-900 text-amber-300 px-4 py-2 rounded-full font-bold text-sm hover:bg-gray-800 transition-colors"
+            >
+              Login
+            </button>
+          )}
+        </div>
+      </div>
 
       {/* Sidebar */}
       <div className="hidden lg:flex h-screen font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex-col fixed z-[70] w-72 left-0 top-0">
