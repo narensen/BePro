@@ -39,7 +39,6 @@ export default function Codex() {
           if (roadmap) {
             const parsed = parseTaggedResponse(roadmap);
             setMissions(parsed);
-            
           }
         }
       } catch (err) {
@@ -54,54 +53,67 @@ export default function Codex() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
+      {/* Mobile-First Sidebar */}
+      <SideBar />
 
-      <div className="pl-72 pt-4 absolute relative left-2">
-        <h1 className="font-bold text-3xl">Codex</h1>
-        <p className="mt-1 text-black/60">Your Career-pathing Engine</p>
-      </div>
+      {/* Main Content - Mobile Optimized */}
+      <div className="pt-16 lg:pt-0 lg:ml-72 min-h-screen">
+        {/* Mobile Header */}
+        <div className="sticky top-16 lg:top-0 z-20 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6">
+          <div className="text-center lg:text-left">
+            <h1 className="font-bold text-2xl lg:text-3xl text-gray-900">Codex</h1>
+            <p className="text-sm lg:text-base text-black/60 mt-1">Your Career-pathing Engine</p>
+          </div>
+        </div>
 
-      <div className="fixed left-0 top-0 h-full z-30 w-72">
-        <SideBar user={user} username={username} onSignOut={handleSignOut} />
-      </div>
+        {/* Content Container */}
+        <div className="px-3 lg:px-8 py-4 lg:py-8">
+          <motion.div
+            className="text-center mb-6 lg:mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
+            <p className="text-3xl lg:text-6xl font-bold text-black mb-2 lg:mb-4">
+              Welcome, {upper_User}!
+            </p>
+            <p className="text-sm lg:text-lg text-black/70 px-4">
+              Here you can create and manage your career roadmap.
+            </p>
 
-      <div className="ml-72 pt-8 flex flex-col items-center min-h-screen">
-        <motion.div
-          className="text-center mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-        >
-          <p className="text-6xl font-bold text-black">Welcome, {upper_User}!</p>
-          <p className="text-lg text-black/70">
-            Here you can create and manage your career roadmap.
-          </p>
-
-          {loading || userExists === null ? (
-            <p className="mt-8 text-black font-semibold">Loading...</p>
-          ) : userExists ? (
-            <div className="mt-8 w-full px-8">
-              <RoadmapGrid missions={missions} />
-            </div>
-          ) : (
-            <>
-              <div className="w-full px-8 mt-8">
-                <QueryBox
-                  prompt={prompt}
-                  setPrompt={setPrompt}
-                  duration={duration}
-                  setDuration={setDuration}
-                />
+            {loading || userExists === null ? (
+              <div className="mt-8 flex flex-col items-center">
+                <div className="w-8 h-8 lg:w-12 lg:h-12 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin"></div>
+                <p className="mt-4 text-black font-semibold text-sm lg:text-base">Loading...</p>
               </div>
-              <div className="mt-4 w-full px-8">
-                <QuickPrompts
-                  handlePrompt={(prompt) => setPrompt(prompt)}
-                  disabled={false}
-                  submitting={false}
-                />
+            ) : userExists ? (
+              <div className="mt-6 lg:mt-8">
+                <RoadmapGrid missions={missions} />
               </div>
-            </>
-          )}
-        </motion.div>
+            ) : (
+              <div className="mt-6 lg:mt-8 space-y-4 lg:space-y-6">
+                {/* Mobile-Optimized Query Box */}
+                <div className="w-full">
+                  <QueryBox
+                    prompt={prompt}
+                    setPrompt={setPrompt}
+                    duration={duration}
+                    setDuration={setDuration}
+                  />
+                </div>
+                
+                {/* Mobile-Optimized Quick Prompts */}
+                <div className="w-full">
+                  <QuickPrompts
+                    handlePrompt={(prompt) => setPrompt(prompt)}
+                    disabled={false}
+                    submitting={false}
+                  />
+                </div>
+              </div>
+            )}
+          </motion.div>
+        </div>
       </div>
     </div>
   );

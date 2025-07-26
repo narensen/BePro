@@ -30,6 +30,7 @@ export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortMode, setSortMode] = useState('recommended');
   const [postInteractions, setPostInteractions] = useState([]);
+  const [showProfileBar, setShowProfileBar] = useState(false);
   const router = useRouter();
   const { user } = useUserStore();
   const { loading, posts, setPosts, userInteractions, setUserInteractions, userProfile } = usePostData(user);
@@ -202,110 +203,115 @@ export default function Explore() {
 
   if (loading) {
     return (
-      <div className="flex bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 min-h-screen">
-        <div className="w-72 fixed gradient-primary font-mono top-0 left-0 h-full z-30">
-          <SideBar 
-            user={user} 
-            username={user?.user_metadata?.username || 'user'} 
-            onSignOut={async () => { 
-              await supabase.auth.signOut(); 
-              router.push('/'); 
-            }} 
-          />
-        </div>
-        <div className="flex-1 ml-72 mr-80 gradient-primary">
+      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
+        <SideBar />
+        <div className="pt-16 lg:pt-0 lg:ml-72">
           <LoadingSpinner />
         </div>
-        <ProfileBar currentUser={userProfile} />
       </div>
     );
   }
 
   return (
-    <div className="flex font-mono bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 min-h-screen overflow-x-hidden">
-      {/* Sidebar */}
-      <div className="hidden lg:block w-72 gradient-primary font-mono fixed top-0 left-0 h-full z-30">
-        <SideBar 
-          user={user} 
-          username={user?.user_metadata?.username || ''} 
-          onSignOut={async () => { 
-            await supabase.auth.signOut(); 
-            router.push('/'); 
-          }} 
-        />
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
+      {/* Mobile-First Sidebar */}
+      <SideBar />
 
-      {/* Mobile Sidebar */}
-      <SideBar 
-        user={user} 
-        username={user?.user_metadata?.username || ''} 
-        onSignOut={async () => { 
-          await supabase.auth.signOut(); 
-          router.push('/'); 
-        }} 
-      />
-
-      {/* Main Content */}
-      <div className="flex-1 lg:ml-72 xl:mr-80 min-h-screen gradient-primary">
-        {/* Header */}
-        <div className="sticky top-0 glass-strong border-white/30 p-4 lg:pt-4 pt-16">
-          <Link href="/home/explore"><h1 className="flex text-3xl font-bold mb-2 text-black">Explore</h1></Link>
-          <p className="text-black/60">
-            Discover posts tailored for you
-          </p>
+      {/* Main Content - Mobile First */}
+      <div className="pt-16 lg:pt-0 lg:ml-72 min-h-screen">
+        {/* Mobile Header */}
+        <div className="sticky top-16 lg:top-0 z-20 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <Link href="/home/explore">
+                <h1 className="text-xl lg:text-3xl font-bold text-black">Explore</h1>
+              </Link>
+              <p className="text-xs lg:text-sm text-black/60 hidden sm:block">
+                Discover posts tailored for you
+              </p>
+            </div>
+            
+            {/* Mobile People Button */}
+            <button
+              onClick={() => setShowProfileBar(!showProfileBar)}
+              className="lg:hidden bg-gray-900 text-amber-300 px-3 py-2 rounded-lg font-bold text-sm"
+            >
+              People
+            </button>
+          </div>
         </div>
 
-        {/* Content */}
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 py-6">
-          {/* Search Bar */}
-          <div className="animate-fadeInUp mb-6">
-            <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-          </div>
-
-          {/* Sort Options */}
-          <div className="animate-fadeInUp mb-6" style={{ animationDelay: '0.2s' }}>
-            <SortOptions sortMode={sortMode} setSortMode={setSortMode} />
-          </div>
-
-          {/* Posts */}
-          <div className="space-y-6">
-            {filteredPosts.length === 0 ? (
-              <div className="text-center py-12 card animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
-                <p className="text-white/80 text-lg">
-                  {searchQuery ? 'No posts found matching your search' : 'No posts available for this category'}
-                </p>
-                {sortMode === 'recommended' && (
-                  <p className="text-white/60 text-sm mt-2">
-                    Interact with more posts to improve your recommendations!
-                  </p>
-                )}
-              </div>
-            ) : (
-              filteredPosts.map((post, index) => (
-                <div 
-                  key={post.id}
-                  className="animate-fadeInUp"
-                  style={{ animationDelay: `${0.3 + index * 0.1}s` }}
-                >
-                  <PostCard
-                    post={post}
-                    userInteractions={userInteractions}
-                    onInteraction={handleInteraction}
-                    onComment={handleComment}
-                    onViewPost={handleViewPostCallback}
-                    userProfile={userProfile}
-                    searchQuery={searchQuery}
-                    showRecommendationScore={sortMode === 'recommended'}
-                  />
+        {/* Mobile Profile Bar Overlay */}
+        {showProfileBar && (
+          <div className="lg:hidden fixed inset-0 z-50 bg-black/50" onClick={() => setShowProfileBar(false)}>
+            <div className="absolute right-0 top-0 h-full w-80 max-w-[90vw] bg-white transform transition-transform">
+              <div className="p-4 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-bold">Discover People</h2>
+                  <button
+                    onClick={() => setShowProfileBar(false)}
+                    className="p-2 hover:bg-gray-100 rounded-lg"
+                  >
+                    ✕
+                  </button>
                 </div>
-              ))
-            )}
+              </div>
+              <div className="h-full overflow-y-auto pb-20">
+                <ProfileBar currentUser={userProfile} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Content Container - Mobile Optimized */}
+        <div className="px-3 lg:px-6 py-4 lg:py-6">
+          <div className="max-w-2xl mx-auto lg:mr-80">
+            {/* Mobile-First Search Bar */}
+            <div className="mb-4">
+              <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+            </div>
+
+            {/* Mobile-First Sort Options */}
+            <div className="mb-6">
+              <SortOptions sortMode={sortMode} setSortMode={setSortMode} />
+            </div>
+
+            {/* Posts - Mobile Optimized */}
+            <div className="space-y-4 lg:space-y-6">
+              {filteredPosts.length === 0 ? (
+                <div className="text-center py-12 bg-white/90 rounded-xl shadow-lg">
+                  <p className="text-gray-600 text-base lg:text-lg">
+                    {searchQuery ? 'No posts found matching your search' : 'No posts available for this category'}
+                  </p>
+                  {sortMode === 'recommended' && (
+                    <p className="text-gray-500 text-sm mt-2">
+                      Interact with more posts to improve your recommendations!
+                    </p>
+                  )}
+                </div>
+              ) : (
+                filteredPosts.map((post, index) => (
+                  <div key={post.id} className="animate-fadeInUp" style={{ animationDelay: `${index * 0.1}s` }}>
+                    <PostCard
+                      post={post}
+                      userInteractions={userInteractions}
+                      onInteraction={handleInteraction}
+                      onComment={handleComment}
+                      onViewPost={handleViewPostCallback}
+                      userProfile={userProfile}
+                      searchQuery={searchQuery}
+                      showRecommendationScore={sortMode === 'recommended'}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Profile Bar */}
-      <div className="hidden xl:block">
+      {/* Desktop Profile Bar */}
+      <div className="hidden lg:block">
         <ProfileBar currentUser={userProfile} />
       </div>
     </div>
