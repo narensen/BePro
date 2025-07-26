@@ -218,9 +218,9 @@ export default function Explore() {
       <SideBar />
 
       {/* Main Content - Mobile First */}
-      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
+      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72 xl:mr-80">
         {/* Content Container - Clean and Centered */}
-        <div className="px-3 lg:px-6 py-4 lg:py-6 min-h-screen lg:flex lg:items-center lg:justify-center">
+        <div className="px-3 lg:px-6 py-4 lg:py-6 min-h-screen flex items-center justify-center">
           <div className="w-full max-w-4xl lg:mx-auto">
             {/* Clean Title Section */}
             <div className="mb-8 text-center lg:mb-12">
