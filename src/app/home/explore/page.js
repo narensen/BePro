@@ -218,7 +218,7 @@ export default function Explore() {
       <SideBar />
 
       {/* Main Content - Mobile First */}
-      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
+      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72 flex flex-col">
         {/* Mobile Header */}
         <div className="hidden lg:block sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-4">
           <div className="flex items-center justify-between">
@@ -233,9 +233,9 @@ export default function Explore() {
           </div>
         </div>
 
-        {/* Content Container - Mobile Optimized */}
-        <div className="px-3 lg:px-6 py-4 lg:py-6 max-w-4xl mx-auto">
-          <div className="max-w-2xl mx-auto">
+        {/* Content Container - Properly Centered */}
+        <div className="flex-1 flex justify-center px-3 lg:px-6 py-4 lg:py-6">
+          <div className="w-full max-w-2xl">
             {/* Mobile Title */}
             <div className="lg:hidden mb-6 text-center">
               <h1 className="text-3xl font-black text-gray-900 mb-2">Explore</h1>
@@ -255,7 +255,12 @@ export default function Explore() {
             {/* Posts - Mobile Optimized */}
             <div className="space-y-4 lg:space-y-6">
               {filteredPosts.length === 0 ? (
-                <div className="text-center py-12 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-white/30">
+                <div className="text-center py-16 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-white/30">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
                   <p className="text-gray-600 text-base lg:text-lg">
                     {searchQuery ? 'No posts found matching your search' : 'No posts available for this category'}
                   </p>
