@@ -23,9 +23,9 @@ export default function RoadmapGrid({ missions }) {
           </h3>
 
           <div className="absolute inset-0 p-4 lg:p-5 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out z-10 rounded-xl overflow-y-auto">
-            <p className="text-xs lg:text-sm text-white/90 leading-relaxed animate-fade-in-up">
+            <div className='text-xs lg:text-sm text-white/90 leading-relaxed animate-fade-in-up'>
               <ReactMarkdown>{item.content}</ReactMarkdown>
-            </p>
+            </div>
           </div>
         </div>
       ))}
