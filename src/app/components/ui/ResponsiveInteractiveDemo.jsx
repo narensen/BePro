@@ -109,7 +109,6 @@ export default function ResponsiveInteractiveDemo() {
           {currentFeedback && <AIMentorFeedback feedback={currentFeedback} />}
         </div>
         
-        {/* Footer */}
         <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-2 sm:gap-3">
             <div>

@@ -72,18 +72,17 @@ export default function Codex() {
 
       if (response.ok) {
         const roadmapData = await response.text();
-        
-        // Save to database
+        const parsed = parseTaggedResponse(roadmapData);
         const { error } = await supabase
           .from('codex')
           .upsert([{
             username: username,
-            roadmap: roadmapData,
+            roadmap: parsed,
             created_at: new Date().toISOString()
           }]);
 
         if (!error) {
-          const parsed = parseTaggedResponse(roadmapData);
+          
           setMissions(parsed);
           setUserExists(true);
         } else {
@@ -118,7 +117,7 @@ export default function Codex() {
               <p className="text-gray-600">Your Career-pathing Engine</p>
             </div>
             
-            <WelcomeSection username={username} />
+            <WelcomeSection className='relative top-10 mb-10' username={username} />
 
             {loading || userExists === null ? (
               <LoadingSection />
@@ -127,8 +126,8 @@ export default function Codex() {
                 <RoadmapGrid missions={missions} />
               </div>
             ) : (
-              <div className="mt-6 lg:mt-8 space-y-4 lg:space-y-6">
-                <div className="w-full">
+              <div className="space-y-4 lg:space-y-6">
+                <div className="flex justify-center relative top-10">
                   <QueryBox
                     prompt={prompt}
                     setPrompt={setPrompt}
@@ -136,16 +135,8 @@ export default function Codex() {
                     setDuration={setDuration}
                   />
                 </div>
-                
-                <div className="w-full">
-                  <QuickPrompts
-                    handlePrompt={(prompt) => setPrompt(prompt)}
-                    disabled={loading}
-                    submitting={loading}
-                  />
-                </div>
 
-                <div className="w-full flex justify-center">
+                  <div className="w-full flex justify-center">
                   <button
                     onClick={handleCreateRoadmap}
                     disabled={loading || !prompt.trim() || !duration}
@@ -166,6 +157,16 @@ export default function Codex() {
                     )}
                   </button>
                 </div>
+                
+                <div className="w-256 pl-50">
+                  <QuickPrompts
+                    handlePrompt={(prompt) => setPrompt(prompt)}
+                    disabled={loading}
+                    submitting={loading}
+                  />
+                </div>
+
+
               </div>
             )}
           </motion.div>

@@ -22,7 +22,7 @@ export default function RoadmapGrid({ missions }) {
 
           <div className="absolute inset-0 p-4 lg:p-5 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out z-10 rounded-xl overflow-y-auto">
             <p className="text-xs lg:text-sm text-white/90 leading-relaxed animate-fade-in-up">
-              {item.content.slice(0, 120)}...
+              {item.content}...
             </p>
           </div>
         </div>

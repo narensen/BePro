@@ -1,10 +1,24 @@
 'use client'
 
+import { motion } from 'framer-motion'
+
 export default function LoadingSection() {
   return (
-    <div className="mt-8 flex flex-col items-center">
-      <div className="w-8 h-8 lg:w-12 lg:h-12 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin"></div>
-      <p className="mt-4 text-black font-semibold text-sm lg:text-base">Loading...</p>
+    <div
+      className="mt-8 flex flex-col items-center justify-center"
+      role="status"
+      aria-label="Loading content"
+    >
+      <motion.div
+        className="w-10 h-10 lg:w-14 lg:h-14 border-[2px] border-t-black rounded-full"
+        animate={{ rotate: 360 }}
+        transition={{
+          repeat: Infinity,
+          duration: 1,
+          ease: 'linear',
+        }}
+      />
+      <p className="mt-4 text-black font-medium text-sm lg:text-base">Loading...</p>
     </div>
   );
 }

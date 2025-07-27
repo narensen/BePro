@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Brain, Sparkles, AlertTriangle } from 'lucide-react';
 
-// AIMentorFeedback component remains the same
+
 const AIMentorFeedback = ({ feedback }) => {
   if (!feedback) return null;
 

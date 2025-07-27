@@ -96,7 +96,7 @@ export default function parseTaggedResponse(payload) {
         
         missions[currentMission] = {
           title: titleMatch ? titleMatch[1].trim() : `Mission ${currentMission}`,
-          content: descriptionMatch ? descriptionMatch[1].trim().replace(/\\n/g, '\n') : fullContent
+          content: descriptionMatch ? descriptionMatch[1].trim().replace(/\\n/g, '') : fullContent
         };
       }
       currentMission = null;

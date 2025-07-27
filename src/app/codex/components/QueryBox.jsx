@@ -14,12 +14,12 @@ function DurationDropDown({ duration, setDuration }) {
         <SelectValue placeholder="Select duration" />
       </SelectTrigger>
       <SelectContent className="font-mono bg-black text-white">
-        <SelectItem value="1w">1 Week</SelectItem>
-        <SelectItem value="2w">2 Weeks</SelectItem>
-        <SelectItem value="1m">1 Month</SelectItem>
-        <SelectItem value="3m">3 Months</SelectItem>
-        <SelectItem value="6m">6 Months</SelectItem>
-        <SelectItem value="1y">1 Year</SelectItem>
+        <SelectItem value="1 week">1 Week</SelectItem>
+        <SelectItem value="2 week">2 Weeks</SelectItem>
+        <SelectItem value="1 month">1 Month</SelectItem>
+        <SelectItem value="3 month">3 Months</SelectItem>
+        <SelectItem value="6 month">6 Months</SelectItem>
+        <SelectItem value="1 year">1 Year</SelectItem>
       </SelectContent>
     </Select>
   )
@@ -27,18 +27,17 @@ function DurationDropDown({ duration, setDuration }) {
 
 export default function QueryBox({ prompt, setPrompt, duration, setDuration }) {
   return (
-    <div className="w-full">
-      <div className="glow-container">
+    <div className=''>
+      <div>
         <textarea
-          className="resize-none rounded-xl p-3 lg:p-4 bg-black w-full h-32 lg:h-48 text-amber-400 placeholder:text-amber-400 text-sm lg:text-base"
+          className="resize-none rounded-xl p-3 lg:p-4 bg-black w-full h-32 lg:h-48 lg:w-256 text-amber-400 placeholder:text-amber-400 text-sm lg:text-base"
           placeholder="Okay Pro, what's the gameplan?"
           value={prompt || ""}
           onChange={(e) => setPrompt(e.target.value)}
         />
       </div>
       
-      {/* Mobile-First Duration Selector */}
-      <div className="mt-3 lg:mt-4 flex justify-center lg:justify-end">
+      <div className="lg:mt-4 flex justify-center lg:justify-end relative bottom-16">
         <DurationDropDown duration={duration} setDuration={setDuration} />
       </div>
     </div>
