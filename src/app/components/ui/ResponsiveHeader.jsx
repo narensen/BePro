@@ -11,7 +11,7 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 p-4 sm:p-6 bg-gradient-to-r from-yellow-400 to-yellow-600">
+    <header className="fixed top-0 left-0 right-0 z-50 p-4 sm:p-6 bg-yellow-400">
       <div className="backdrop-blur-2xl border border-white/20 rounded-2xl px-4 sm:px-8 py-3 sm:py-4 mx-auto max-w-7xl shadow-2xl">
         <div className="flex justify-between items-center">
           {/* Logo */}
