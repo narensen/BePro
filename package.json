@@ -23,6 +23,7 @@
     "nodemailer": "^7.0.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
     "shadcn": "^2.9.2",
     "socket": "^1.0.65",
     "socket.io": "^4.8.1",
