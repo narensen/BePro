@@ -12,7 +12,7 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 p-4 sm:p-6">
-      <div className="sm:backdrop-blur-2xl sm:rounded-2xl border border-white/20 px-4 sm:px-8 py-3 sm:py-4 mx-auto max-w-7xl shadow-2xl">
+      <div className="backdrop-blur-2xl border border-white/20 rounded-2xl px-4 sm:px-8 py-3 sm:py-4 mx-auto max-w-7xl shadow-2xl">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="text-2xl sm:text-3xl font-black text-gray-900">BePro</div>
