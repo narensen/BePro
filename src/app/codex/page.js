@@ -8,21 +8,19 @@ import SideBar from "../components/SideBar";
 import QueryBox from "./components/QueryBox";
 import QuickPrompts from "./components/QuickPrompts";
 import RoadmapGrid from "./components/RoadmapGrid";
+import WelcomeSection from "./components/WelcomeSection";
+import LoadingSection from "./components/LoadingSection";
 
 import { checkUsername, loadMissions } from "./utils/userRoadmap";
 import parseTaggedResponse from "./utils/parseResponse";
-import MissionInterface from "./components/MissionInterface";
 
 export default function Codex() {
   const { user, username } = useUserStore();
-  const upper_User = username.charAt(0).toUpperCase() + username.slice(1);
-
   const [prompt, setPrompt] = useState("");
   const [duration, setDuration] = useState("");
   const [loading, setLoading] = useState(false);
   const [userExists, setUserExists] = useState(null);
   const [missions, setMissions] = useState([]);
-  const [showMissionInterface, setShowMissionInterface] = useState(false);
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -41,7 +39,6 @@ export default function Codex() {
           if (roadmap) {
             const parsed = parseTaggedResponse(roadmap);
             setMissions(parsed);
-            setShowMissionInterface(true);
           }
         }
       } catch (err) {
@@ -89,7 +86,6 @@ export default function Codex() {
           const parsed = parseTaggedResponse(roadmapData);
           setMissions(parsed);
           setUserExists(true);
-          setShowMissionInterface(true);
         } else {
           alert('Failed to save roadmap to database');
         }
@@ -103,117 +99,77 @@ export default function Codex() {
       setLoading(false);
     }
   };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
-      {/* Mobile-First Sidebar */}
       <SideBar />
 
-      {/* Main Content - Mobile Optimized */}
       <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
-        {/* Mobile Header */}
-
-        {showMissionInterface && Object.keys(missions).length > 0 ? (
-          <>
-            {/* Desktop Mission Interface */}
-            <div className="hidden lg:block">
-              <MissionInterface missions={missions} username={username} />
+        <div className="px-3 lg:px-8 py-4 lg:py-8">
+          <motion.div
+            className="text-center mb-6 lg:mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
+            {/* Mobile Title */}
+            <div className="lg:hidden mb-6">
+              <h1 className="text-3xl font-black text-gray-900 mb-2">Codex</h1>
+              <p className="text-gray-600">Your Career-pathing Engine</p>
             </div>
             
-            {/* Mobile Roadmap Grid */}
-            <div className="lg:hidden px-3 py-4">
-              <motion.div
-                className="text-center mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, ease: "easeOut" }}
-              >
-                <div className="mb-6">
-                  <h1 className="text-3xl font-black text-gray-900 mb-2">Your Roadmap</h1>
-                  <p className="text-gray-600">Tap missions to view details</p>
+            <WelcomeSection username={username} />
+
+            {loading || userExists === null ? (
+              <LoadingSection />
+            ) : userExists ? (
+              <div className="mt-6 lg:mt-8">
+                <RoadmapGrid missions={missions} />
+              </div>
+            ) : (
+              <div className="mt-6 lg:mt-8 space-y-4 lg:space-y-6">
+                <div className="w-full">
+                  <QueryBox
+                    prompt={prompt}
+                    setPrompt={setPrompt}
+                    duration={duration}
+                    setDuration={setDuration}
+                  />
                 </div>
                 
-                <div className="mt-6">
-                  <RoadmapGrid missions={missions} />
+                <div className="w-full">
+                  <QuickPrompts
+                    handlePrompt={(prompt) => setPrompt(prompt)}
+                    disabled={loading}
+                    submitting={loading}
+                  />
                 </div>
-              </motion.div>
-            </div>
-          </>
-        ) : (
-          <div className="px-3 lg:px-8 py-4 lg:py-8">
-            <motion.div
-              className="text-center mb-6 lg:mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-            >
-              {/* Mobile Title */}
-              <div className="lg:hidden mb-6">
-                <h1 className="text-3xl font-black text-gray-900 mb-2">Codex</h1>
-                <p className="text-gray-600">Your Career-pathing Engine</p>
+
+                <div className="w-full flex justify-center">
+                  <button
+                    onClick={handleCreateRoadmap}
+                    disabled={loading || !prompt.trim() || !duration}
+                    className="px-8 py-4 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 rounded-xl font-black text-lg hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-amber-300/30 border-t-amber-300 rounded-full animate-spin"></div>
+                        Generating Roadmap...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                        Generate My Roadmap
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
-              
-              <p className="text-3xl lg:text-6xl font-bold text-black mb-2 lg:mb-4">
-                Welcome, {upper_User}!
-              </p>
-              <p className="text-sm lg:text-lg text-black/70 px-4">
-                Here you can create and manage your career roadmap.
-              </p>
-
-              {loading || userExists === null ? (
-                <div className="mt-8 flex flex-col items-center">
-                  <div className="w-8 h-8 lg:w-12 lg:h-12 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin"></div>
-                  <p className="mt-4 text-black font-semibold text-sm lg:text-base">Loading...</p>
-                </div>
-              ) : userExists ? (
-                <div className="mt-6 lg:mt-8">
-                  <RoadmapGrid missions={missions} />
-                </div>
-              ) : (
-                <div className="mt-6 lg:mt-8 space-y-4 lg:space-y-6">
-                  {/* Mobile-Optimized Query Box */}
-                  <div className="w-full">
-                    <QueryBox
-                      prompt={prompt}
-                      setPrompt={setPrompt}
-                      duration={duration}
-                      setDuration={setDuration}
-                    />
-                  </div>
-                  
-                  {/* Mobile-Optimized Quick Prompts */}
-                  <div className="w-full">
-                    <QuickPrompts
-                      handlePrompt={(prompt) => setPrompt(prompt)}
-                      disabled={loading}
-                      submitting={loading}
-                    />
-                  </div>
-
-                  {/* Generate Roadmap Button */}
-                  <div className="w-full flex justify-center">
-                    <button
-                      onClick={handleCreateRoadmap}
-                      disabled={loading || !prompt.trim() || !duration}
-                      className="px-8 py-4 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 rounded-xl font-black text-lg hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3"
-                    >
-                      {loading ? (
-                        <>
-                          <div className="w-5 h-5 border-2 border-amber-300/30 border-t-amber-300 rounded-full animate-spin"></div>
-                          Generating Roadmap...
-                        </>
-                      ) : (
-                        <>
-                          <Brain className="w-5 h-5" />
-                          Generate My Roadmap
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          </div>
-        )}
+            )}
+          </motion.div>
+        </div>
       </div>
     </div>
   );
