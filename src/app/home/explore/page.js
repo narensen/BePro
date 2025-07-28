@@ -219,7 +219,7 @@ export default function Explore() {
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
       <SideBar />
 
-      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72 xl:mr-80">
+      <div className="min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72 xl:mr-80" >
         <div className="px-3 lg:px-6 py-4 lg:py-6 min-h-screen flex items-center justify-center">
           <div className="w-full max-w-4xl lg:mx-auto">
             <ExploreHeader />
