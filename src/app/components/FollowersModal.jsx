@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useFollowers } from '../utils/useFollowers';
 
+import Link from 'next/link';
+
 const FollowersModal = ({ userId, username, isOpen, onClose, type = 'followers' }) => {
   const { followers, following, loading } = useFollowers(userId);
   
@@ -10,7 +12,7 @@ const FollowersModal = ({ userId, username, isOpen, onClose, type = 'followers' 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 backdrop-blur-lg pl-72 bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 max-w-md w-full mx-4 max-h-[80vh] overflow-hidden">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-black text-amber-300">{title}</h2>
@@ -45,7 +47,9 @@ const FollowersModal = ({ userId, username, isOpen, onClose, type = 'followers' 
                     )}
                   </div>
                   <div className="flex-1">
+                   <Link href={`https://bepro.live/${profile.username}`}>
                     <h3 className="text-amber-300 font-bold">{profile.username}</h3>
+                    </Link>
                     <p className="text-amber-200 text-sm">{profile.email}</p>
                   </div>
                 </div>

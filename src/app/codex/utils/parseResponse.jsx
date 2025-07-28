@@ -95,7 +95,7 @@ export default function parseTaggedResponse(payload) {
         const descriptionMatch = fullContent.match(/Description:\s*([\s\S]*?)(?:\n\n(?:Key Objectives:|<)|$)/i);
         
         missions[currentMission] = {
-          title: titleMatch ? titleMatch[1].trim().replace(/\\n/g, '') : `Mission ${currentMission}`,
+          title: titleMatch ? titleMatch[1].trim().replace(/\\n/g, '').replace(/\n/g, '') : `Mission ${currentMission}`,
           content: descriptionMatch ? descriptionMatch[1].trim().replace(/\\n/g, '') : fullContent
         };
       }
