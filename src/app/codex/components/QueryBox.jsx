@@ -30,7 +30,7 @@ export default function QueryBox({ prompt, setPrompt, duration, setDuration }) {
     <div className=''>
       <div>
         <textarea
-          className="resize-none rounded-xl p-3 lg:p-4 bg-black w-256 h-32 lg:h-48 lg:w-256 text-amber-400 placeholder:text-amber-400 text-sm lg:text-base"
+          className="resize-none rounded-xl p-3 lg:p-4 bg-black w-800 h-32 lg:h-48 lg:w-160 border-black hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-3 focus:ring-black transition-all duration-300 text-amber-400 placeholder:text-amber-400 text-sm lg:text-base"
           placeholder="Okay Pro, what's the gameplan?"
           value={prompt || ""}
           onChange={(e) => setPrompt(e.target.value)}
