@@ -22,7 +22,7 @@ export default function QuickPrompts({ handlePrompt, disabled = false, submittin
           key={idx}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="w-full text-left text-center rounded-lg px-3 lg:px-4 py-3 lg:py-4 bg-gradient-to-r from-yellow-100 to-yellow-100 text-amber-900 font-mono font-semibold shadow hover:bg-amber-100 transition text-sm lg:text-base leading-tight"
+          className="w-full text-left text-center rounded-lg px-3 lg:px-4 py-3 lg:py-4 bg-gradient-to-r from-yellow-100 to-yellow-100 text-amber-900 font-mono font-semibold shadow hover:bg-amber-100 transition text-sm lg:text-base lg:text-center leading-tight"
           onClick={() => handlePrompt(prompt)}
           disabled={disabled || submitting}
           type="button"
