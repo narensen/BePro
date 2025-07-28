@@ -21,12 +21,12 @@ export default function Codex() {
   const [loading, setLoading] = useState(false);
   const [userExists, setUserExists] = useState(null);
   const [missions, setMissions] = useState([]);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) console.error("Sign out error:", error);
-    else location.reload();
-  };
+const handleOpenSettings = () => {
+  setSettingsOpen(prev => !prev);
+};
+
 
   useEffect(() => {
     const fetchUserData = async () => {
