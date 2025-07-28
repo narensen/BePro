@@ -32,7 +32,7 @@ export default function RoadmapGrid({ missions, username }) {
     <div>
 <div className="flex justify-end pr-4">
   <button className="flex items-center gap-2 border bg-red-600 border-red-300 text-white/80 rounded-lg p-2 hover:scale-105 transition-all duration-300 cursor-pointer" onClick={handleDeleteRoadmap}>
-    <Trash2 size={24} />
+    <Trash2 size={24} />Delete Roadmap
     </button>
 </div>
 
