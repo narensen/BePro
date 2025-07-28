@@ -1,35 +1,39 @@
 'use client'
 
 import ReactMarkdown from 'react-markdown';
-import { SettingsIcon } from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { supabase } from '@/app/lib/supabase_client';
+import useUserStore from '@/app/store/useUserStore';
 
 export function SettingsCodex({}) {
-  
+  const [username, setUsername] = useState('')
 }
 
-export default function RoadmapGrid({ missions }) {
+export default function RoadmapGrid({ missions, username }) {
   if (!missions || Object.keys(missions).length === 0) {
     return (
       <div className="text-center py-8">
         <p className="text-gray-500 text-sm lg:text-base">No roadmap found.</p>
       </div>
     );
+
+  }
+
+  const handleDeleteRoadmap = async () => {
+    const { error } = await supabase
+    .from('codex')
+    .delete()
+    .eq('username', username);
+    location.reload();
   }
 
   return (
     <div>
 <div className="flex justify-end pr-4">
-  <div className="flex items-center gap-2 border bg-black border-black text-amber-400 rounded-lg p-2 hover:scale-105 transition-all duration-300 cursor-pointer">
-    <SettingsIcon size={24} />
-    <p className="text-sm">Settings</p>
-  </div>
+  <button className="flex items-center gap-2 border bg-red-600 border-red-300 text-white/80 rounded-lg p-2 hover:scale-105 transition-all duration-300 cursor-pointer" onClick={handleDeleteRoadmap}>
+    <Trash2 size={24} />
+    </button>
 </div>
 
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mt-10">

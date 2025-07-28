@@ -15,18 +15,20 @@ import { checkUsername, loadMissions } from "./utils/userRoadmap";
 import parseTaggedResponse from "./utils/parseResponse";
 
 export default function Codex() {
-  const { user, username } = useUserStore();
   const [prompt, setPrompt] = useState("");
   const [duration, setDuration] = useState("");
   const [loading, setLoading] = useState(false);
   const [userExists, setUserExists] = useState(null);
   const [missions, setMissions] = useState([]);
-  const [settingsOpen, setSettingsOpen] = useState(false);
 
-const handleOpenSettings = () => {
-  setSettingsOpen(prev => !prev);
-};
-
+  const {
+    user,
+    username,
+    setUserSession,
+    setUsername,
+    clearUserSession,
+  } = useUserStore();
+  
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -123,7 +125,7 @@ const handleOpenSettings = () => {
               <LoadingSection />
             ) : userExists ? (
               <div className="mt-6 lg:mt-8">
-                <RoadmapGrid missions={missions} />
+                <RoadmapGrid missions={missions} username={username} />
               </div>
             ) : (
               <div className="space-y-4 lg:space-y-6">
