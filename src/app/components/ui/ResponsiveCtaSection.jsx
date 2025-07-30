@@ -1,7 +1,7 @@
-export default function ResponsiveCtaSection({ user, onAuthAction }) {
+export default function   ResponsiveCtaSection({ user, onAuthAction }) {
   return (
     <section className="py-20 sm:py-24 md:py-32 px-4 sm:px-6 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-t from-gray-900/30 via-white/10 to-gray-900/30 backdrop-blur-xl" />
+      <div className="absolute inset-0 backdrop-blur-xl" />
       <div className="relative z-10 max-w-6xl mx-auto text-center">
         <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-6 sm:mb-8 text-white">
           The Throne is Empty.

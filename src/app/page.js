@@ -101,7 +101,7 @@ export default function LandingPage() {
         </div>
       </AnimatedSection>
       
-      <AnimatedSection className="py-20 sm:py-24 md:py-32 px-4 sm:px-6" background="bg-gray-900/20 backdrop-blur-xl">
+      <AnimatedSection className="py-20 sm:py-24 md:py-32 px-4 sm:px-6" background="backdrop-blur-xl">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 md:mb-8 text-white">The Illusion of Progress</h2>
           <p className="max-w-4xl mx-auto text-lg sm:text-xl md:text-2xl text-gray-900 leading-relaxed font-bold">
@@ -128,7 +128,7 @@ export default function LandingPage() {
         </div>
       </AnimatedSection>
 
-      <AnimatedSection id="fortress" className="py-20 sm:py-24 md:py-32 px-4 sm:px-6" background="bg-gray-900/20 backdrop-blur-xl">
+      <AnimatedSection id="fortress" className="py-20 sm:py-24 md:py-32 px-4 sm:px-6" background="backdrop-blur-xl">
         <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12 md:mb-20">
                 <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 md:mb-8 text-white">The <span className="text-gray-900">Community Fortress</span></h2>
