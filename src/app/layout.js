@@ -28,17 +28,4 @@ export default function RootLayout({ children }) {
   );
 }
 
-import ResponsiveHeader from "@/components/ResponsiveHeader";
-import ResponsiveFooter from "@/components/ResponsiveFooter";
-
-export default function Layout({ children }) {
-  return (
-    <>
-      <ResponsiveHeader />
-      <main className="flex-grow pt-20">{children}</main>
-      <ResponsiveFooter />
-    </>
-  );
-}
-
 
