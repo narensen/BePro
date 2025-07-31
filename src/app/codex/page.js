@@ -133,10 +133,6 @@ export default function Codex() {
     }
   };
 
-  // Show loading screen when:
-  // 1. Initial data hasn't loaded yet, OR
-  // 2. Currently loading initial data, OR 
-  // 3. Currently generating a roadmap (this persists across tabs)
   if (!initialDataLoaded || (loading && userExists === null) || isGeneratingRoadmap) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
@@ -160,10 +156,10 @@ export default function Codex() {
               {isGeneratingRoadmap && (
                 <div className="mt-4 text-center">
                   <p className="text-gray-700 font-semibold">
-                    🚀 Generating your personalized roadmap...
+                    Generating your personalized roadmap...
                   </p>
                   <p className="text-gray-600 text-sm mt-2">
-                    This may take a few moments. Feel free to browse other tabs!
+                    This may take a few moments. Feel free to browse
                   </p>
                 </div>
               )}
