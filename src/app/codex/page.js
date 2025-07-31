@@ -197,7 +197,7 @@ export default function Codex() {
               <>
                 {isMobile ? (
                   <div className="text-center text-sm text-gray-700 bg-white p-4 rounded-lg shadow-md">
-                    🚫 The roadmap generator is available only on desktop. Please switch to a PC or tablet to access this feature.
+                    🚫 The roadmap generator is available only on desktop. Please switch to a PC to access this feature.
                   </div>
                 ) : (
                   <div className="space-y-4 lg:space-y-6">
