@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "../lib/supabase_client";
 import useUserStore from "../store/useUserStore";
+import useLoadingStore from "../store/useLoadingStore";
 import SideBar from "../components/SideBar";
 import QueryBox from "./components/QueryBox";
 import QuickPrompts from "./components/QuickPrompts";
@@ -13,7 +14,7 @@ import LoadingSection from "./components/LoadingSection";
 import { checkUsername, loadMissions } from "./utils/userRoadmap";
 import parseTaggedResponse from "./utils/parseResponse";
 
-// 👇 Mobile detection hook
+// Mobile detection hook
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -35,7 +36,6 @@ function useIsMobile() {
 export default function Codex() {
   const [prompt, setPrompt] = useState("");
   const [duration, setDuration] = useState("");
-  const [loading, setLoading] = useState(false);
   const [userExists, setUserExists] = useState(null);
   const [missions, setMissions] = useState([]);
 
@@ -47,11 +47,14 @@ export default function Codex() {
     clearUserSession,
   } = useUserStore();
 
+  // Use the universal loading store
+  const { loading, setLoading } = useLoadingStore();
   const isMobile = useIsMobile();
 
   useEffect(() => {
     const fetchUserData = async () => {
-      setLoading(true);
+      setLoading(true); // Set universal loading to true
+      setUserExists(null); // Reset userExists to null when starting fetch
       try {
         const exists = await checkUsername(username);
         setUserExists(exists);
@@ -65,12 +68,12 @@ export default function Codex() {
       } catch (err) {
         console.error("Codex fetch error:", err);
       } finally {
-        setLoading(false);
+        setLoading(false); // Set universal loading to false
       }
     };
 
     fetchUserData();
-  }, [username]);
+  }, [username, setLoading]);
 
   const handleCreateRoadmap = async () => {
     if (!prompt.trim() || !duration) {
@@ -78,7 +81,7 @@ export default function Codex() {
       return;
     }
 
-    setLoading(true);
+    setLoading(true); // Set universal loading to true
     try {
       const response = await fetch('https://bepro-codex.onrender.com/create-roadmap', {
         method: 'POST',
@@ -115,9 +118,35 @@ export default function Codex() {
       console.error('Error creating roadmap:', error);
       alert('Network error occurred');
     } finally {
-      setLoading(false);
+      setLoading(false); // Set universal loading to false
     }
   };
+
+  // Show universal loading screen when loading is true OR when userExists is null
+  if (loading || userExists === null) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+        <SideBar />
+        <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
+          <div className="px-3 lg:px-8 py-4 lg:py-8">
+            <motion.div
+              className="text-center mb-6 lg:mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+            >
+              <div className="lg:hidden mb-6">
+                <h1 className="text-3xl font-black text-gray-900 mb-2">Codex</h1>
+                <p className="text-gray-600">Your Career-pathing Engine</p>
+              </div>
+              <WelcomeSection className="relative top-10 mb-10" username={username} />
+              <LoadingSection />
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
@@ -138,9 +167,7 @@ export default function Codex() {
 
             <WelcomeSection className="relative top-10 mb-10" username={username} />
 
-            {loading || userExists === null ? (
-              <LoadingSection />
-            ) : userExists ? (
+            {userExists ? (
               <div className="mt-6 lg:mt-8">
                 <RoadmapGrid missions={missions} username={username} />
               </div>
