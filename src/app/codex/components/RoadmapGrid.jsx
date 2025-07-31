@@ -24,7 +24,6 @@ export default function RoadmapGrid({ missions, username }) {
     }
   };
 
-  // Scroll lock
   useEffect(() => {
     if (isModalOpen) {
       document.body.style.overflow = 'hidden';
@@ -37,7 +36,6 @@ export default function RoadmapGrid({ missions, username }) {
     };
   }, [isModalOpen]);
 
-  // ESC key to close modal
   const handleEscKey = useCallback((e) => {
     if (e.key === 'Escape') {
       setIsModalOpen(false);
@@ -66,7 +64,6 @@ export default function RoadmapGrid({ missions, username }) {
 
   return (
     <div>
-      {/* Delete Button */}
       <div className="flex justify-end pr-4">
         <button
           className="flex items-center gap-2 border bg-red-600 border-red-300 text-white/80 rounded-lg p-2 hover:scale-105 transition-all duration-300 cursor-pointer"
@@ -121,7 +118,7 @@ export default function RoadmapGrid({ missions, username }) {
               <h2 className="text-xl font-bold mb-4">
                 <ReactMarkdown>{selectedItem.title.replace(/\\n/g, '')}</ReactMarkdown>
               </h2>
-              <div className="max-h-[60vh] text-sm lg:text-base pr-2 mb-4">
+              <div className="max-h-[60vh] text-sm lg:text-base px-2 mb-4">
                 <div className='rounded-xl bg-white/30 backdrop-blur-md shadow-lg overflow-y-auto p-4 mb-4'>
                 <ReactMarkdown>{selectedItem.content}</ReactMarkdown>
                 </div>
