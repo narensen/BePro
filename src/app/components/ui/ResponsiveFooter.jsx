@@ -1,6 +1,6 @@
 export default function ResponsiveFooter() {
   return (
-    <footer className="bg-gray-900/80 backdrop-blur-xl border-t border-white/20 px-4 sm:px-6 py-8 sm:py-10 lg:py-12">
+    <footer className="backdrop-blur-xl border-t border-white/20 px-4 sm:px-6 py-8 sm:py-10 lg:py-12">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 mb-8 sm:mb-10">
           <div className="sm:col-span-2 lg:col-span-2">
