@@ -118,7 +118,7 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
                     onAuthAction();
                     setIsMenuOpen(false);
                   }} 
-                  className="w-full px-4 py-3 font-bold bg-gray-900 text-amber-300 rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-lg cursor-pointer"
+                  className="w-full px-4 py-3 font-bold text-amber-300 rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-lg cursor-pointer"
                 >
                   Enter The Forge
                 </button>
