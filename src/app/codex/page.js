@@ -38,6 +38,7 @@ export default function Codex() {
   const [duration, setDuration] = useState("");
   const [userExists, setUserExists] = useState(null);
   const [missions, setMissions] = useState([]);
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
 
   const {
     user,
@@ -48,13 +49,14 @@ export default function Codex() {
   } = useUserStore();
 
   // Use the universal loading store
-  const { loading, setLoading } = useLoadingStore();
+  const { loading, setLoading, isGeneratingRoadmap, setIsGeneratingRoadmap } = useLoadingStore();
   const isMobile = useIsMobile();
 
   useEffect(() => {
     const fetchUserData = async () => {
-      setLoading(true); // Set universal loading to true
-      setUserExists(null); // Reset userExists to null when starting fetch
+      setLoading(true);
+      setUserExists(null);
+      setInitialDataLoaded(false);
       try {
         const exists = await checkUsername(username);
         setUserExists(exists);
@@ -68,7 +70,8 @@ export default function Codex() {
       } catch (err) {
         console.error("Codex fetch error:", err);
       } finally {
-        setLoading(false); // Set universal loading to false
+        setLoading(false);
+        setInitialDataLoaded(true);
       }
     };
 
@@ -81,7 +84,10 @@ export default function Codex() {
       return;
     }
 
-    setLoading(true); // Set universal loading to true
+    // Set both loading states to ensure persistence across tab changes
+    setLoading(true);
+    setIsGeneratingRoadmap(true);
+    
     try {
       const response = await fetch('https://bepro-codex.onrender.com/create-roadmap', {
         method: 'POST',
@@ -108,6 +114,9 @@ export default function Codex() {
         if (!error) {
           setMissions(parsed);
           setUserExists(true);
+          // Clear the prompt after successful generation
+          setPrompt("");
+          setDuration("");
         } else {
           alert('Failed to save roadmap to database');
         }
@@ -118,12 +127,17 @@ export default function Codex() {
       console.error('Error creating roadmap:', error);
       alert('Network error occurred');
     } finally {
-      setLoading(false); // Set universal loading to false
+      // Clear both loading states only after everything is complete
+      setLoading(false);
+      setIsGeneratingRoadmap(false);
     }
   };
 
-  // Show universal loading screen when loading is true OR when userExists is null
-  if (loading || userExists === null) {
+  // Show loading screen when:
+  // 1. Initial data hasn't loaded yet, OR
+  // 2. Currently loading initial data, OR 
+  // 3. Currently generating a roadmap (this persists across tabs)
+  if (!initialDataLoaded || (loading && userExists === null) || isGeneratingRoadmap) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
         <SideBar />
@@ -141,6 +155,18 @@ export default function Codex() {
               </div>
               <WelcomeSection className="relative top-10 mb-10" username={username} />
               <LoadingSection />
+              
+              {/* Show different loading message when generating roadmap */}
+              {isGeneratingRoadmap && (
+                <div className="mt-4 text-center">
+                  <p className="text-gray-700 font-semibold">
+                    🚀 Generating your personalized roadmap...
+                  </p>
+                  <p className="text-gray-600 text-sm mt-2">
+                    This may take a few moments. Feel free to browse other tabs!
+                  </p>
+                </div>
+              )}
             </motion.div>
           </div>
         </div>
@@ -191,10 +217,10 @@ export default function Codex() {
                     <div className="w-full flex justify-center">
                       <button
                         onClick={handleCreateRoadmap}
-                        disabled={loading || !prompt.trim() || !duration}
+                        disabled={loading || isGeneratingRoadmap || !prompt.trim() || !duration}
                         className="px-8 py-4 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 rounded-xl font-black text-lg hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3"
                       >
-                        {loading ? (
+                        {(loading || isGeneratingRoadmap) ? (
                           <>
                             <div className="w-5 h-5 border-2 border-amber-300/30 border-t-amber-300 rounded-full animate-spin"></div>
                             Generating Roadmap...
@@ -213,8 +239,8 @@ export default function Codex() {
                     <div className="w-256 pl-50">
                       <QuickPrompts
                         handlePrompt={(prompt) => setPrompt(prompt)}
-                        disabled={loading}
-                        submitting={loading}
+                        disabled={loading || isGeneratingRoadmap}
+                        submitting={loading || isGeneratingRoadmap}
                       />
                     </div>
                   </div>
