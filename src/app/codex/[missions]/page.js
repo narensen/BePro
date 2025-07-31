@@ -49,11 +49,12 @@ export default function Mission() {
     }, [username, missions]);
 
     return (
-        <div className="p-6">
+        <div className="p-6 min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
             {mission ? (
                 <>
-                    <h1 className="text-2xl font-bold mb-4">{mission.title}</h1>
-                    <p className="whitespace-pre-line">{mission.content}</p>
+                    <h1 className="text-2xl font-bold mb-4 rounded-xl bg-white/40 backdrop-blur-md shadow-md w-200 p-2 text-center hover:shadow-lg hover:bg-gradient-to-br from-yellow-500 via-amber-400 to-orange-400 transition-all duration-500">{mission.title.replace(/\\n/g,"")}</h1>
+                    <div className="rounded-xl bg-white/60 backdrop-blur-xl p-4 w-210">
+                    Hey</div>
                 </>
             ) : (
                 <p>Loading mission...</p>

@@ -54,6 +54,18 @@ export default function RoadmapGrid({ missions, username }) {
     };
   }, [isModalOpen, handleEscKey]);
 
+  // Handle backdrop click (only close when clicking the backdrop, not the modal content)
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      setIsModalOpen(false);
+    }
+  };
+
+  // Prevent modal content clicks from bubbling to backdrop
+  const handleModalClick = (e) => {
+    e.stopPropagation();
+  };
+
   if (!missions || Object.keys(missions).length === 0) {
     return (
       <div className="text-center py-8">
@@ -101,6 +113,7 @@ export default function RoadmapGrid({ missions, username }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 pl-72 bg-black/60 backdrop-blur-md flex items-center justify-center overflow-hidden px-4"
+            onClick={handleBackdropClick}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
@@ -108,6 +121,7 @@ export default function RoadmapGrid({ missions, username }) {
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 300, damping: 25 }}
               className="bg-amber-300 dark:bg-gray-900 text-black dark:text-white rounded-xl shadow-2xl p-6 w-full max-w-xl relative max-h-[90vh] overflow-hidden"
+              onClick={handleModalClick}
             >
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -118,9 +132,9 @@ export default function RoadmapGrid({ missions, username }) {
               <h2 className="text-xl font-bold mb-4">
                 <ReactMarkdown>{selectedItem.title.replace(/\\n/g, '')}</ReactMarkdown>
               </h2>
-              <div className="max-h-[60vh] text-sm lg:text-base px-2 mb-4">
-                <div className='rounded-xl bg-white/30 backdrop-blur-md shadow-lg overflow-y-auto p-4 mb-4'>
-                <ReactMarkdown>{selectedItem.content}</ReactMarkdown>
+              <div className="max-h-[60vh] text-sm lg:text-base px-2 mb-4 overflow-y-auto">
+                <div className='rounded-xl bg-white/30 backdrop-blur-md shadow-lg p-4 mb-4'>
+                  <ReactMarkdown>{selectedItem.content}</ReactMarkdown>
                 </div>
               </div>
             </motion.div>

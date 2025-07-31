@@ -14,22 +14,18 @@ import LoadingSection from "./components/LoadingSection";
 import { checkUsername, loadMissions } from "./utils/userRoadmap";
 import parseTaggedResponse from "./utils/parseResponse";
 
-// Mobile detection hook
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
-
   useEffect(() => {
     const checkMobile = () => {
       const userAgent = typeof window !== 'undefined' ? navigator.userAgent : '';
       const mobileRegex = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
       setIsMobile(mobileRegex.test(userAgent));
     };
-
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
-
   return isMobile;
 }
 
@@ -48,7 +44,6 @@ export default function Codex() {
     clearUserSession,
   } = useUserStore();
 
-  // Use the universal loading store
   const { loading, setLoading, isGeneratingRoadmap, setIsGeneratingRoadmap } = useLoadingStore();
   const isMobile = useIsMobile();
 
@@ -84,10 +79,9 @@ export default function Codex() {
       return;
     }
 
-    // Set both loading states to ensure persistence across tab changes
     setLoading(true);
     setIsGeneratingRoadmap(true);
-    
+
     try {
       const response = await fetch('https://bepro-codex.onrender.com/create-roadmap', {
         method: 'POST',
@@ -103,6 +97,13 @@ export default function Codex() {
       if (response.ok) {
         const roadmapData = await response.text();
         const parsed = parseTaggedResponse(roadmapData);
+
+        if (Array.isArray(parsed)) {
+          parsed.forEach((mission, index) => {
+            mission.status = index === 0 ? "active" : "not_active";
+          });
+        }
+
         const { error } = await supabase
           .from('codex')
           .upsert([{
@@ -114,7 +115,6 @@ export default function Codex() {
         if (!error) {
           setMissions(parsed);
           setUserExists(true);
-          // Clear the prompt after successful generation
           setPrompt("");
           setDuration("");
         } else {
@@ -127,7 +127,6 @@ export default function Codex() {
       console.error('Error creating roadmap:', error);
       alert('Network error occurred');
     } finally {
-      // Clear both loading states only after everything is complete
       setLoading(false);
       setIsGeneratingRoadmap(false);
     }
@@ -151,8 +150,6 @@ export default function Codex() {
               </div>
               <WelcomeSection className="relative top-10 mb-10" username={username} />
               <LoadingSection />
-              
-              {/* Show different loading message when generating roadmap */}
               {isGeneratingRoadmap && (
                 <div className="mt-4 text-center">
                   <p className="text-gray-700 font-semibold">
@@ -173,7 +170,6 @@ export default function Codex() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
       <SideBar />
-
       <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
         <div className="px-3 lg:px-8 py-4 lg:py-8">
           <motion.div
@@ -186,9 +182,7 @@ export default function Codex() {
               <h1 className="text-3xl font-black text-gray-900 mb-2">Codex</h1>
               <p className="text-gray-600">Your Career-pathing Engine</p>
             </div>
-
             <WelcomeSection className="relative top-10 mb-10" username={username} />
-
             {userExists ? (
               <div className="mt-6 lg:mt-8">
                 <RoadmapGrid missions={missions} username={username} />
@@ -209,7 +203,6 @@ export default function Codex() {
                         setDuration={setDuration}
                       />
                     </div>
-
                     <div className="w-full flex justify-center">
                       <button
                         onClick={handleCreateRoadmap}
@@ -231,7 +224,6 @@ export default function Codex() {
                         )}
                       </button>
                     </div>
-
                     <div className="w-256 pl-50">
                       <QuickPrompts
                         handlePrompt={(prompt) => setPrompt(prompt)}
