@@ -20,10 +20,25 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         {children}
       </body>
     </html>
   );
 }
+
+import ResponsiveHeader from "@/components/ResponsiveHeader";
+import ResponsiveFooter from "@/components/ResponsiveFooter";
+
+export default function Layout({ children }) {
+  return (
+    <>
+      <ResponsiveHeader />
+      <main className="flex-grow pt-20">{children}</main>
+      <ResponsiveFooter />
+    </>
+  );
+}
+
+
