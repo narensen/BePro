@@ -1,4 +1,4 @@
-export function ResponsiveFooter() {
+export default function ResponsiveFooter() {
   return (
     <footer className="bg-gray-900/80 backdrop-blur-xl border-t border-white/20 px-4 sm:px-6 py-8 sm:py-10 lg:py-12">
       <div className="max-w-7xl mx-auto">
