@@ -1,6 +1,6 @@
 export default function ResponsiveFooter() {
   return (
-    <footer className="bg-white/10 backdrop-blur-xl border-t border-white/20 px-4 sm:px-6 py-12 sm:py-16 lg:py-20">
+    <footer className="bg-gray-900/80 backdrop-blur-xl border-t border-white/20 px-4 sm:px-6 py-12 sm:py-16 lg:py-20">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-12 sm:mb-16">
           <div className="sm:col-span-2 lg:col-span-2">
@@ -14,7 +14,7 @@ export default function ResponsiveFooter() {
             <ul className="space-y-2 sm:space-y-3">
               {['Features', 'Pricing', 'Roadmap', 'API'].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-gray-900 hover:text-white transition-colors font-bold text-sm sm:text-base">
+                  <a href="#" className="text-gray-300 hover:text-white transition-colors font-bold text-sm sm:text-base">
                     {item}
                   </a>
                 </li>
@@ -26,7 +26,7 @@ export default function ResponsiveFooter() {
             <ul className="space-y-2 sm:space-y-3">
               {['Help Center', 'Contact', 'Privacy', 'Terms'].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-gray-900 hover:text-white transition-colors font-bold text-sm sm:text-base">
+                  <a href="#" className="text-gray-300 hover:text-white transition-colors font-bold text-sm sm:text-base">
                     {item}
                   </a>
                 </li>
@@ -35,7 +35,7 @@ export default function ResponsiveFooter() {
           </div>
         </div>
         <div className="pt-6 sm:pt-8 border-t border-white/20 text-center">
-          <p className="text-gray-900 font-bold text-sm sm:text-base">
+          <p className="text-gray-300 font-bold text-sm sm:text-base">
             © {new Date().getFullYear()} BePro Inc. The Forge is Open.
           </p>
         </div>
