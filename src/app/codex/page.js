@@ -8,6 +8,7 @@ import useLoadingStore from "../store/useLoadingStore";
 import SideBar from "../components/SideBar";
 import PromptRefinerQueryBox from "./components/PromptRefinerQueryBox";
 import RoadmapGrid from "./components/RoadmapGrid";
+import EnhancedMissionsSection from './components/EnhancedMissionsSection'; // Import the enhanced component
 import WelcomeSection from "./components/WelcomeSection";
 import LoadingSection from "./components/LoadingSection";
 import { checkUsername, loadMissions } from "./utils/userRoadmap";
@@ -28,10 +29,44 @@ function useIsMobile() {
   return isMobile;
 }
 
+// Tab Navigation Component
+function TabNavigation({ activeTab, setActiveTab, userExists }) {
+  const tabs = [
+    { id: 'roadmap', label: 'Roadmap' },
+    { id: 'missions', label: 'Missions' }
+  ];
+
+  if (!userExists) return null;
+
+  return (
+    <div className="flex justify-center mb-6 lg:mb-8">
+      <div className="bg-white/20 backdrop-blur-sm rounded-lg p-1 shadow-lg">
+        <div className="flex space-x-1">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-6 py-2 text-sm font-semibold rounded-md transition-all duration-200 ${
+                activeTab === tab.id
+                  ? 'bg-white text-gray-900 shadow-md'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-white/30'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Codex() {
   const [userExists, setUserExists] = useState(null);
   const [missions, setMissions] = useState([]);
+  const [activeStatus, setActiveStatus] = useState([]); // Add this state for mission status tracking
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+  const [activeTab, setActiveTab] = useState('roadmap');
 
   const {
     user,
@@ -57,6 +92,30 @@ export default function Codex() {
           if (roadmap) {
             const parsed = parseTaggedResponse(roadmap);
             setMissions(parsed);
+            
+            // Extract active_status from your database
+            // This should come from your codex table's active_status column
+            const statusResponse = await supabase
+              .from('codex')
+              .select('active_status')
+              .eq('username', username)
+              .single();
+            
+            if (statusResponse.data?.active_status && Array.isArray(statusResponse.data.active_status)) {
+              setActiveStatus(statusResponse.data.active_status);
+            } else {
+              // Default: first mission is active, rest are inactive
+              const defaultStatus = parsed.map((_, index) => 
+                index === 0 ? 'active' : 'not_active'
+              );
+              setActiveStatus(defaultStatus);
+              
+              // Save the default status to database
+              await supabase
+                .from('codex')
+                .update({ active_status: defaultStatus })
+                .eq('username', username);
+            }
           }
         }
       } catch (err) {
@@ -69,6 +128,25 @@ export default function Codex() {
 
     fetchUserData();
   }, [username, setLoading]);
+
+  // Update the mission completion handler
+  const updateMissionStatus = async (missionIndex, newStatus) => {
+    const updatedStatus = [...activeStatus];
+    updatedStatus[missionIndex] = newStatus;
+    
+    // If completing a mission, activate the next one
+    if (newStatus === 'completed' && missionIndex + 1 < missions.length) {
+      updatedStatus[missionIndex + 1] = 'active';
+    }
+    
+    setActiveStatus(updatedStatus);
+    
+    // Save to database
+    await supabase
+      .from('codex')
+      .update({ active_status: updatedStatus })
+      .eq('username', username);
+  };
 
   const handleCreateRoadmapFromRefinedPrompt = async (refinedPrompt, duration) => {
     setLoading(true);
@@ -96,16 +174,23 @@ export default function Codex() {
           });
         }
 
+        // Initialize activeStatus for new roadmap
+        const defaultStatus = parsed.map((_, index) => 
+          index === 0 ? 'active' : 'not_active'
+        );
+
         const { error } = await supabase
           .from('codex')
           .upsert([{
             username: username,
             roadmap: parsed,
+            active_status: defaultStatus, // Save the default status
             created_at: new Date().toISOString()
           }]);
 
         if (!error) {
           setMissions(parsed);
+          setActiveStatus(defaultStatus);
           setUserExists(true);
         } else {
           alert('Failed to save roadmap to database');
@@ -172,10 +257,28 @@ export default function Codex() {
               <h1 className="text-3xl font-black text-gray-900 mb-2">Codex</h1>
               <p className="text-gray-600">Your Career-pathing Engine</p>
             </div>
-            <WelcomeSection className="relative top-10 mb-10" username={username} />
+            <WelcomeSection className="relative top-10 mb-16" username={username} />
+            
+            {/* Tab Navigation */}
+            <TabNavigation 
+              activeTab={activeTab} 
+              setActiveTab={setActiveTab} 
+              userExists={userExists} 
+            />
+            
             {userExists ? (
-              <div className="mt-6 lg:mt-8">
-                <RoadmapGrid missions={missions} username={username} />
+              <div className="mt-16">
+                {activeTab === 'roadmap' && (
+                  <RoadmapGrid missions={missions} username={username} />
+                )}
+                {activeTab === 'missions' && (
+                  <EnhancedMissionsSection 
+                    missions={missions} 
+                    username={username}
+                    activeStatus={activeStatus}
+                    onUpdateMissionStatus={updateMissionStatus}
+                  />
+                )}
               </div>
             ) : (
               <>
