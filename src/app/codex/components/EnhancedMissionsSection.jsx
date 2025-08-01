@@ -45,7 +45,7 @@ function EnhancedMissionsSection({ missions, username, activeStatus, onUpdateMis
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://bepro-codex.onrender.com/query', {
+      const response = await fetch('/api/query', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
