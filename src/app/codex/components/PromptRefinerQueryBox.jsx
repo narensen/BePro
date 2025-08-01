@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
 
 const PromptRefinerQueryBox = ({ 
   onFinalPrompt, 
@@ -176,9 +177,9 @@ const PromptRefinerQueryBox = ({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
-        className="w-full max-w-2xl mx-auto bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 overflow-hidden"
+        className="w-full max-w-3xl mx-auto bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 overflow-hidden"
       >
-        <div className="p-6 lg:p-8">
+        <div className="p-8 lg:p-10">
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-3">
@@ -238,18 +239,18 @@ const PromptRefinerQueryBox = ({
     );
   }
 
-  // Conversation interface
+  // Conversation interface - Made significantly bigger
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
-      className="w-full max-w-4xl mx-auto bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 overflow-hidden"
+      className="w-full max-w-6xl mx-auto bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 overflow-hidden"
     >
-      <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white p-4 flex items-center justify-between">
+      <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-3 h-3 bg-amber-400 rounded-full animate-pulse"></div>
-          <h3 className="font-black text-lg">Codex Assistant</h3>
+          <h3 className="font-black text-xl">Codex Assistant</h3>
         </div>
         <button
           onClick={resetConversation}
@@ -257,13 +258,14 @@ const PromptRefinerQueryBox = ({
           title="Start Over"
           disabled={isRefining || loading}
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
         </button>
       </div>
 
-      <div className="h-96 overflow-y-auto p-6 space-y-4">
+      {/* Bigger chat area */}
+      <div className="h-[600px] overflow-y-auto p-8 space-y-6">
         <AnimatePresence>
           {conversation.map((message, index) => (
             <motion.div
@@ -274,13 +276,21 @@ const PromptRefinerQueryBox = ({
               className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[80%] p-4 rounded-2xl font-mono ${
+                className={`max-w-[85%] p-6 rounded-2xl ${
                   message.type === 'user'
                     ? 'bg-gradient-to-r from-amber-400 to-yellow-400 text-gray-900'
-                    : 'bg-gray-100 text-gray-800 border-l-4 border-amber-400'
+                    : 'bg-gray-50 text-gray-800 border-l-4 border-amber-400'
                 }`}
               >
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                {message.type === 'user' ? (
+                  <p className="text-base leading-relaxed text-left whitespace-pre-wrap font-medium">
+                    {message.content}
+                  </p>
+                ) : (
+                  <div className="text-base leading-relaxed text-left">
+                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                  </div>
+                )}
               </div>
             </motion.div>
           ))}
@@ -292,12 +302,12 @@ const PromptRefinerQueryBox = ({
             animate={{ opacity: 1, y: 0 }}
             className="flex justify-start"
           >
-            <div className="bg-gray-100 p-4 rounded-2xl border-l-4 border-amber-400">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                <span className="ml-2 text-gray-600 text-sm font-mono">Codex is thinking...</span>
+            <div className="bg-gray-50 p-6 rounded-2xl border-l-4 border-amber-400">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-amber-400 rounded-full animate-bounce"></div>
+                <div className="w-3 h-3 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-3 h-3 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                <span className="ml-3 text-gray-600 text-base font-medium">Codex is thinking...</span>
               </div>
             </div>
           </motion.div>
@@ -306,31 +316,31 @@ const PromptRefinerQueryBox = ({
         <div ref={chatEndRef} />
       </div>
 
-      <div className="p-6 border-t border-gray-200">
+      <div className="p-8 border-t border-gray-200">
         {isRefinementComplete ? (
           <div className="space-y-4">
-            <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded-r-lg">
+            <div className="bg-green-50 border-l-4 border-green-400 p-6 rounded-r-lg">
               <div className="flex items-center">
-                <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-green-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <p className="text-green-800 font-semibold">Roadmap prompt ready!</p>
+                <p className="text-green-800 font-semibold text-lg">Roadmap prompt ready!</p>
               </div>
             </div>
             
             <button
               onClick={handleGenerateRoadmap}
               disabled={loading}
-              className="w-full px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl font-black text-lg hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+              className="w-full px-8 py-5 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl font-black text-xl hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
             >
               {loading ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                   Generating Roadmap...
                 </>
               ) : (
                 <>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
                   Generate My Roadmap
@@ -339,25 +349,25 @@ const PromptRefinerQueryBox = ({
             </button>
           </div>
         ) : (
-          <div className="flex gap-3">
+          <div className="flex gap-4">
             <input
               type="text"
               value={currentInput}
               onChange={(e) => setCurrentInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && !isRefining && handleContinueConversation()}
               placeholder="Type your response..."
-              className="flex-1 p-4 border-2 border-gray-200 rounded-xl focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 outline-none transition-all duration-300 font-mono text-gray-800 placeholder-gray-400"
+              className="flex-1 p-5 border-2 border-gray-200 rounded-xl focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 outline-none transition-all duration-300 text-gray-800 placeholder-gray-400 text-base"
               disabled={isRefining || loading}
             />
             <button
               onClick={handleContinueConversation}
               disabled={isRefining || loading || !currentInput.trim()}
-              className="px-6 py-4 bg-gradient-to-r from-amber-400 to-yellow-400 text-gray-900 rounded-xl font-black hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-8 py-5 bg-gradient-to-r from-amber-400 to-yellow-400 text-gray-900 rounded-xl font-black hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isRefining ? (
-                <div className="w-5 h-5 border-2 border-gray-900/30 border-t-gray-900 rounded-full animate-spin"></div>
+                <div className="w-6 h-6 border-2 border-gray-900/30 border-t-gray-900 rounded-full animate-spin"></div>
               ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
               )}
