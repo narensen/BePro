@@ -6,8 +6,7 @@ import { supabase } from "../lib/supabase_client";
 import useUserStore from "../store/useUserStore";
 import useLoadingStore from "../store/useLoadingStore";
 import SideBar from "../components/SideBar";
-import QueryBox from "./components/QueryBox";
-import QuickPrompts from "./components/QuickPrompts";
+import PromptRefinerQueryBox from "./components/PromptRefinerQueryBox";
 import RoadmapGrid from "./components/RoadmapGrid";
 import WelcomeSection from "./components/WelcomeSection";
 import LoadingSection from "./components/LoadingSection";
@@ -30,8 +29,6 @@ function useIsMobile() {
 }
 
 export default function Codex() {
-  const [prompt, setPrompt] = useState("");
-  const [duration, setDuration] = useState("");
   const [userExists, setUserExists] = useState(null);
   const [missions, setMissions] = useState([]);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
@@ -73,12 +70,7 @@ export default function Codex() {
     fetchUserData();
   }, [username, setLoading]);
 
-  const handleCreateRoadmap = async () => {
-    if (!prompt.trim() || !duration) {
-      alert('Please enter a goal and select duration');
-      return;
-    }
-
+  const handleCreateRoadmapFromRefinedPrompt = async (refinedPrompt, duration) => {
     setLoading(true);
     setIsGeneratingRoadmap(true);
 
@@ -89,7 +81,7 @@ export default function Codex() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_input: prompt,
+          user_input: refinedPrompt,
           context: `Duration: ${duration}, Username: ${username}`
         })
       });
@@ -115,8 +107,6 @@ export default function Codex() {
         if (!error) {
           setMissions(parsed);
           setUserExists(true);
-          setPrompt("");
-          setDuration("");
         } else {
           alert('Failed to save roadmap to database');
         }
@@ -196,39 +186,10 @@ export default function Codex() {
                 ) : (
                   <div className="space-y-4 lg:space-y-6">
                     <div className="flex justify-center relative top-10">
-                      <QueryBox
-                        prompt={prompt}
-                        setPrompt={setPrompt}
-                        duration={duration}
-                        setDuration={setDuration}
-                      />
-                    </div>
-                    <div className="w-full flex justify-center">
-                      <button
-                        onClick={handleCreateRoadmap}
-                        disabled={loading || isGeneratingRoadmap || !prompt.trim() || !duration}
-                        className="px-8 py-4 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 rounded-xl font-black text-lg hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3"
-                      >
-                        {(loading || isGeneratingRoadmap) ? (
-                          <>
-                            <div className="w-5 h-5 border-2 border-amber-300/30 border-t-amber-300 rounded-full animate-spin"></div>
-                            Generating Roadmap...
-                          </>
-                        ) : (
-                          <>
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                            </svg>
-                            Generate My Roadmap
-                          </>
-                        )}
-                      </button>
-                    </div>
-                    <div className="w-256 pl-50">
-                      <QuickPrompts
-                        handlePrompt={(prompt) => setPrompt(prompt)}
+                      <PromptRefinerQueryBox
+                        onFinalPrompt={handleCreateRoadmapFromRefinedPrompt}
                         disabled={loading || isGeneratingRoadmap}
-                        submitting={loading || isGeneratingRoadmap}
+                        loading={loading || isGeneratingRoadmap}
                       />
                     </div>
                   </div>
