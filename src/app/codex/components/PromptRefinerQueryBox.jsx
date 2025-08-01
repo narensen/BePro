@@ -25,7 +25,7 @@ const PromptRefinerQueryBox = ({
   }, [conversation]);
 
   const callInitiatePrompt = async (userInput, history = []) => {
-    const response = await fetch('https://bepro-codex.onrender.com/initiate-prompt', {
+    const response = await fetch('https://bepro-initiator-prompt.onrender.com/initiate-prompt', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
