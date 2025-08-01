@@ -43,8 +43,8 @@ async function processQuery(userInput, previousLogs, chatHistory) {
     // Format the prompt with context
     const formattedPrompt = formatPromptWithContext(userInput, previousLogs, chatHistory);
     
-    // Generate structured response
-    const response = await generateCodexResponse(formattedPrompt, userInput);
+    // Generate structured response with context
+    const response = await generateCodexResponse(formattedPrompt, userInput, previousLogs, chatHistory);
     
     // Parse and structure the response
     return parseResponseStructure(response, previousLogs);
@@ -83,23 +83,25 @@ Your response should be helpful, encouraging, and focused on advancing their lea
 /**
  * Generate Codex response based on formatted prompt
  */
-async function generateCodexResponse(prompt, originalInput) {
+async function generateCodexResponse(prompt, originalInput, previousLogs, chatHistory) {
   // Since we don't have access to an external AI service in this implementation,
   // we'll create contextual responses based on common career development queries
   
   const inputLower = originalInput.toLowerCase();
   
-  // Detect query type and generate appropriate response
-  if (inputLower.includes('code') || inputLower.includes('programming') || inputLower.includes('function') || 
-      inputLower.includes('sort') || inputLower.includes('array') || inputLower.includes('javascript') ||
-      inputLower.includes('python') || inputLower.includes('java') || inputLower.includes('algorithm')) {
-    return generateCodeResponse(originalInput);
-  } else if (inputLower.includes('career') || inputLower.includes('job') || inputLower.includes('skill') ||
-             inputLower.includes('interview') || inputLower.includes('resume') || inputLower.includes('portfolio')) {
-    return generateCareerResponse(originalInput);
-  } else if (inputLower.includes('learn') || inputLower.includes('study') || inputLower.includes('practice') ||
-             inputLower.includes('tutorial') || inputLower.includes('course') || inputLower.includes('how')) {
+  // Prioritize learning intent over specific technologies
+  if (inputLower.includes('learn') || inputLower.includes('study') || inputLower.includes('practice') ||
+      inputLower.includes('tutorial') || inputLower.includes('course') || inputLower.includes('how') ||
+      inputLower.includes('start') || inputLower.includes('begin') || inputLower.includes('roadmap')) {
     return generateLearningResponse(originalInput);
+  } else if (inputLower.includes('career') || inputLower.includes('job') || inputLower.includes('skill') ||
+             inputLower.includes('interview') || inputLower.includes('resume') || inputLower.includes('portfolio') ||
+             inputLower.includes('path') || inputLower.includes('transition')) {
+    return generateCareerResponse(originalInput);
+  } else if (inputLower.includes('code') || inputLower.includes('programming') || inputLower.includes('function') || 
+             inputLower.includes('sort') || inputLower.includes('array') || inputLower.includes('algorithm') ||
+             inputLower.includes('debug') || inputLower.includes('fix') || inputLower.includes('implement')) {
+    return generateCodeResponse(originalInput);
   } else {
     return generateGeneralResponse(originalInput);
   }
@@ -280,39 +282,157 @@ Professional Development Plan:
  * Generate learning-focused response
  */
 function generateLearningResponse(input) {
-  return {
-    session: `Perfect! Learning is at the core of career advancement. I'll help you create an effective learning strategy for "${input}". Let's break this down into actionable steps that will accelerate your progress.`,
-    ide: `// Learning roadmap template
-const learningPlan = {
-    topic: "Your Learning Focus",
-    duration: "Estimated timeline",
-    phases: [
-        {
-            phase: "Foundation",
-            activities: [
-                "Understand core concepts",
-                "Complete basic exercises",
-                "Build simple projects"
-            ]
+  const inputLower = input.toLowerCase();
+  let learningPlan = "";
+  let sessionMessage = "";
+  
+  if (inputLower.includes('javascript') || inputLower.includes('js')) {
+    sessionMessage = `Excellent choice! JavaScript is the backbone of modern web development. I'll create a comprehensive learning path that takes you from fundamentals to advanced concepts, ensuring you build real-world skills.`;
+    learningPlan = `// JavaScript Learning Roadmap
+const javascriptLearningPath = {
+    phase1: {
+        title: "JavaScript Fundamentals (2-3 weeks)",
+        topics: [
+            "Variables, Data Types, and Operators",
+            "Functions and Scope",
+            "Control Flow (if/else, loops)",
+            "Arrays and Objects",
+            "DOM Manipulation Basics"
+        ],
+        projects: [
+            "Calculator App",
+            "Todo List",
+            "Simple Quiz Game"
+        ]
+    },
+    phase2: {
+        title: "Intermediate JavaScript (3-4 weeks)",
+        topics: [
+            "ES6+ Features (arrow functions, destructuring, modules)",
+            "Asynchronous JavaScript (Promises, async/await)",
+            "Error Handling",
+            "Working with APIs (fetch, JSON)",
+            "Event Handling"
+        ],
+        projects: [
+            "Weather App with API",
+            "Movie Search Application",
+            "Interactive Dashboard"
+        ]
+    },
+    phase3: {
+        title: "Advanced Concepts (4-5 weeks)",
+        topics: [
+            "Object-Oriented Programming",
+            "Functional Programming Concepts",
+            "Testing (Jest, unit tests)",
+            "Build Tools (Webpack, Vite)",
+            "Framework Introduction (React/Vue)"
+        ],
+        projects: [
+            "Full-Stack Application",
+            "Component Library",
+            "Testing Portfolio"
+        ]
+    }
+};
+
+// Weekly milestone tracker
+const weeklyGoals = [
+    "Week 1: Master variables and basic functions",
+    "Week 2: Complete first interactive project",
+    "Week 3: Understand async programming",
+    "Week 4: Build API-connected application",
+    "Week 5: Deploy first full project"
+];`;
+  } else if (inputLower.includes('python')) {
+    sessionMessage = `Python is an excellent choice for career growth! Its versatility makes it valuable across web development, data science, automation, and AI. Let me outline a strategic learning path.`;
+    learningPlan = `// Python Career Development Path
+const pythonRoadmap = {
+    foundation: {
+        duration: "3-4 weeks",
+        skills: [
+            "Syntax and Basic Data Types",
+            "Functions and Modules",
+            "File I/O and Error Handling",
+            "Object-Oriented Programming",
+            "Working with Libraries (requests, json)"
+        ],
+        careerProjects: [
+            "Automation Scripts",
+            "Data Processing Tools",
+            "API Client Applications"
+        ]
+    },
+    specialization: {
+        webDevelopment: {
+            frameworks: ["Django", "Flask", "FastAPI"],
+            skills: ["REST APIs", "Database Integration", "Authentication"],
+            portfolio: "Full-stack web application"
         },
-        {
-            phase: "Practice", 
-            activities: [
-                "Work on intermediate projects",
-                "Join coding challenges",
-                "Collaborate with others"
-            ]
+        dataScience: {
+            libraries: ["Pandas", "NumPy", "Matplotlib", "Scikit-learn"],
+            skills: ["Data Analysis", "Visualization", "Machine Learning"],
+            portfolio: "Data analysis project with insights"
         },
-        {
-            phase: "Mastery",
-            activities: [
-                "Build advanced projects",
-                "Teach others",
-                "Contribute to community"
-            ]
+        automation: {
+            tools: ["Selenium", "BeautifulSoup", "Schedule"],
+            skills: ["Web Scraping", "Task Automation", "System Integration"],
+            portfolio: "Automation suite for business processes"
         }
-    ]
-};`,
+    }
+};
+
+// Career-focused milestones
+const careerMilestones = [
+    "Build 3 automation scripts for your workflow",
+    "Create a data analysis project with real datasets",
+    "Deploy a web application to the cloud",
+    "Contribute to an open-source Python project"
+];`;
+  } else {
+    sessionMessage = `Perfect! Learning is at the core of career advancement. I'll help you create an effective learning strategy for "${input}". Let's break this down into actionable steps that will accelerate your progress.`;
+    learningPlan = `// Universal Learning Framework
+const learningStrategy = {
+    assessment: {
+        currentSkills: "Evaluate what you already know",
+        gaps: "Identify areas needing improvement",
+        goals: "Define specific, measurable objectives"
+    },
+    
+    planning: {
+        timeline: "Set realistic deadlines",
+        resources: "Curate high-quality learning materials",
+        milestones: "Break down into weekly achievements"
+    },
+    
+    execution: {
+        dailyPractice: "Consistent 1-2 hours of focused learning",
+        projectBuilding: "Apply knowledge through real projects",
+        communityEngagement: "Join relevant developer communities"
+    },
+    
+    validation: {
+        peerReview: "Get feedback from experienced developers",
+        realWorldProjects: "Build portfolio-worthy applications",
+        continuousImprovement: "Iterate based on feedback"
+    }
+};
+
+// Success metrics for any learning path
+const progressTracking = {
+    week1: "Complete foundational concepts",
+    week2: "Build first practice project", 
+    week3: "Integrate with external APIs/libraries",
+    week4: "Deploy and share your work",
+    month2: "Contribute to team/open-source project",
+    month3: "Mentor someone else learning the same skill"
+};`;
+  }
+
+  return {
+    session: sessionMessage,
+    ide: learningPlan,
     logs: "✓ Created structured learning plan and defined milestones"
   };
 }
