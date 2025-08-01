@@ -1,6 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import ReactMarkdown from 'react-markdown';
+
+const ReactMarkdown = ({ children }) => {
+  const formatText = (text) => {
+    return text
+      .split('\n\n')
+      .map((paragraph, index) => (
+        <p key={index} className="mb-4 last:mb-0 leading-relaxed">
+          {paragraph.split('\n').map((line, lineIndex, array) => (
+            <React.Fragment key={lineIndex}>
+              {line}
+              {lineIndex < array.length - 1 && <br />}
+            </React.Fragment>
+          ))}
+        </p>
+      ));
+  };
+
+  return <div>{formatText(children)}</div>;
+};
 
 const PromptRefinerQueryBox = ({ 
   onFinalPrompt, 
@@ -63,7 +81,6 @@ const PromptRefinerQueryBox = ({
     try {
       const data = await callInitiatePrompt(initialUserInput, []);
       
-      // Update conversation history for next call
       const newHistory = [
         { role: 'user', content: initialUserInput },
         { role: 'assistant', content: data.session }
@@ -71,7 +88,6 @@ const PromptRefinerQueryBox = ({
       setConversationHistory(newHistory);
       
       if (data.end === "true") {
-        // Refinement complete immediately
         setFinalRoadmapPrompt(data.session);
         setIsRefinementComplete(true);
         
@@ -83,7 +99,6 @@ const PromptRefinerQueryBox = ({
         
         setConversation(prev => [...prev, finalMessage]);
       } else {
-        // Continue conversation
         const assistantMessage = {
           type: 'assistant',
           content: data.session,
@@ -117,7 +132,6 @@ const PromptRefinerQueryBox = ({
     try {
       const data = await callInitiatePrompt(currentInput, conversationHistory);
       
-      // Update conversation history
       const newHistory = [
         ...conversationHistory,
         { role: 'user', content: currentInput },
@@ -126,7 +140,6 @@ const PromptRefinerQueryBox = ({
       setConversationHistory(newHistory);
       
       if (data.end === "true") {
-        // Refinement complete
         setFinalRoadmapPrompt(data.session);
         setIsRefinementComplete(true);
         
@@ -138,7 +151,6 @@ const PromptRefinerQueryBox = ({
         
         setConversation(prev => [...prev, finalMessage]);
       } else {
-        // Continue conversation
         const assistantMessage = {
           type: 'assistant',
           content: data.session,
@@ -171,7 +183,6 @@ const PromptRefinerQueryBox = ({
   };
 
   if (conversation.length === 0) {
-    // Initial prompt input
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -239,7 +250,6 @@ const PromptRefinerQueryBox = ({
     );
   }
 
-  // Conversation interface - Made significantly bigger
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -264,8 +274,7 @@ const PromptRefinerQueryBox = ({
         </button>
       </div>
 
-      {/* Chat area */}
-      <div className="h-[450px] overflow-y-auto p-6 space-y-4">
+      <div className="h-[500px] overflow-y-auto p-6 space-y-6">
         <AnimatePresence>
           {conversation.map((message, index) => (
             <motion.div
@@ -276,18 +285,18 @@ const PromptRefinerQueryBox = ({
               className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[80%] p-4 rounded-2xl ${
+                className={`max-w-[85%] p-6 rounded-2xl ${
                   message.type === 'user'
                     ? 'bg-gradient-to-r from-amber-400 to-yellow-400 text-gray-900'
                     : 'bg-gray-50 text-gray-800 border-l-4 border-amber-400'
                 }`}
               >
                 {message.type === 'user' ? (
-                  <p className="text-base leading-relaxed text-left whitespace-pre-wrap font-medium">
+                  <p className="text-base leading-loose text-left whitespace-pre-wrap font-medium">
                     {message.content}
                   </p>
                 ) : (
-                  <div className="text-base leading-relaxed text-left">
+                  <div className="text-base leading-loose text-left">
                     <ReactMarkdown>{message.content}</ReactMarkdown>
                   </div>
                 )}
@@ -302,12 +311,12 @@ const PromptRefinerQueryBox = ({
             animate={{ opacity: 1, y: 0 }}
             className="flex justify-start"
           >
-            <div className="bg-gray-50 p-4 rounded-2xl border-l-4 border-amber-400">
-              <div className="flex items-center gap-2">
+            <div className="bg-gray-50 p-6 rounded-2xl border-l-4 border-amber-400">
+              <div className="flex items-center gap-3">
                 <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce"></div>
                 <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                 <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                <span className="ml-2 text-gray-600 text-sm font-medium">Codex is thinking...</span>
+                <span className="ml-3 text-gray-600 text-sm font-medium">Codex is thinking...</span>
               </div>
             </div>
           </motion.div>
