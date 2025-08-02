@@ -39,7 +39,7 @@ export default function MessagesPage() {
     activeConversationRef.current = activeConversation;
   }, [activeConversation]);
 
-  // Mark messages as read when conversation is selected
+  // Mark messages as read function
   const markMessagesAsRead = async (conversationId, otherUsername) => {
     if (!username || !otherUsername) return;
     
@@ -64,6 +64,7 @@ export default function MessagesPage() {
       console.error('Error in markMessagesAsRead:', error);
     }
   };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
@@ -379,7 +380,7 @@ export default function MessagesPage() {
     setShowConversationsList(false) // Hide conversations list on mobile
     
     // Mark messages as read when starting a new conversation
-    markMessagesAsRead(conversation.conversationId, userResult.username);
+    markMessagesAsRead(conversation.conversationId, otherUser.username);
     
     if (socket && isConnected) {
       socket.emit('joinConversation', { otherUsername: otherUser.username })
@@ -529,14 +530,15 @@ export default function MessagesPage() {
 
       {/* Desktop Messages Layout */}
       <div className="hidden lg:flex h-screen lg:ml-72">
-        <ConversationsList {...sharedProps} />
-        <ChatArea {...sharedProps} />
+        <ConversationsList {...sharedProps} markMessagesAsRead={markMessagesAsRead} />
+        <ChatArea {...sharedProps} markMessagesAsRead={markMessagesAsRead} />
       </div>
 
       {/* Mobile Layout */}
       <MobileLayout 
         {...sharedProps}
         showConversationsList={showConversationsList}
+        markMessagesAsRead={markMessagesAsRead}
       />
     </div>
   )

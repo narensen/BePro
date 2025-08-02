@@ -13,6 +13,7 @@ export default function ChatArea({
   formatTime,
   messagesEndRef,
   username,
+  markMessagesAsRead,
   sendMessage,
   handleTyping,
   goBackToConversations
