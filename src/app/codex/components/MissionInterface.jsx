@@ -22,7 +22,7 @@ const MissionInterface = ({
   const [isLoading, setIsLoading] = useState(false);
   const [codeInput, setCodeInput] = useState('');
   const [showCodeEditor, setShowCodeEditor] = useState(false);
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false); // Start with sidebar closed
   const [sessionLoaded, setSessionLoaded] = useState(false);
 
   // Load existing session messages for this mission
@@ -220,7 +220,7 @@ const MissionInterface = ({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono flex flex-col">
       <MissionHeader
         missionNumber={missionNumber}
         missionTitle={missionTitle}
@@ -229,27 +229,31 @@ const MissionInterface = ({
         setShowSidebar={setShowSidebar}
       />
 
-      <div className="flex h-[calc(100vh-80px)]">
-        <MissionSidebar
-          missionDescription={missionDescription}
-          setCurrentInput={setCurrentInput}
-          showSidebar={showSidebar}
-          setShowSidebar={setShowSidebar}
-        />
+      <div className="flex flex-1 overflow-hidden">
+        {showSidebar && (
+          <MissionSidebar
+            missionDescription={missionDescription}
+            setCurrentInput={setCurrentInput}
+            showSidebar={showSidebar}
+            setShowSidebar={setShowSidebar}
+          />
+        )}
 
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col bg-white/95 backdrop-blur-sm">
           <ChatArea
             messages={messages}
             isLoading={isLoading}
           />
 
-          <CodeEditor
-            showCodeEditor={showCodeEditor}
-            setShowCodeEditor={setShowCodeEditor}
-            codeInput={codeInput}
-            setCodeInput={setCodeInput}
-            setCurrentInput={setCurrentInput}
-          />
+          {showCodeEditor && (
+            <CodeEditor
+              showCodeEditor={showCodeEditor}
+              setShowCodeEditor={setShowCodeEditor}
+              codeInput={codeInput}
+              setCodeInput={setCodeInput}
+              setCurrentInput={setCurrentInput}
+            />
+          )}
 
           <ChatInput
             currentInput={currentInput}

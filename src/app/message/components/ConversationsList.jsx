@@ -82,7 +82,7 @@ export default function ConversationsList({
                     </p>
                     {unreadCounts[conversation.conversationId] > 0 && (
                       <span className="ml-2 flex-shrink-0 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                        {unreadCounts[conversation.conversationId]}
+                        {unreadCounts[conversation.conversationId] > 99 ? '99+' : unreadCounts[conversation.conversationId]}
                       </span>
                     )}
                   </div>

@@ -2,10 +2,22 @@
 
 import DateSeparator from './DateSeparator';
 import { groupMessagesByDate, formatTime } from '../utils/dateUtils';
+import { useEffect } from 'react';
 
-export default function MessagesList({ messages, username, messagesEndRef }) {
+export default function MessagesList({ messages, username, messagesEndRef, activeConversation, markMessagesAsRead }) {
   const messageGroups = groupMessagesByDate(messages);
 
+  // Mark messages as read when they come into view
+  useEffect(() => {
+    if (messages.length > 0 && activeConversation && username) {
+      // Mark messages as read after a short delay to ensure they're actually viewed
+      const timer = setTimeout(() => {
+        markMessagesAsRead(activeConversation.conversationId, activeConversation.otherUsername);
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [messages.length, activeConversation, username, markMessagesAsRead]);
   return (
     <div className="flex-1 p-4 overflow-y-auto bg-gradient-to-br from-yellow-50 to-orange-50">
       <div className="space-y-2">
@@ -28,6 +40,11 @@ export default function MessagesList({ messages, username, messagesEndRef }) {
                       message.senderUsername === username ? 'text-gray-700' : 'text-gray-500'
                     }`}>
                       {formatTime(message.timestamp)}
+                      {message.senderUsername === username && (
+                        <span className="ml-2">
+                          {message.is_read ? '✓✓' : '✓'}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

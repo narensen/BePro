@@ -17,7 +17,10 @@ export default function MobileLayout({ showConversationsList, ...props }) {
       <div className={`${
         !showConversationsList && props.activeConversation ? 'flex' : 'hidden'
       } flex-1 flex-col`}>
-        <ChatArea {...props} />
+        <ChatArea 
+          {...props}
+          markMessagesAsRead={props.markMessagesAsRead}
+        />
       </div>
     </div>
   )

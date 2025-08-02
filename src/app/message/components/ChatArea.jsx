@@ -31,8 +31,9 @@ export default function ChatArea({
           <MessagesList
             messages={messages}
             username={username}
-            formatTime={formatTime}
             messagesEndRef={messagesEndRef}
+            activeConversation={activeConversation}
+            markMessagesAsRead={markMessagesAsRead}
           />
 
           <MessageInput

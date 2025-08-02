@@ -39,6 +39,31 @@ export default function MessagesPage() {
     activeConversationRef.current = activeConversation;
   }, [activeConversation]);
 
+  // Mark messages as read when conversation is selected
+  const markMessagesAsRead = async (conversationId, otherUsername) => {
+    if (!username || !otherUsername) return;
+    
+    try {
+      const { error } = await supabase
+        .from('messages')
+        .update({ is_read: true })
+        .eq('receiver_username', username)
+        .eq('sender_username', otherUsername)
+        .eq('is_read', false);
+
+      if (error) {
+        console.error('Error marking messages as read:', error);
+      } else {
+        // Update local unread counts
+        setUnreadCounts(prev => ({
+          ...prev,
+          [conversationId]: 0
+        }));
+      }
+    } catch (error) {
+      console.error('Error in markMessagesAsRead:', error);
+    }
+  };
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
@@ -102,11 +127,17 @@ export default function MessagesPage() {
       socketInstance.on('newDirectMessage', (message) => {
         console.log('Received new direct message:', message)
         
+        // Mark message as read if it's for the active conversation
         if (activeConversationRef.current?.conversationId === message.conversationId) {
           setMessages(prev => {
             const exists = prev.some(msg => msg.id === message.id)
             return exists ? prev : [...prev, message]
           })
+          
+          // Mark as read if it's from the other user in active conversation
+          if (message.senderUsername !== username) {
+            markMessagesAsRead(message.conversationId, message.senderUsername);
+          }
         }
       })
 
@@ -347,6 +378,9 @@ export default function MessagesPage() {
     setSearchResults([])
     setShowConversationsList(false) // Hide conversations list on mobile
     
+    // Mark messages as read when starting a new conversation
+    markMessagesAsRead(conversation.conversationId, userResult.username);
+    
     if (socket && isConnected) {
       socket.emit('joinConversation', { otherUsername: otherUser.username })
     }
@@ -363,6 +397,9 @@ export default function MessagesPage() {
     setMessages([])
     setOtherUserTyping(false)
     setShowConversationsList(false) // Hide conversations list on mobile
+    
+    // Mark messages as read when selecting a conversation
+    markMessagesAsRead(conversation.conversationId, conversation.otherUsername);
     
     if (socket && isConnected) {
       socket.emit('joinConversation', { otherUsername: conversation.otherUsername })
@@ -475,8 +512,8 @@ export default function MessagesPage() {
     unreadCounts,
     username,
     formatLastMessageTime,
-    formatTime,
     messagesEndRef,
+    markMessagesAsRead,
     setShowAddUser,
     setSearchQuery,
     startConversation,
