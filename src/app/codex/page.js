@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { Play } from 'lucide-react';
 import { supabase } from "../lib/supabase_client";
 import useUserStore from "../store/useUserStore";
 import useLoadingStore from "../store/useLoadingStore";
@@ -10,6 +11,7 @@ import PromptRefinerQueryBox from "./components/PromptRefinerQueryBox";
 import RoadmapGrid from "./components/RoadmapGrid";
 import WelcomeSection from "./components/WelcomeSection";
 import LoadingSection from "./components/LoadingSection";
+import MissionInterface from './components/MissionInterface';
 import { loadMissions } from "./utils/userRoadmap";
 import parseTaggedResponse from "./utils/parseResponse";
 
@@ -28,10 +30,99 @@ function useIsMobile() {
   return isMobile;
 }
 
+// RoadmapGrid component with Mission functionality
+const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
+  // Convert missions object to array for easier processing
+  const missionsArray = missions && typeof missions === 'object' 
+    ? Object.entries(missions).map(([key, mission]) => ({ ...mission, id: key }))
+    : [];
+  
+  return (
+    <div className="space-y-6">
+      {/* Active Mission Highlight */}
+      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+        <h3 className="text-lg font-bold text-blue-300 mb-4">🎯 Current Mission</h3>
+        {(() => {
+          if (missionsArray.length === 0) {
+            return (
+              <p className="text-gray-300">No missions available yet.</p>
+            );
+          }
+
+          const activeMission = missionsArray.find(mission => mission.status === "active");
+          if (activeMission) {
+            const missionNumber = missionsArray.findIndex(mission => mission.id === activeMission.id) + 1;
+            return (
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-semibold text-white">Mission {missionNumber}: {activeMission.title}</h4>
+                  <p className="text-gray-300 text-sm mt-1">
+                    {activeMission.description ? activeMission.description.substring(0, 100) + '...' : 
+                     activeMission.content ? activeMission.content.substring(0, 100) + '...' : 'No description available'}
+                  </p>
+                </div>
+                <button
+                  onClick={onStartMission}
+                  className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all transform hover:scale-105"
+                >
+                  <Play size={18} />
+                  <span className="font-semibold">Start Mission</span>
+                </button>
+              </div>
+            );
+          } else {
+            // Check if all missions are completed or if we need to set the first one as active
+            const completedMissions = missionsArray.filter(mission => mission.status === "completed");
+            if (completedMissions.length === missionsArray.length) {
+              return (
+                <p className="text-gray-300">🎉 All missions completed! Great work!</p>
+              );
+            } else {
+              // Find the first mission without completed status to make it active
+              const firstIncomplete = missionsArray.find(mission => mission.status !== "completed");
+              if (firstIncomplete) {
+                const missionNumber = missionsArray.findIndex(mission => mission.id === firstIncomplete.id) + 1;
+                return (
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-semibold text-white">Mission {missionNumber}: {firstIncomplete.title}</h4>
+                      <p className="text-gray-300 text-sm mt-1">
+                        {firstIncomplete.description ? firstIncomplete.description.substring(0, 100) + '...' : 
+                         firstIncomplete.content ? firstIncomplete.content.substring(0, 100) + '...' : 'No description available'}
+                      </p>
+                    </div>
+                    <button
+                      onClick={onStartMission}
+                      className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all transform hover:scale-105"
+                    >
+                      <Play size={18} />
+                      <span className="font-semibold">Start Mission</span>
+                    </button>
+                  </div>
+                );
+              }
+              return (
+                <p className="text-gray-300">No active missions available.</p>
+              );
+            }
+          }
+        })()}
+      </div>
+
+      {/* Original RoadmapGrid content */}
+      <RoadmapGrid missions={missions} username={username} />
+    </div>
+  );
+};
+
 export default function Codex() {
   const [userHasRoadmap, setUserHasRoadmap] = useState(null);
   const [missions, setMissions] = useState([]);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+  
+  // Mission Interface state
+  const [showMissionInterface, setShowMissionInterface] = useState(false);
+  const [activeMissionData, setActiveMissionData] = useState(null);
 
   const {
     user,
@@ -73,8 +164,50 @@ export default function Codex() {
             const roadmap = await loadMissions(username);
             if (roadmap) {
               const parsed = parseTaggedResponse(roadmap);
-              setMissions(parsed);
+              
+              // Handle both object and array formats
+              let missionsData;
+              if (Array.isArray(parsed)) {
+                // Convert array to object format expected by RoadmapGrid
+                missionsData = {};
+                parsed.forEach((mission, index) => {
+                  missionsData[index] = mission;
+                });
+              } else if (parsed && typeof parsed === 'object') {
+                // Already in object format
+                missionsData = parsed;
+              } else {
+                console.error('Parsed roadmap is neither array nor object:', parsed);
+                setMissions({});
+                return;
+              }
+              
+              // Get the current active_status from database
+              const { data: statusData } = await supabase
+                .from('codex')
+                .select('active_status')
+                .eq('username', username)
+                .single();
+              
+              const activeStatus = statusData?.active_status || 0;
+              
+              // Set mission statuses based on active_status
+              Object.keys(missionsData).forEach((key, index) => {
+                if (index < activeStatus) {
+                  missionsData[key].status = "completed";
+                } else if (index === activeStatus) {
+                  missionsData[key].status = "active";
+                } else {
+                  missionsData[key].status = "not_active";
+                }
+              });
+              
+              setMissions(missionsData);
+            } else {
+              setMissions({});
             }
+          } else {
+            setMissions({});
           }
         }
       } catch (err) {
@@ -88,6 +221,119 @@ export default function Codex() {
 
     checkUserRoadmap();
   }, [username, setLoading]);
+
+  // Function to get the active mission data
+  const getActiveMissionData = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('codex')
+        .select('active_status, roadmap')
+        .eq('username', username)
+        .single();
+
+      if (error) {
+        console.error('Error fetching active mission:', error);
+        return null;
+      }
+
+      const activeStatus = data.active_status || 0;
+      const roadmap = data.roadmap || {};
+      
+      // Convert roadmap object to array for easier processing
+      const roadmapArray = Object.entries(roadmap).map(([key, mission]) => ({ ...mission, id: key }));
+      const activeMissionNumber = activeStatus + 1;
+
+      // Check if there's an active mission available
+      if (activeMissionNumber <= roadmapArray.length) {
+        const activeMission = roadmapArray[activeStatus];
+        return {
+          number: activeMissionNumber,
+          title: activeMission.title,
+          description: activeMission.description || activeMission.content || 'No description available',
+          totalMissions: roadmapArray.length
+        };
+      }
+
+      return null; // All missions completed
+    } catch (error) {
+      console.error('Error in getActiveMissionData:', error);
+      return null;
+    }
+  };
+
+  // Function to handle starting a mission
+  const handleStartMission = async () => {
+    const missionData = await getActiveMissionData();
+    
+    if (missionData) {
+      setActiveMissionData(missionData);
+      setShowMissionInterface(true);
+    } else {
+      alert('🎉 Congratulations! You have completed all missions in your roadmap!');
+    }
+  };
+
+  // Function to handle mission completion
+  const handleMissionComplete = async (completedMissionNumber) => {
+    try {
+      // Refresh the missions data to reflect the updated status
+      const roadmap = await loadMissions(username);
+      if (roadmap) {
+        const parsed = parseTaggedResponse(roadmap);
+        
+        // Handle both object and array formats
+        let missionsData;
+        if (Array.isArray(parsed)) {
+          missionsData = {};
+          parsed.forEach((mission, index) => {
+            missionsData[index] = mission;
+          });
+        } else if (parsed && typeof parsed === 'object') {
+          missionsData = parsed;
+        } else {
+          console.error('Error parsing roadmap after completion');
+          return;
+        }
+        
+        // Get the updated active status
+        const { data } = await supabase
+          .from('codex')
+          .select('active_status')
+          .eq('username', username)
+          .single();
+        
+        const activeStatus = data?.active_status || 0;
+        
+        // Update mission statuses based on active_status
+        Object.keys(missionsData).forEach((key, index) => {
+          if (index < activeStatus) {
+            missionsData[key].status = "completed";
+          } else if (index === activeStatus) {
+            missionsData[key].status = "active";
+          } else {
+            missionsData[key].status = "not_active";
+          }
+        });
+        
+        setMissions(missionsData);
+      }
+      
+      // Go back to the main codex page
+      setShowMissionInterface(false);
+      setActiveMissionData(null);
+      
+      // Show success message
+      alert(`🎉 Mission ${completedMissionNumber} completed successfully!`);
+    } catch (error) {
+      console.error('Error handling mission completion:', error);
+    }
+  };
+
+  // Function to handle going back to codex
+  const handleBackToCodex = () => {
+    setShowMissionInterface(false);
+    setActiveMissionData(null);
+  };
 
   const handleCreateRoadmapFromRefinedPrompt = async (refinedPrompt, duration) => {
     setLoading(true);
@@ -180,48 +426,66 @@ export default function Codex() {
     );
   }
 
+  // Main render with mission interface integration
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
-      <SideBar />
-      <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
-        <div className="px-3 lg:px-8 py-4 lg:py-8">
-          <motion.div
-            className="text-center mb-6 lg:mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-          >
-            <div className="lg:hidden mb-6">
-              <h1 className="text-3xl font-black text-gray-900 mb-2">Codex</h1>
-              <p className="text-gray-600">Your Career-pathing Engine</p>
-            </div>
-            <WelcomeSection className="relative top-10 mb-10" username={username} />
-            {userHasRoadmap ? (
-              <div className="mt-6 lg:mt-8">
-                <RoadmapGrid missions={missions} username={username} />
-              </div>
-            ) : (
-              <>
-                {isMobile ? (
-                  <div className="text-center text-sm text-gray-700 bg-white p-4 rounded-lg shadow-md">
-                    🚫 The roadmap generator is available only on desktop. Please switch to a PC to access this feature.
+    <>
+      {showMissionInterface ? (
+        <MissionInterface
+          missionNumber={activeMissionData.number}
+          missionTitle={activeMissionData.title}
+          missionDescription={activeMissionData.description}
+          username={username}
+          onBackToCodex={handleBackToCodex}
+          onMissionComplete={handleMissionComplete}
+        />
+      ) : (
+        <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+          <SideBar />
+          <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
+            <div className="px-3 lg:px-8 py-4 lg:py-8">
+              <motion.div
+                className="text-center mb-6 lg:mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+              >
+                <div className="lg:hidden mb-6">
+                  <h1 className="text-3xl font-black text-gray-900 mb-2">Codex</h1>
+                  <p className="text-gray-600">Your Career-pathing Engine</p>
+                </div>
+                <WelcomeSection className="relative top-10 mb-10" username={username} />
+                {userHasRoadmap ? (
+                  <div className="mt-6 lg:mt-8">
+                    <RoadmapGridWithMission 
+                      missions={missions} 
+                      username={username} 
+                      onStartMission={handleStartMission}
+                    />
                   </div>
                 ) : (
-                  <div className="space-y-4 lg:space-y-6">
-                    <div className="flex justify-center relative top-10">
-                      <PromptRefinerQueryBox
-                        onFinalPrompt={handleCreateRoadmapFromRefinedPrompt}
-                        disabled={loading || isGeneratingRoadmap}
-                        loading={loading || isGeneratingRoadmap}
-                      />
-                    </div>
-                  </div>
+                  <>
+                    {isMobile ? (
+                      <div className="text-center text-sm text-gray-700 bg-white p-4 rounded-lg shadow-md">
+                        🚫 The roadmap generator is available only on desktop. Please switch to a PC to access this feature.
+                      </div>
+                    ) : (
+                      <div className="space-y-4 lg:space-y-6">
+                        <div className="flex justify-center relative top-10">
+                          <PromptRefinerQueryBox
+                            onFinalPrompt={handleCreateRoadmapFromRefinedPrompt}
+                            disabled={loading || isGeneratingRoadmap}
+                            loading={loading || isGeneratingRoadmap}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
-              </>
-            )}
-          </motion.div>
+              </motion.div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
