@@ -12,6 +12,7 @@ import RoadmapGrid from "./components/RoadmapGrid";
 import WelcomeSection from "./components/WelcomeSection";
 import LoadingSection from "./components/LoadingSection";
 import MissionInterface from './components/MissionInterface';
+import RoadmapGridWithMission from './components/RoadmapGridWithMission';
 import { loadMissions } from "./utils/userRoadmap";
 import parseTaggedResponse from "./utils/parseResponse";
 
@@ -30,90 +31,6 @@ function useIsMobile() {
   return isMobile;
 }
 
-// RoadmapGrid component with Mission functionality
-const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
-  // Convert missions object to array for easier processing
-  const missionsArray = missions && typeof missions === 'object' 
-    ? Object.entries(missions).map(([key, mission]) => ({ ...mission, id: key }))
-    : [];
-  
-  return (
-    <div className="space-y-6">
-      {/* Active Mission Highlight */}
-      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-        <h3 className="text-lg font-bold text-blue-300 mb-4">🎯 Current Mission</h3>
-        {(() => {
-          if (missionsArray.length === 0) {
-            return (
-              <p className="text-gray-300">No missions available yet.</p>
-            );
-          }
-
-          const activeMission = missionsArray.find(mission => mission.status === "active");
-          if (activeMission) {
-            const missionNumber = missionsArray.findIndex(mission => mission.id === activeMission.id) + 1;
-            return (
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-semibold text-white">Mission {missionNumber}: {activeMission.title}</h4>
-                  <p className="text-gray-300 text-sm mt-1">
-                    {activeMission.description ? activeMission.description.substring(0, 100) + '...' : 
-                     activeMission.content ? activeMission.content.substring(0, 100) + '...' : 'No description available'}
-                  </p>
-                </div>
-                <button
-                  onClick={onStartMission}
-                  className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all transform hover:scale-105"
-                >
-                  <Play size={18} />
-                  <span className="font-semibold">Start Mission</span>
-                </button>
-              </div>
-            );
-          } else {
-            // Check if all missions are completed or if we need to set the first one as active
-            const completedMissions = missionsArray.filter(mission => mission.status === "completed");
-            if (completedMissions.length === missionsArray.length) {
-              return (
-                <p className="text-gray-300">🎉 All missions completed! Great work!</p>
-              );
-            } else {
-              // Find the first mission without completed status to make it active
-              const firstIncomplete = missionsArray.find(mission => mission.status !== "completed");
-              if (firstIncomplete) {
-                const missionNumber = missionsArray.findIndex(mission => mission.id === firstIncomplete.id) + 1;
-                return (
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-semibold text-white">Mission {missionNumber}: {firstIncomplete.title}</h4>
-                      <p className="text-gray-300 text-sm mt-1">
-                        {firstIncomplete.description ? firstIncomplete.description.substring(0, 100) + '...' : 
-                         firstIncomplete.content ? firstIncomplete.content.substring(0, 100) + '...' : 'No description available'}
-                      </p>
-                    </div>
-                    <button
-                      onClick={onStartMission}
-                      className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all transform hover:scale-105"
-                    >
-                      <Play size={18} />
-                      <span className="font-semibold">Start Mission</span>
-                    </button>
-                  </div>
-                );
-              }
-              return (
-                <p className="text-gray-300">No active missions available.</p>
-              );
-            }
-          }
-        })()}
-      </div>
-
-      {/* Original RoadmapGrid content */}
-      <RoadmapGrid missions={missions} username={username} />
-    </div>
-  );
-};
 
 export default function Codex() {
   const [userHasRoadmap, setUserHasRoadmap] = useState(null);
