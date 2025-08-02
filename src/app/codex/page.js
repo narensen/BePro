@@ -10,7 +10,7 @@ import PromptRefinerQueryBox from "./components/PromptRefinerQueryBox";
 import RoadmapGrid from "./components/RoadmapGrid";
 import WelcomeSection from "./components/WelcomeSection";
 import LoadingSection from "./components/LoadingSection";
-import { checkUsername, loadMissions } from "./utils/userRoadmap";
+import { loadMissions } from "./utils/userRoadmap";
 import parseTaggedResponse from "./utils/parseResponse";
 
 function useIsMobile() {
@@ -29,7 +29,7 @@ function useIsMobile() {
 }
 
 export default function Codex() {
-  const [userExists, setUserExists] = useState(null);
+  const [userHasRoadmap, setUserHasRoadmap] = useState(null);
   const [missions, setMissions] = useState([]);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
 
@@ -45,29 +45,48 @@ export default function Codex() {
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const checkUserRoadmap = async () => {
+      if (!username) return;
+      
       setLoading(true);
-      setUserExists(null);
+      setUserHasRoadmap(null);
       setInitialDataLoaded(false);
+      
       try {
-        const exists = await checkUsername(username);
-        setUserExists(exists);
-        if (exists) {
-          const roadmap = await loadMissions(username);
-          if (roadmap) {
-            const parsed = parseTaggedResponse(roadmap);
-            setMissions(parsed);
+        // Directly check if username exists in codex table
+        const { data, error } = await supabase
+          .from('codex')
+          .select('username')
+          .eq('username', username)
+          .single();
+        
+        if (error && error.code !== 'PGRST116') { // PGRST116 is the error code for "not found"
+          console.error("Error checking user roadmap:", error);
+          setUserHasRoadmap(false);
+        } else {
+          // User exists in codex table if we got data
+          const exists = !!data;
+          setUserHasRoadmap(exists);
+          
+          if (exists) {
+            // Load the missions data
+            const roadmap = await loadMissions(username);
+            if (roadmap) {
+              const parsed = parseTaggedResponse(roadmap);
+              setMissions(parsed);
+            }
           }
         }
       } catch (err) {
         console.error("Codex fetch error:", err);
+        setUserHasRoadmap(false);
       } finally {
         setLoading(false);
         setInitialDataLoaded(true);
       }
     };
 
-    fetchUserData();
+    checkUserRoadmap();
   }, [username, setLoading]);
 
   const handleCreateRoadmapFromRefinedPrompt = async (refinedPrompt, duration) => {
@@ -106,7 +125,7 @@ export default function Codex() {
 
         if (!error) {
           setMissions(parsed);
-          setUserExists(true);
+          setUserHasRoadmap(true);
         } else {
           alert('Failed to save roadmap to database');
         }
@@ -122,7 +141,11 @@ export default function Codex() {
     }
   };
 
-  if (!initialDataLoaded || (loading && userExists === null) || isGeneratingRoadmap) {
+  // Show loading screen when:
+  // 1. Initial data hasn't loaded yet
+  // 2. We're checking if the user has a roadmap (userHasRoadmap is null)
+  // 3. We're generating a roadmap
+  if (!initialDataLoaded || userHasRoadmap === null || isGeneratingRoadmap) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
         <SideBar />
@@ -173,7 +196,7 @@ export default function Codex() {
               <p className="text-gray-600">Your Career-pathing Engine</p>
             </div>
             <WelcomeSection className="relative top-10 mb-10" username={username} />
-            {userExists ? (
+            {userHasRoadmap ? (
               <div className="mt-6 lg:mt-8">
                 <RoadmapGrid missions={missions} username={username} />
               </div>
