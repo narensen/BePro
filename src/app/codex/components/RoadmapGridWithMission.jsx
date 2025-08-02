@@ -13,7 +13,6 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
       {/* Active Mission Highlight */}
       <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 backdrop-blur-sm rounded-xl p-6 border border-amber-400/30 shadow-xl">
         <h3 className="text-lg lg:text-xl font-black text-amber-300 mb-4 flex items-center gap-2">
-          <span className="text-2xl">🎯</span>
           Current Mission
         </h3>
         {(() => {
@@ -29,7 +28,7 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
             return (
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div className="flex-1">
-                  <h4 className="font-black text-amber-300 text-lg">Mission {missionNumber}: {activeMission.title}</h4>
+                  <h4 className="font-black text-amber-300 text-lg">Mission {missionNumber}: {activeMission.title.replace(/\\n/g,"")}</h4>
                   <p className="text-amber-200 text-sm mt-2 leading-relaxed">
                     {activeMission.description ? activeMission.description.substring(0, 100) + '...' : 
                      activeMission.content ? activeMission.content.substring(0, 100) + '...' : 'No description available'}
