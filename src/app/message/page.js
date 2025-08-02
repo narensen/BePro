@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '../lib/supabase_client'
 import SideBar from '../components/SideBar'
@@ -35,21 +35,24 @@ export default function MessagesPage() {
   const typingTimeoutRef = useRef(null)
 
   const activeConversationRef = useRef(null);
+  const markMessagesAsReadRef = useRef(null);
+  
   useEffect(() => {
     activeConversationRef.current = activeConversation;
   }, [activeConversation]);
 
   // Mark messages as read function
-  const markMessagesAsRead = async (conversationId, otherUsername) => {
+  const markMessagesAsRead = useCallback(async (conversationId, otherUsername) => {
     if (!username || !otherUsername) return;
     
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('messages')
         .update({ is_read: true })
         .eq('receiver_username', username)
         .eq('sender_username', otherUsername)
-        .eq('is_read', false);
+        .eq('is_read', false)
+        .select('id');
 
       if (error) {
         console.error('Error marking messages as read:', error);
@@ -59,11 +62,26 @@ export default function MessagesPage() {
           ...prev,
           [conversationId]: 0
         }));
+
+        // Emit socket event to notify sender about read status
+        if (data && data.length > 0 && socket && isConnected) {
+          socket.emit('messagesRead', {
+            messageIds: data.map(msg => msg.id),
+            conversationId,
+            readerUsername: username,
+            senderUsername: otherUsername
+          });
+        }
       }
     } catch (error) {
       console.error('Error in markMessagesAsRead:', error);
     }
-  };
+  }, [username, socket, isConnected]);
+
+  // Update ref when function changes
+  useEffect(() => {
+    markMessagesAsReadRef.current = markMessagesAsRead;
+  }, [markMessagesAsRead]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -122,6 +140,11 @@ export default function MessagesPage() {
         
         if (activeConversationRef.current?.conversationId === conversationId) {
           setMessages(conversationMessages || [])
+          
+          // Mark messages as read when conversation messages are loaded
+          if (activeConversationRef.current?.otherUsername && markMessagesAsReadRef.current) {
+            markMessagesAsReadRef.current(conversationId, activeConversationRef.current.otherUsername);
+          }
         }
       })
 
@@ -136,8 +159,8 @@ export default function MessagesPage() {
           })
           
           // Mark as read if it's from the other user in active conversation
-          if (message.senderUsername !== username) {
-            markMessagesAsRead(message.conversationId, message.senderUsername);
+          if (message.senderUsername !== username && markMessagesAsReadRef.current) {
+            markMessagesAsReadRef.current(message.conversationId, message.senderUsername);
           }
         }
       })
@@ -177,6 +200,21 @@ export default function MessagesPage() {
       socketInstance.on('messageError', (error) => {
         console.error('Message error:', error)
         alert('Failed to send message: ' + error.error)
+      })
+
+      socketInstance.on('messagesMarkedRead', (data) => {
+        console.log('Messages marked as read:', data)
+        const { messageIds, conversationId, readerUsername } = data
+        
+        // Update local messages state to reflect read status
+        if (activeConversationRef.current?.conversationId === conversationId) {
+          setMessages(prev => prev.map(message => {
+            if (messageIds.includes(message.id) && message.senderUsername === username) {
+              return { ...message, is_read: true }
+            }
+            return message
+          }))
+        }
       })
 
       setSocket(socketInstance)
