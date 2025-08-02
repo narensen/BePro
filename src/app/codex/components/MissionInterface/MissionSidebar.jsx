@@ -2,8 +2,14 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { X } from 'lucide-react';
 
-const MissionSidebar = ({ missionDescription, setCurrentInput }) => {
+const MissionSidebar = ({ 
+  missionDescription, 
+  setCurrentInput, 
+  showSidebar, 
+  setShowSidebar 
+}) => {
   const markdownComponents = {
     code({ node, inline, className, children, ...props }) {
       const match = /language-(\w+)/.exec(className || '');
@@ -69,39 +75,51 @@ const MissionSidebar = ({ missionDescription, setCurrentInput }) => {
     }
   ];
 
+  if (!showSidebar) return null;
+
   return (
-    <div className="w-1/3 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-r border-amber-400/30 p-6 overflow-y-auto">
-      <h2 className="text-lg lg:text-xl font-black mb-4 text-amber-300 flex items-center gap-2">
-        <span className="text-2xl">📋</span>
-        Mission Brief
-      </h2>
-      
-      <div className="prose prose-amber prose-sm mb-6">
-        <div className="bg-black/20 rounded-xl p-4 border border-amber-400/20">
-          <ReactMarkdown components={markdownComponents}>
-            {missionDescription}
-          </ReactMarkdown>
-        </div>
-      </div>
-      
-      {/* Quick Actions */}
-      <div className="space-y-3">
-        <h3 className="text-md font-black text-amber-300 flex items-center gap-2">
-          <span className="text-lg">⚡</span>
-          Quick Actions
-        </h3>
-        {quickActions.map((action, index) => (
+    <div className="w-80 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-r border-amber-400/30 overflow-y-auto shadow-xl">
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg lg:text-xl font-black text-amber-300 flex items-center gap-2">
+            <span className="text-2xl">📋</span>
+            Mission Brief
+          </h2>
           <button
-            key={index}
-            onClick={() => setCurrentInput(action.text)}
-            className="w-full text-left px-4 py-3 bg-gradient-to-r from-amber-600/20 to-yellow-600/20 hover:from-amber-600/30 hover:to-yellow-600/30 rounded-xl border border-amber-400/30 transition-all duration-300 text-sm text-amber-100 hover:scale-105 hover:shadow-lg"
+            onClick={() => setShowSidebar(false)}
+            className="p-2 hover:bg-amber-600/20 rounded-lg transition-colors text-amber-300"
           >
-            <div className="flex items-center gap-3">
-              <span className="text-lg">{action.icon}</span>
-              <span className="font-medium">{action.label}</span>
-            </div>
+            <X size={18} />
           </button>
-        ))}
+        </div>
+        
+        <div className="prose prose-amber prose-sm mb-6">
+          <div className="bg-black/20 rounded-xl p-4 border border-amber-400/20">
+            <ReactMarkdown components={markdownComponents}>
+              {missionDescription}
+            </ReactMarkdown>
+          </div>
+        </div>
+        
+        {/* Quick Actions */}
+        <div className="space-y-3">
+          <h3 className="text-md font-black text-amber-300 flex items-center gap-2">
+            <span className="text-lg">⚡</span>
+            Quick Actions
+          </h3>
+          {quickActions.map((action, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentInput(action.text)}
+              className="w-full text-left px-4 py-3 bg-gradient-to-r from-amber-600/20 to-yellow-600/20 hover:from-amber-600/30 hover:to-yellow-600/30 rounded-xl border border-amber-400/30 transition-all duration-300 text-sm text-amber-100 hover:scale-105 hover:shadow-lg"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-lg">{action.icon}</span>
+                <span className="font-medium">{action.label}</span>
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

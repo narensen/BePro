@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase_client';
 
-// Import new components
+// Import components
 import MissionHeader from './MissionInterface/MissionHeader';
 import MissionSidebar from './MissionInterface/MissionSidebar';
 import ChatArea from './MissionInterface/ChatArea';
@@ -22,6 +22,7 @@ const MissionInterface = ({
   const [isLoading, setIsLoading] = useState(false);
   const [codeInput, setCodeInput] = useState('');
   const [showCodeEditor, setShowCodeEditor] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
   const [sessionLoaded, setSessionLoaded] = useState(false);
 
   // Load existing session messages for this mission
@@ -219,17 +220,21 @@ const MissionInterface = ({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 font-mono">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono">
       <MissionHeader
         missionNumber={missionNumber}
         missionTitle={missionTitle}
         onBackToCodex={onBackToCodex}
+        showSidebar={showSidebar}
+        setShowSidebar={setShowSidebar}
       />
 
       <div className="flex h-[calc(100vh-80px)]">
         <MissionSidebar
           missionDescription={missionDescription}
           setCurrentInput={setCurrentInput}
+          showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
         />
 
         <div className="flex-1 flex flex-col">
@@ -251,6 +256,8 @@ const MissionInterface = ({
             setCurrentInput={setCurrentInput}
             handleSendMessage={handleSendMessage}
             isLoading={isLoading}
+            showCodeEditor={showCodeEditor}
+            setShowCodeEditor={setShowCodeEditor}
           />
         </div>
       </div>

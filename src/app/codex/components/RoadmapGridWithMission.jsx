@@ -37,7 +37,7 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
                 </div>
                 <button
                   onClick={onStartMission}
-                  className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 rounded-xl transition-all duration-300 transform hover:scale-105 text-white font-bold shadow-lg"
+                  className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 rounded-xl transition-all duration-300 transform hover:scale-105 text-gray-900 font-bold shadow-lg"
                 >
                   <Play size={18} />
                   <span>Start Mission</span>
@@ -70,7 +70,7 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
                     </div>
                     <button
                       onClick={onStartMission}
-                      className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 rounded-xl transition-all duration-300 transform hover:scale-105 text-white font-bold shadow-lg"
+                      className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 rounded-xl transition-all duration-300 transform hover:scale-105 text-gray-900 font-bold shadow-lg"
                     >
                       <Play size={18} />
                       <span>Start Mission</span>
