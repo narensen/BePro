@@ -2,25 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-
-const ReactMarkdown = ({ children }) => {
-  const formatText = (text) => {
-    return text
-      .split('\n\n')
-      .map((paragraph, index) => (
-        <p key={index} className="mb-4 last:mb-0 leading-relaxed">
-          {paragraph.split('\n').map((line, lineIndex, array) => (
-            <React.Fragment key={lineIndex}>
-              {line}
-              {lineIndex < array.length - 1 && <br />}
-            </React.Fragment>
-          ))}
-        </p>
-      ));
-  };
-
-  return <div>{formatText(children)}</div>;
-};
+import ReactMarkdown from 'react-markdown';
 
 const PromptRefinerQueryBox = ({ 
   onFinalPrompt, 
