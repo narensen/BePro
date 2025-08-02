@@ -36,6 +36,7 @@ export default function MessagesPage() {
 
   const activeConversationRef = useRef(null);
   const markMessagesAsReadRef = useRef(null);
+  const lastMarkAsReadRef = useRef({});
   
   useEffect(() => {
     activeConversationRef.current = activeConversation;
@@ -44,6 +45,20 @@ export default function MessagesPage() {
   // Mark messages as read function
   const markMessagesAsRead = useCallback(async (conversationId, otherUsername) => {
     if (!username || !otherUsername) return;
+    
+    // Throttle calls to prevent excessive database queries
+    const cacheKey = `${conversationId}-${otherUsername}`;
+    const now = Date.now();
+    const lastCall = lastMarkAsReadRef.current[cacheKey];
+    
+    if (lastCall && (now - lastCall) < 2000) { // Throttle to max once per 2 seconds
+      console.log(`Throttling markMessagesAsRead call for ${cacheKey}`);
+      return;
+    }
+    
+    lastMarkAsReadRef.current[cacheKey] = now;
+    
+    console.log(`Attempting to mark messages as read for conversation ${conversationId} from ${otherUsername}`);
     
     try {
       const { data, error } = await supabase
@@ -57,6 +72,8 @@ export default function MessagesPage() {
       if (error) {
         console.error('Error marking messages as read:', error);
       } else {
+        console.log(`Marked ${data?.length || 0} messages as read`);
+        
         // Update local unread counts
         setUnreadCounts(prev => ({
           ...prev,
@@ -65,6 +82,7 @@ export default function MessagesPage() {
 
         // Emit socket event to notify sender about read status
         if (data && data.length > 0 && socket && isConnected) {
+          console.log(`Emitting messagesRead event for ${data.length} messages`);
           socket.emit('messagesRead', {
             messageIds: data.map(msg => msg.id),
             conversationId,
@@ -208,12 +226,16 @@ export default function MessagesPage() {
         
         // Update local messages state to reflect read status
         if (activeConversationRef.current?.conversationId === conversationId) {
+          console.log(`Updating read status for ${messageIds.length} messages in active conversation`);
           setMessages(prev => prev.map(message => {
             if (messageIds.includes(message.id) && message.senderUsername === username) {
+              console.log(`Marking message ${message.id} as read`);
               return { ...message, is_read: true }
             }
             return message
           }))
+        } else {
+          console.log('Read notification for non-active conversation, ignoring');
         }
       })
 
