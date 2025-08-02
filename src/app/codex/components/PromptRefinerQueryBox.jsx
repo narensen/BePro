@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 const ReactMarkdown = ({ children }) => {
   const formatText = (text) => {
@@ -206,23 +208,23 @@ const PromptRefinerQueryBox = ({
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
-                Timeline
-              </label>
-              <select
+            <div className="space-y-2">
+              <Label className="text-sm font-semibold text-gray-700">Timeline</Label>
+              <Select
                 value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-                className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 outline-none transition-all duration-300 font-mono text-gray-800"
+                onValueChange={(value) => setDuration(value)}
                 disabled={disabled || isRefining}
               >
-                <option value="">Select timeline</option>
-                <option value="1 month">1 Month</option>
-                <option value="3 months">3 Months</option>
-                <option value="6 months">6 Months</option>
-                <option value="1 year">1 Year</option>
-                <option value="2 years">2 Years</option>
-              </select>
+                <SelectTrigger className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-800 font-mono focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 transition-all duration-300">
+                  <SelectValue placeholder="Select timeline" />
+                </SelectTrigger>
+                <SelectContent className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-800 font-mono focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 transition-all duration-300">
+                  <SelectItem  value="1 month">1 Month</SelectItem>
+                  <SelectItem value="3 months">3 Months</SelectItem>
+                  <SelectItem value="6 months">6 Months</SelectItem>
+                  <SelectItem value="1 year">1 Year</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <button

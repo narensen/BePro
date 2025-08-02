@@ -2,6 +2,7 @@
 
 import { Trash2 } from 'lucide-react';
 import React from 'react';
+import { supabase } from '@/app/lib/supabase_client';
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
