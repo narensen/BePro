@@ -30,7 +30,6 @@ const PostHeader = ({ post }) => {
 
   return (
     <div className="flex items-start gap-3 mb-3">
-      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
       <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
         {avatarUrl ? (
           <img
