@@ -72,10 +72,24 @@ export default function ProfileBar({ currentUser }) {
       setLoading(true);
       setError(null);
       
+      // First, get the list of users that the current user is following
+      const { data: followingData, error: followingError } = await supabase
+        .from('followers')
+        .select('following_id')
+        .eq('follower_id', currentUser.id);
+
+      if (followingError) {
+        console.error('Error fetching following list:', followingError);
+      }
+
+      const followingIds = followingData?.map(f => f.following_id) || [];
+      console.log('User is following:', followingIds);
+
       const { data: users, error } = await supabase
         .from('profile')
         .select('id, username, email, location, university, tags, avatar_url, created_at')
         .neq('id', currentUser.id)
+        .not('id', 'in', `(${followingIds.length > 0 ? followingIds.join(',') : 'null'})`)
         .limit(100); // Fetch more users for better recommendations
 
       if (error) {

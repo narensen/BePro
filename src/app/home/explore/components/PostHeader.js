@@ -29,8 +29,8 @@ const PostHeader = ({ post }) => {
   }, [username, post]);
 
   return (
-    <div className="flex items-center gap-3 mb-2">
-      <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+    <div className="flex items-start gap-3 mb-3">
+      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
         {avatarUrl ? (
           <img
             src={avatarUrl}
@@ -56,17 +56,20 @@ const PostHeader = ({ post }) => {
           </span>
         )}
       </div>
-      <div className="flex items-center gap-2">
-        <button
-          className="font-bold text-black/80 cursor-pointer hover:underline"
-          onClick={() => window.open(`https://bepro.live/${username}`, "_blank")}
-        >
-          {`@${username}`}
-        </button>
-        <span className="text-gray-500 text-sm">·</span>
-        <span className="text-gray-500 text-sm">
-          {formatDate(post.created_at)}
-        </span>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1 flex-wrap">
+          <button
+            className="font-bold text-gray-900 hover:underline text-[15px]"
+            onClick={() => window.open(`https://bepro.live/${username}`, "_blank")}
+          >
+            {username}
+          </button>
+          <span className="text-gray-500 text-[15px]">@{username}</span>
+          <span className="text-gray-500 text-[15px]">·</span>
+          <span className="text-gray-500 text-[15px] hover:underline cursor-pointer">
+            {formatDate(post.created_at)}
+          </span>
+        </div>
       </div>
     </div>
   );

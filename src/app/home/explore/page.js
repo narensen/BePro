@@ -216,36 +216,40 @@ export default function Explore() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+    <div className="min-h-screen bg-gray-50 font-sans relative">
       <SideBar />
 
-      <div className="min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72 xl:mr-80" >
-        <div className="px-3 lg:px-6 py-4 lg:py-6 min-h-screen flex items-center justify-center">
-          <div className="w-full max-w-4xl lg:mx-auto">
-            <ExploreHeader />
-            
-            <SearchAndSort 
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              sortMode={sortMode}
-              setSortMode={setSortMode}
-            />
-
-            {filteredPosts.length === 0 ? (
-              <EmptyState searchQuery={searchQuery} sortMode={sortMode} />
-            ) : (
-              <PostsList
-                posts={filteredPosts}
-                userInteractions={userInteractions}
-                onInteraction={handleInteraction}
-                onComment={handleComment}
-                onViewPost={handleViewPostCallback}
-                userProfile={userProfile}
-                searchQuery={searchQuery}
-                sortMode={sortMode}
-              />
-            )}
+      <div className="min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72 xl:mr-80">
+        <div className="max-w-2xl mx-auto">
+          <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200 p-4 z-10">
+            <h1 className="text-xl font-bold text-gray-900">Home</h1>
           </div>
+            
+          <SearchAndSort 
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            sortMode={sortMode}
+            setSortMode={setSortMode}
+          />
+
+          {filteredPosts.length === 0 ? (
+            <div className="p-8 text-center">
+              <div className="text-gray-500">
+                {searchQuery ? 'No posts found matching your search' : 'No posts available'}
+              </div>
+            </div>
+          ) : (
+            <PostsList
+              posts={filteredPosts}
+              userInteractions={userInteractions}
+              onInteraction={handleInteraction}
+              onComment={handleComment}
+              onViewPost={handleViewPostCallback}
+              userProfile={userProfile}
+              searchQuery={searchQuery}
+              sortMode={sortMode}
+            />
+          )}
         </div>
       </div>
 

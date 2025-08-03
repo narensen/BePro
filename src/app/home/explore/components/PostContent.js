@@ -4,17 +4,17 @@ import { highlightQuery } from '../utils/highlightQuery';
 const PostContent = ({ post, searchQuery }) => (
   <div>
     {/* Highlighted Post Content */}
-    <p className="text-gray-800 mb-4 leading-relaxed transition-colors duration-300 hover:text-gray-900">
+    <p className="text-gray-900 mb-3 leading-relaxed text-[15px]">
       {highlightQuery(post.content, searchQuery)}
     </p>
 
     {/* Post Tags */}
     {post.tags && post.tags.length > 0 && (
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-3">
         {post.tags.map((tag, index) => (
           <span
             key={index}
-            className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm transition-all duration-300 hover:bg-yellow-200 hover:scale-105 cursor-pointer"
+            className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium hover:bg-blue-200 transition-colors cursor-pointer"
           >
             #{tag}
           </span>

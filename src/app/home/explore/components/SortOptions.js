@@ -7,15 +7,15 @@ export default function SortOptions({ sortMode, setSortMode }) {
   ];
 
   return (
-    <div className="flex flex-wrap gap-2 sm:gap-3">
+    <div className="flex gap-1 mb-4 border-b border-gray-200">
       {sortOptions.map((mode) => (
         <button
           key={mode.key}
           onClick={() => setSortMode(mode.key)}
-          className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 ${
+          className={`px-4 py-3 text-sm font-medium transition-all duration-200 border-b-2 hover:bg-gray-50 ${
             sortMode === mode.key
-              ? 'bg-white text-orange-600 shadow-lg scale-105'
-              : 'bg-white/20 text-white hover:bg-white/30 hover:scale-105'
+              ? 'border-blue-500 text-blue-600 bg-blue-50/50'
+              : 'border-transparent text-gray-600 hover:text-gray-900'
           }`}
           title={mode.desc}
         >

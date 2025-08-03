@@ -39,11 +39,11 @@ const CommentSection = ({
     <div className={`overflow-hidden transition-all duration-500 ease-in-out ${
       showComments ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
     }`}>
-      <div className="px-6 py-4 bg-white border-t border-gray-200 space-y-4">
+      <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 space-y-3">
         {/* Add Comment */}
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           <textarea
-            className="flex-1 border border-gray-300 rounded-lg p-3 text-sm resize-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300 hover:shadow-sm focus:shadow-md"
+            className="flex-1 border border-gray-300 rounded-lg p-2 text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             rows={2}
             placeholder="Write a comment..."
             value={commentText}
@@ -51,7 +51,7 @@ const CommentSection = ({
           />
           <button
             onClick={handleComment}
-            className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            className="bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
             disabled={!commentText.trim()}
           >
             Post
@@ -67,13 +67,13 @@ const CommentSection = ({
             </div>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {organizedComments.map((comment, index) => (
               <div 
                 key={comment.id} 
-                className="transform transition-all duration-300 hover:scale-[1.01]"
+                className="transition-all duration-200"
                 style={{
-                  animation: `slideInUp 0.3s ease-out ${index * 0.1}s both`
+                  animation: `slideInUp 0.2s ease-out ${index * 0.05}s both`
                 }}
               >
                 <Comment 
@@ -85,7 +85,7 @@ const CommentSection = ({
               </div>
             ))}
             {organizedComments.length === 0 && !loadingComments && (
-              <p className="text-gray-500 text-sm text-center py-4">
+              <p className="text-gray-500 text-sm text-center py-3">
                 No comments yet. Be the first to comment!
               </p>
             )}

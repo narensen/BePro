@@ -5,8 +5,10 @@ import SortOptions from './SortOptions';
 
 export default function SearchAndSort({ searchQuery, setSearchQuery, sortMode, setSortMode }) {
   return (
-    <div className="mb-6 lg:mb-8 space-y-4">
-      <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+    <div className="bg-white border-b border-gray-200">
+      <div className="p-4">
+        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      </div>
       <SortOptions sortMode={sortMode} setSortMode={setSortMode} />
     </div>
   );
