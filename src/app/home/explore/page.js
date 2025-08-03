@@ -28,18 +28,39 @@ import {
   getRecommendedPostsByCategory,
   calculateUserCringeTolerance 
 } from './utils/recommendationSystem';
+
+// Mock data for demo
+import { mockPosts, mockUserInteractions, mockUserProfile } from './utils/mockData';
+
 import './styles.css';
 
 export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortMode, setSortMode] = useState('recommended');
   const [postInteractions, setPostInteractions] = useState([]);
+  const [demoMode, setDemoMode] = useState(false); // Demo mode toggle
   const router = useRouter();
   const { user } = useUserStore();
   const { loading, posts, setPosts, userInteractions, setUserInteractions, userProfile } = usePostData(user);
 
+  // Toggle demo mode with URL parameter
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('demo') === 'true') {
+      setDemoMode(true);
+    }
+  }, []);
+
+  // Use mock data when in demo mode
+  const currentPosts = demoMode ? mockPosts : posts;
+  const currentUserInteractions = demoMode ? mockUserInteractions : userInteractions;
+  const currentUserProfile = demoMode ? mockUserProfile : userProfile;
+  const isLoading = demoMode ? false : loading;
+
   // Fetch user interaction history for better recommendations
   useEffect(() => {
+    if (demoMode) return; // Skip for demo mode
+    
     const fetchInteractionHistory = async () => {
       if (!userProfile?.id) return;
       
@@ -62,22 +83,22 @@ export default function Explore() {
     };
 
     fetchInteractionHistory();
-  }, [userProfile?.id]);
+  }, [userProfile?.id, demoMode]);
 
   // Calculate user's cringe tolerance based on their interaction history
   const userCringeTolerance = useMemo(() => {
-    if (!userInteractions || !posts.length) return 0.5;
-    return calculateUserCringeTolerance(userInteractions, posts);
-  }, [userInteractions, posts]);
+    if (!currentUserInteractions || !currentPosts.length) return 0.5;
+    return calculateUserCringeTolerance(currentUserInteractions, currentPosts);
+  }, [currentUserInteractions, currentPosts]);
 
   // Get recommended posts based on selected sort mode
   const sortedPosts = useMemo(() => {
-    if (!posts.length || !userProfile) return posts;
+    if (!currentPosts.length || !currentUserProfile) return currentPosts;
 
     const categorizedPosts = getRecommendedPostsByCategory(
-      posts,
-      userProfile,
-      userInteractions,
+      currentPosts,
+      currentUserProfile,
+      currentUserInteractions,
       postInteractions,
       userCringeTolerance
     );
@@ -85,9 +106,9 @@ export default function Explore() {
     switch (sortMode) {
       case 'recommended':
         return getRecommendedPosts(
-          posts,
-          userProfile,
-          userInteractions,
+          currentPosts,
+          currentUserProfile,
+          currentUserInteractions,
           postInteractions,
           userCringeTolerance
         );
@@ -98,9 +119,9 @@ export default function Explore() {
       case 'lowCringe':
         return categorizedPosts.lowCringe;
       default:
-        return posts;
+        return currentPosts;
     }
-  }, [posts, userProfile, userInteractions, postInteractions, userCringeTolerance, sortMode]);
+  }, [currentPosts, currentUserProfile, currentUserInteractions, postInteractions, userCringeTolerance, sortMode]);
 
   // Filter posts based on search
   const filteredPosts = useMemo(() => {
@@ -114,6 +135,18 @@ export default function Explore() {
   }, [sortedPosts, searchQuery]);
 
   const handleInteraction = useCallback(async (type, postId, currentState) => {
+    if (demoMode) {
+      // Demo mode: just update local state
+      setUserInteractions(prev => ({
+        ...prev,
+        [postId]: {
+          ...prev[postId],
+          [type]: !currentState
+        }
+      }));
+      return true;
+    }
+
     const userId = userProfile?.id;
     if (!userId) return;
 
@@ -171,9 +204,14 @@ export default function Explore() {
     } catch (error) {
       console.error(`Error handling ${type}:`, error);
     }
-  }, [userProfile?.id, setPosts, setUserInteractions, posts]);
+  }, [userProfile?.id, setPosts, setUserInteractions, posts, demoMode]);
 
   const handleComment = useCallback(async (postId, content) => {
+    if (demoMode) {
+      // Demo mode: just return success
+      return true;
+    }
+
     try {
       const success = await submitComment(postId, userProfile?.id, content);
       if (success !== false) {
@@ -187,9 +225,11 @@ export default function Explore() {
     } catch (error) {
       console.error('Error submitting comment:', error);
     }
-  }, [userProfile?.id, setPosts]);
+  }, [userProfile?.id, setPosts, demoMode]);
 
   const handleViewPostCallback = useCallback(async (postId) => {
+    if (demoMode) return true; // Demo mode: no-op
+
     try {
       const success = await handleViewPost(postId, userProfile?.id);
       if (success) {
@@ -202,14 +242,19 @@ export default function Explore() {
     } catch (error) {
       console.error('Error handling view:', error);
     }
-  }, [userProfile?.id, setPosts]);
+  }, [userProfile?.id, setPosts, demoMode]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
         <SideBar />
         <div className="pt-16 lg:pt-0 lg:ml-72">
-          <LoadingSpinner />
+          <div className="max-w-2xl mx-auto">
+            <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200/50 p-4 z-10 shadow-xl rounded-t-2xl">
+              <h1 className="text-xl font-black text-gray-900">Explore</h1>
+            </div>
+            <LoadingSpinner showSkeleton={true} />
+          </div>
         </div>
       </div>
     );
@@ -222,7 +267,20 @@ export default function Explore() {
       <div className="min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72 xl:mr-80">
         <div className="max-w-2xl mx-auto">
           <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200/50 p-4 z-10 shadow-xl rounded-t-2xl">
-            <h1 className="text-xl font-black text-gray-900">Explore</h1>
+            <div className="flex items-center justify-between">
+              <h1 className="text-xl font-black text-gray-900">Explore</h1>
+              {/* Demo mode toggle */}
+              <button
+                onClick={() => setDemoMode(!demoMode)}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
+                  demoMode 
+                    ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                {demoMode ? '🎭 Demo Mode' : 'Enable Demo'}
+              </button>
+            </div>
           </div>
             
           <SearchAndSort 
@@ -241,11 +299,11 @@ export default function Explore() {
           ) : (
             <PostsList
               posts={filteredPosts}
-              userInteractions={userInteractions}
+              userInteractions={currentUserInteractions}
               onInteraction={handleInteraction}
               onComment={handleComment}
               onViewPost={handleViewPostCallback}
-              userProfile={userProfile}
+              userProfile={currentUserProfile}
               searchQuery={searchQuery}
               sortMode={sortMode}
             />
@@ -254,7 +312,7 @@ export default function Explore() {
       </div>
 
       <div className="hidden xl:block">
-        <ProfileBar currentUser={userProfile} />
+        <ProfileBar currentUser={currentUserProfile} />
       </div>
     </div>
   );
