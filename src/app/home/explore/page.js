@@ -209,7 +209,12 @@ export default function Explore() {
       <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
         <SideBar />
         <div className="pt-16 lg:pt-0 lg:ml-72">
-          <LoadingSpinner />
+          <div className="max-w-2xl mx-auto">
+            <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200/50 p-4 z-10 shadow-xl rounded-t-2xl">
+              <h1 className="text-xl font-black text-gray-900">Explore</h1>
+            </div>
+            <LoadingSpinner showSkeleton={true} />
+          </div>
         </div>
       </div>
     );

@@ -1,5 +1,63 @@
 import React from 'react';
-import { ThumbsUp, ThumbsDown, MessageCircle, Bookmark, Eye, ChevronDown, ChevronUp } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ThumbsUp, ThumbsDown, MessageCircle, Bookmark, Eye, Share } from 'lucide-react';
+
+const InteractionButton = ({ 
+  onClick, 
+  active, 
+  hoverColor, 
+  activeColor, 
+  icon: Icon, 
+  count, 
+  ariaLabel,
+  scale = 1.1 
+}) => (
+  <motion.button 
+    onClick={onClick}
+    className={`flex items-center gap-2 px-3 py-2 rounded-full transition-all duration-200 group relative ${
+      active 
+        ? `${activeColor} shadow-sm` 
+        : `text-gray-500 hover:${hoverColor}`
+    }`}
+    whileHover={{ scale: 1.02 }}
+    whileTap={{ scale: 0.98 }}
+    aria-label={ariaLabel}
+  >
+    {/* Background highlight on hover */}
+    <motion.div
+      className={`absolute inset-0 rounded-full ${
+        active ? activeColor.replace('text-', 'bg-').replace('-700', '-100/80') : ''
+      }`}
+      initial={{ scale: 0, opacity: 0 }}
+      whileHover={{ 
+        scale: active ? 1 : 1.2, 
+        opacity: active ? 1 : 0.1,
+        backgroundColor: active ? undefined : hoverColor.replace('text-', '').replace('-600', '') === 'amber' ? 'rgb(251 191 36 / 0.1)' : 
+                         hoverColor.replace('text-', '').replace('-600', '') === 'blue' ? 'rgb(59 130 246 / 0.1)' :
+                         hoverColor.replace('text-', '').replace('-600', '') === 'red' ? 'rgb(239 68 68 / 0.1)' :
+                         'rgb(156 163 175 / 0.1)'
+      }}
+      transition={{ duration: 0.2 }}
+    />
+    
+    {/* Icon with bounce animation */}
+    <motion.div
+      whileHover={{ scale: scale, rotate: active ? [0, -10, 10, 0] : 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      <Icon size={18} className="relative z-10" />
+    </motion.div>
+    
+    {/* Count with subtle scale */}
+    <motion.span 
+      className="text-sm font-medium relative z-10 min-w-[1rem] text-center"
+      whileHover={{ scale: 1.05 }}
+      transition={{ duration: 0.2 }}
+    >
+      {count || 0}
+    </motion.span>
+  </motion.button>
+);
 
 const PostInteractions = ({ 
   post, 
@@ -33,51 +91,87 @@ const PostInteractions = ({
     await onInteraction('bookmark', post.id, isCurrentlyBookmarked);
   };
 
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Check out this post',
+          text: post.content.substring(0, 100) + '...',
+          url: window.location.href
+        });
+      } catch (err) {
+        console.log('Share cancelled');
+      }
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(window.location.href);
+      // You could add a toast notification here
+    }
+  };
+
   return (
-    <div className="px-4 pb-2">
-      <div className="flex items-center justify-between max-w-md">
-        <button 
+    <motion.div 
+      className="px-4 sm:px-6 pb-3 border-t border-gray-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.1 }}
+    >
+      <div className="flex items-center justify-between max-w-lg">
+        {/* Like Button */}
+        <InteractionButton
           onClick={() => handleLikeDislike('like', post.id, userInteractions[post.id]?.like)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-200 hover:bg-amber-100/50 group ${
-            userInteractions[post.id]?.like 
-              ? 'text-amber-700 bg-amber-100/50' 
-              : 'text-gray-600 hover:text-amber-700'
-          }`}
-        >
-          <ThumbsUp size={16} className="transition-transform duration-200 group-hover:scale-110" />
-          <span className="text-sm font-medium">{post.like_count || 0}</span>
-        </button>
+          active={userInteractions[post.id]?.like}
+          hoverColor="text-amber-600"
+          activeColor="text-amber-700 bg-amber-100/80"
+          icon={ThumbsUp}
+          count={post.like_count}
+          ariaLabel="Like this post"
+          scale={1.2}
+        />
 
-        <button 
+        {/* Comment Button */}
+        <InteractionButton
           onClick={toggleComments}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-200 hover:bg-amber-100/50 group ${
-            showComments 
-              ? 'text-amber-700 bg-amber-100/50' 
-              : 'text-gray-600 hover:text-amber-700'
-          }`}
-        >
-          <MessageCircle size={16} className="transition-transform duration-200 group-hover:scale-110" />
-          <span className="text-sm font-medium">{comments?.length || post.comment_count || 0}</span>
-        </button>
+          active={showComments}
+          hoverColor="text-blue-600"
+          activeColor="text-blue-700 bg-blue-100/80"
+          icon={MessageCircle}
+          count={comments?.length || post.comment_count}
+          ariaLabel="View comments"
+        />
 
-        <button 
+        {/* Share Button */}
+        <InteractionButton
+          onClick={handleShare}
+          active={false}
+          hoverColor="text-green-600"
+          activeColor="text-green-700 bg-green-100/80"
+          icon={Share}
+          count={0}
+          ariaLabel="Share this post"
+        />
+
+        {/* Dislike Button */}
+        <InteractionButton
           onClick={() => handleLikeDislike('dislike', post.id, userInteractions[post.id]?.dislike)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-200 hover:bg-gray-100/50 group ${
-            userInteractions[post.id]?.dislike 
-              ? 'text-gray-700 bg-gray-100/50' 
-              : 'text-gray-600 hover:text-gray-700'
-          }`}
-        >
-          <ThumbsDown size={16} className="transition-transform duration-200 group-hover:scale-110" />
-          <span className="text-sm font-medium">{post.dislike_count || 0}</span>
-        </button>
+          active={userInteractions[post.id]?.dislike}
+          hoverColor="text-red-600"
+          activeColor="text-red-700 bg-red-100/80"
+          icon={ThumbsDown}
+          count={post.dislike_count}
+          ariaLabel="Dislike this post"
+        />
 
-        <div className="flex items-center gap-1 text-gray-500 px-3 py-1.5">
+        {/* View Count - Static */}
+        <motion.div 
+          className="flex items-center gap-2 px-3 py-2 text-gray-400"
+          whileHover={{ scale: 1.05 }}
+        >
           <Eye size={16} />
-          <span className="text-sm font-medium text-gray-600">{post.view_count || 0}</span>
-        </div>
+          <span className="text-sm font-medium">{post.view_count || 0}</span>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
