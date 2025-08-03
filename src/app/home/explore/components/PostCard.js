@@ -96,7 +96,7 @@ const PostCard = ({
       layout
     >
       {/* Clean minimal post design - no heavy cards */}
-      <div className="relative bg-white/70 backdrop-blur-sm transition-all duration-300 ease-out hover:bg-white/80 rounded-xl p-6 mx-4">
+      <div className="relative bg-white/70 backdrop-blur-sm transition-all duration-300 ease-out hover:bg-white/80 rounded-xl p-6">
         
         {/* Main content area with improved spacing */}
         <div className="relative">

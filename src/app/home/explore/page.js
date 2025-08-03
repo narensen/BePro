@@ -273,13 +273,13 @@ export default function Explore() {
     }
   }, [userProfile?.id, setPosts]);
 
-  if (loading) {
+  if (loading && displayPosts.length === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
         <SideBar />
         <div className="pt-16 lg:pt-0 lg:ml-72">
           <div className="max-w-2xl mx-auto">
-            <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200/50 p-4 z-10 shadow-xl rounded-t-2xl">
+            <div className="sticky top-0 bg-white/90 backdrop-blur-sm border-b border-white/30 p-4 z-10 rounded-t-xl mb-4">
               <h1 className="text-xl font-black text-gray-900">Explore</h1>
             </div>
             <LoadingSpinner showSkeleton={true} />
@@ -295,7 +295,7 @@ export default function Explore() {
 
       <div className="min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72 xl:mr-80">
         <div className="max-w-2xl mx-auto">
-          <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200/50 p-4 z-10 shadow-xl rounded-t-2xl">
+          <div className="sticky top-0 bg-white/90 backdrop-blur-sm border-b border-white/30 p-4 z-10 rounded-t-xl mb-4">
             <h1 className="text-xl font-black text-gray-900">Explore</h1>
           </div>
             

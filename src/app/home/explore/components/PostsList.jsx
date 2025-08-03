@@ -46,7 +46,7 @@ export default function PostsList({
 }) {
   return (
     <motion.div 
-      className="space-y-0"
+      className="space-y-4 py-4"
       variants={containerVariants}
       initial="hidden"
       animate="show"
