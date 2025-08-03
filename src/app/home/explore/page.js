@@ -221,8 +221,8 @@ export default function Explore() {
 
       <div className="min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72 xl:mr-80">
         <div className="max-w-2xl mx-auto">
-          <div className="sticky top-0 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 backdrop-blur-sm border-b border-amber-400/30 p-4 z-10 shadow-xl rounded-t-2xl">
-            <h1 className="text-xl font-black text-amber-300">Explore</h1>
+          <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200/50 p-4 z-10 shadow-xl rounded-t-2xl">
+            <h1 className="text-xl font-black text-gray-900">Explore</h1>
           </div>
             
           <SearchAndSort 
