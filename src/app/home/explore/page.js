@@ -216,13 +216,13 @@ export default function Explore() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans relative">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
       <SideBar />
 
       <div className="min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72 xl:mr-80">
         <div className="max-w-2xl mx-auto">
-          <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200 p-4 z-10">
-            <h1 className="text-xl font-bold text-gray-900">Home</h1>
+          <div className="sticky top-0 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 backdrop-blur-sm border-b border-amber-400/30 p-4 z-10 shadow-xl">
+            <h1 className="text-xl font-black text-amber-300">Explore</h1>
           </div>
             
           <SearchAndSort 

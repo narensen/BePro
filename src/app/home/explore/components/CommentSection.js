@@ -39,11 +39,11 @@ const CommentSection = ({
     <div className={`overflow-hidden transition-all duration-500 ease-in-out ${
       showComments ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
     }`}>
-      <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 space-y-3">
+      <div className="px-4 py-3 bg-amber-50/50 backdrop-blur-sm border-t border-amber-200/50 space-y-3">
         {/* Add Comment */}
         <div className="flex gap-2">
           <textarea
-            className="flex-1 border border-gray-300 rounded-lg p-2 text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+            className="flex-1 border border-amber-300/50 rounded-lg p-2 text-sm resize-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all duration-200 bg-white/90 backdrop-blur-sm"
             rows={2}
             placeholder="Write a comment..."
             value={commentText}
@@ -51,7 +51,7 @@ const CommentSection = ({
           />
           <button
             onClick={handleComment}
-            className="bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+            className="bg-gradient-to-r from-amber-500 to-yellow-500 text-gray-900 px-3 py-2 rounded-lg hover:from-amber-600 hover:to-yellow-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-bold shadow-md hover:scale-105"
             disabled={!commentText.trim()}
           >
             Post

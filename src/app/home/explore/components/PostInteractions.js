@@ -38,10 +38,10 @@ const PostInteractions = ({
       <div className="flex items-center justify-between max-w-md">
         <button 
           onClick={() => handleLikeDislike('like', post.id, userInteractions[post.id]?.like)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-200 hover:bg-red-50 group ${
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-200 hover:bg-amber-100/50 group ${
             userInteractions[post.id]?.like 
-              ? 'text-red-600' 
-              : 'text-gray-500 hover:text-red-600'
+              ? 'text-amber-700 bg-amber-100/50' 
+              : 'text-gray-600 hover:text-amber-700'
           }`}
         >
           <ThumbsUp size={16} className="transition-transform duration-200 group-hover:scale-110" />
@@ -50,10 +50,10 @@ const PostInteractions = ({
 
         <button 
           onClick={toggleComments}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-200 hover:bg-blue-50 group ${
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-200 hover:bg-amber-100/50 group ${
             showComments 
-              ? 'text-blue-600' 
-              : 'text-gray-500 hover:text-blue-600'
+              ? 'text-amber-700 bg-amber-100/50' 
+              : 'text-gray-600 hover:text-amber-700'
           }`}
         >
           <MessageCircle size={16} className="transition-transform duration-200 group-hover:scale-110" />
@@ -62,10 +62,10 @@ const PostInteractions = ({
 
         <button 
           onClick={() => handleLikeDislike('dislike', post.id, userInteractions[post.id]?.dislike)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-200 hover:bg-gray-50 group ${
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all duration-200 hover:bg-gray-100/50 group ${
             userInteractions[post.id]?.dislike 
-              ? 'text-gray-700' 
-              : 'text-gray-500 hover:text-gray-700'
+              ? 'text-gray-700 bg-gray-100/50' 
+              : 'text-gray-600 hover:text-gray-700'
           }`}
         >
           <ThumbsDown size={16} className="transition-transform duration-200 group-hover:scale-110" />
@@ -74,7 +74,7 @@ const PostInteractions = ({
 
         <div className="flex items-center gap-1 text-gray-500 px-3 py-1.5">
           <Eye size={16} />
-          <span className="text-sm font-medium">{post.view_count || 0}</span>
+          <span className="text-sm font-medium text-gray-600">{post.view_count || 0}</span>
         </div>
       </div>
     </div>

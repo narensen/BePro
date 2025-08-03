@@ -232,12 +232,12 @@ export default function ProfileBar({ currentUser }) {
     if (!user) return null; 
     
     return (
-      <div className="bg-white rounded-xl p-4 hover:scale-105 transition-all duration-300 cursor-pointer shadow-lg">
+      <div className="bg-gradient-to-r from-amber-400/10 to-yellow-400/10 backdrop-blur-sm border border-amber-400/30 rounded-xl p-4 hover:scale-105 hover:from-amber-400/20 hover:to-yellow-400/20 transition-all duration-300 cursor-pointer shadow-lg">
         <div 
           className="flex items-center space-x-3"
           onClick={() => handleUserClick(user.username)}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-yellow-400 rounded-full flex items-center justify-center flex-shrink-0">
+          <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-yellow-500 rounded-full flex items-center justify-center flex-shrink-0 border-2 border-amber-400/50">
             {user.avatar_url ? (
               <img 
                 src={user.avatar_url} 
@@ -251,18 +251,18 @@ export default function ProfileBar({ currentUser }) {
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-bold truncate text-lg hover:text-amber-600 transition-colors">
+            <p className="font-bold truncate text-lg text-amber-300 hover:text-amber-200 transition-colors">
               {user.username || user.email?.split('@')[0] || 'Anonymous'}
             </p>
             {showSimilarity && user.similarity !== undefined && (
               <div className="flex items-center mt-2">
-                <div className="w-20 h-2 bg-gray-600 rounded-full overflow-hidden">
+                <div className="w-20 h-2 bg-gray-700 rounded-full overflow-hidden">
                   <div 
                     className="h-full bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full transition-all duration-300"
                     style={{ width: `${user.similarity * 100}%` }}
                   />
                 </div>
-                <span className="text-xs text-gray-400 ml-2 font-medium">
+                <span className="text-xs text-amber-200/70 ml-2 font-medium">
                   {Math.round(user.similarity * 100)}% match
                 </span>
               </div>
@@ -276,13 +276,13 @@ export default function ProfileBar({ currentUser }) {
             {user.tags.slice(0, 3).map((tag, index) => (
               <span
                 key={index}
-                className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 text-xs rounded-full font-medium"
+                className="px-3 py-1 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 text-amber-200 text-xs rounded-full font-medium border border-amber-400/30"
               >
                 {tag}
               </span>
             ))}
             {user.tags.length > 3 && (
-              <span className="text-xs text-gray-400 flex items-center px-2">
+              <span className="text-xs text-amber-200/70 flex items-center px-2">
                 +{user.tags.length - 3} more
               </span>
             )}
@@ -296,11 +296,11 @@ export default function ProfileBar({ currentUser }) {
     <button
       onClick={onClick}
       disabled={loading}
-      className="w-full mt-4 py-3 px-4 bg-gradient-to-r from-yellow-400 to-orange-400 text-black font-bold rounded-xl hover:from-yellow-500 hover:to-orange-500 transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+      className="w-full mt-4 py-3 px-4 bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 font-bold rounded-xl hover:from-yellow-500 hover:to-orange-500 transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:scale-105"
     >
       {loading ? (
         <>
-          <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-gray-900/30 border-t-gray-900 rounded-full animate-spin" />
           <span>Loading...</span>
         </>
       ) : (
@@ -315,21 +315,21 @@ export default function ProfileBar({ currentUser }) {
   );
 
   return (
-    <div className="w-80 bg-white/90 backdrop-blur-sm border-r border-gray-200/50 border-l-2 border-amber-400 h-full fixed right-0 top-0 overflow-y-auto shadow-2xl font-mono z-30">
+    <div className="w-80 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-l border-amber-400/30 h-full fixed right-0 top-0 overflow-y-auto shadow-2xl font-mono z-30">
       <div className="p-6">
         {/* Header */}
         <div className="mb-6">
-          <h2 className="text-2xl font-black mb-2">Discover People</h2>
-          <p className="text-gray-600 text-sm">Find and connect with others</p>
+          <h2 className="text-2xl font-black mb-2 text-amber-300">Discover People</h2>
+          <p className="text-amber-200 text-sm">Find and connect with others</p>
         </div>
 
         {/* Error Display */}
         {error && (
-          <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl">
-            <p className="text-red-200 text-sm">{error}</p>
+          <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl backdrop-blur-sm">
+            <p className="text-red-300 text-sm">{error}</p>
             <button
               onClick={() => setError(null)}
-              className="mt-2 text-red-300 hover:text-red-100 text-xs underline"
+              className="mt-2 text-red-400 hover:text-red-200 text-xs underline"
             >
               Dismiss
             </button>
@@ -344,13 +344,13 @@ export default function ProfileBar({ currentUser }) {
               placeholder="Search users..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-3 bg-black/80 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 bg-gray-800/90 border border-amber-400/30 rounded-xl text-amber-100 placeholder-amber-300/60 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition-all backdrop-blur-sm"
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               {isSearching ? (
-                <div className="w-5 h-5 border-2 border-gray-400 border-t-amber-400 rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
               ) : (
-                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               )}
@@ -361,18 +361,18 @@ export default function ProfileBar({ currentUser }) {
         {/* Search Results */}
         {searchQuery && (
           <div className="mb-8">
-            <h3 className="text-xl font-bold text-amber-300 mb-4 flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <h3 className="text-xl font-black text-amber-300 mb-4 flex items-center">
+              <svg className="w-5 h-5 mr-2 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               Search Results
             </h3>
             {searchResults.length === 0 ? (
               <div className="text-center py-8">
-                <svg className="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-16 h-16 text-amber-400/50 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                <p className="text-gray-400 text-sm">
+                <p className="text-amber-200 text-sm">
                   {isSearching ? 'Searching...' : 'No users found'}
                 </p>
               </div>
@@ -396,8 +396,8 @@ export default function ProfileBar({ currentUser }) {
         {/* Recommendations */}
         {!searchQuery && (
           <div>
-            <h3 className="text-xl font-bold mb-4 flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <h3 className="text-xl font-black text-amber-300 mb-4 flex items-center">
+              <svg className="w-5 h-5 mr-2 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               People You May Know
@@ -405,17 +405,17 @@ export default function ProfileBar({ currentUser }) {
             {loading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="text-center">
-                  <div className="w-8 h-8 border-2 border-gray-600 border-t-amber-400 rounded-full animate-spin mx-auto mb-4" />
-                  <p className="text-gray-400 text-sm">Finding recommendations...</p>
+                  <div className="w-8 h-8 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin mx-auto mb-4" />
+                  <p className="text-amber-200 text-sm">Finding recommendations...</p>
                 </div>
               </div>
             ) : recommendations.length === 0 ? (
               <div className="text-center py-8">
-                <svg className="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-16 h-16 text-amber-400/50 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                <p className="text-gray-400 text-sm mb-2">No recommendations available</p>
-                <p className="text-gray-500 text-xs">
+                <p className="text-amber-200 text-sm mb-2">No recommendations available</p>
+                <p className="text-amber-300/70 text-xs">
                   Add more tags and profile information to get better suggestions!
                 </p>
               </div>

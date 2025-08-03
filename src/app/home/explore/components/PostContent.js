@@ -14,7 +14,7 @@ const PostContent = ({ post, searchQuery }) => (
         {post.tags.map((tag, index) => (
           <span
             key={index}
-            className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium hover:bg-blue-200 transition-colors cursor-pointer"
+            className="bg-gradient-to-r from-yellow-400/20 to-orange-400/20 text-amber-800 px-3 py-1 rounded-full text-xs font-bold hover:from-yellow-400/30 hover:to-orange-400/30 transition-all duration-200 cursor-pointer border border-amber-300/30"
           >
             #{tag}
           </span>

@@ -83,7 +83,7 @@ const PostCard = ({
   const handleLoadReplies = async (commentId) => true;
 
   return (
-    <div className="border-b border-gray-200 hover:bg-gray-50/50 transition-colors duration-200 cursor-pointer">
+    <div className="border-b border-gray-200/50 hover:bg-amber-50/50 transition-colors duration-200 cursor-pointer">
       <div className="p-4">
         <PostHeader post={post} />
         <PostContent post={post} searchQuery={searchQuery} /> 

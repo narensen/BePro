@@ -14,7 +14,7 @@ export default function PostsList({
   sortMode 
 }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+    <div className="bg-white/95 backdrop-blur-sm border border-white/30 rounded-2xl overflow-hidden shadow-xl">
       {posts.map((post, index) => (
         <motion.div 
           key={post.id} 
