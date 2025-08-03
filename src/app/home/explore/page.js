@@ -29,8 +29,7 @@ import {
   calculateUserCringeTolerance 
 } from './utils/recommendationSystem';
 
-// Mock data for demo
-import { mockPosts, mockUserInteractions, mockUserProfile } from './utils/mockData';
+
 
 import './styles.css';
 
@@ -38,29 +37,78 @@ export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortMode, setSortMode] = useState('recommended');
   const [postInteractions, setPostInteractions] = useState([]);
-  const [demoMode, setDemoMode] = useState(false); // Demo mode toggle
   const router = useRouter();
   const { user } = useUserStore();
   const { loading, posts, setPosts, userInteractions, setUserInteractions, userProfile } = usePostData(user);
 
-  // Toggle demo mode with URL parameter
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('demo') === 'true') {
-      setDemoMode(true);
+  // Temporary mock data for testing the new design
+  const mockPosts = [
+    {
+      id: 1,
+      content: "Just completed my first full-stack project using Next.js and Supabase! 🚀 The learning curve was steep but totally worth it. Building real-time features with PostgreSQL was amazing.",
+      username: "alexdev",
+      email: "alex@example.com",
+      created_at: "2024-01-15T10:30:00Z",
+      like_count: 24,
+      dislike_count: 2,
+      comment_count: 8,
+      view_count: 156,
+      bookmark_count: 12,
+      tags: ["nextjs", "supabase", "fullstack", "postgresql"],
+      user_role: "Developer"
+    },
+    {
+      id: 2,
+      content: "Hot take: TypeScript isn't just about catching bugs - it's about making your code self-documenting and improving developer experience. Once you go TypeScript, you never go back! 💙",
+      username: "sarah_codes",
+      email: "sarah@example.com", 
+      created_at: "2024-01-15T08:15:00Z",
+      like_count: 67,
+      dislike_count: 5,
+      comment_count: 23,
+      view_count: 342,
+      bookmark_count: 31,
+      tags: ["typescript", "dx", "webdev"],
+      user_role: "Senior Engineer"
+    },
+    {
+      id: 3,
+      content: "Successfully deployed my React Native app to both iOS and Android stores! 📱✨ The cross-platform development experience was smoother than expected. Expo made everything so much easier.",
+      username: "mobile_mike",
+      email: "mike@example.com",
+      created_at: "2024-01-14T16:45:00Z",
+      like_count: 89,
+      dislike_count: 1,
+      comment_count: 15,
+      view_count: 278,
+      bookmark_count: 45,
+      tags: ["reactnative", "expo", "mobile", "crossplatform"],
+      media_url: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500&h=300&fit=crop"
     }
-  }, []);
+  ];
 
-  // Use mock data when in demo mode
-  const currentPosts = demoMode ? mockPosts : posts;
-  const currentUserInteractions = demoMode ? mockUserInteractions : userInteractions;
-  const currentUserProfile = demoMode ? mockUserProfile : userProfile;
-  const isLoading = demoMode ? false : loading;
+  const mockUserInteractions = {
+    1: { like: true, bookmark: false },
+    2: { like: false, bookmark: true },
+    3: { like: true, bookmark: true }
+  };
+
+  const mockUserProfile = {
+    id: "user123",
+    username: "demo_user",
+    email: "demo@example.com",
+    avatar_url: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+  };
+
+  // Use mock data when no real posts are available for design testing
+  const displayPosts = posts.length > 0 ? posts : mockPosts;
+  const displayUserInteractions = Object.keys(userInteractions).length > 0 ? userInteractions : mockUserInteractions;
+  const displayUserProfile = userProfile || mockUserProfile;
+
+
 
   // Fetch user interaction history for better recommendations
   useEffect(() => {
-    if (demoMode) return; // Skip for demo mode
-    
     const fetchInteractionHistory = async () => {
       if (!userProfile?.id) return;
       
@@ -83,22 +131,22 @@ export default function Explore() {
     };
 
     fetchInteractionHistory();
-  }, [userProfile?.id, demoMode]);
+  }, [userProfile?.id]);
 
   // Calculate user's cringe tolerance based on their interaction history
   const userCringeTolerance = useMemo(() => {
-    if (!currentUserInteractions || !currentPosts.length) return 0.5;
-    return calculateUserCringeTolerance(currentUserInteractions, currentPosts);
-  }, [currentUserInteractions, currentPosts]);
+    if (!displayUserInteractions || !displayPosts.length) return 0.5;
+    return calculateUserCringeTolerance(displayUserInteractions, displayPosts);
+  }, [displayUserInteractions, displayPosts]);
 
   // Get recommended posts based on selected sort mode
   const sortedPosts = useMemo(() => {
-    if (!currentPosts.length || !currentUserProfile) return currentPosts;
+    if (!displayPosts.length || !displayUserProfile) return displayPosts;
 
     const categorizedPosts = getRecommendedPostsByCategory(
-      currentPosts,
-      currentUserProfile,
-      currentUserInteractions,
+      displayPosts,
+      displayUserProfile,
+      displayUserInteractions,
       postInteractions,
       userCringeTolerance
     );
@@ -106,9 +154,9 @@ export default function Explore() {
     switch (sortMode) {
       case 'recommended':
         return getRecommendedPosts(
-          currentPosts,
-          currentUserProfile,
-          currentUserInteractions,
+          displayPosts,
+          displayUserProfile,
+          displayUserInteractions,
           postInteractions,
           userCringeTolerance
         );
@@ -119,9 +167,9 @@ export default function Explore() {
       case 'lowCringe':
         return categorizedPosts.lowCringe;
       default:
-        return currentPosts;
+        return displayPosts;
     }
-  }, [currentPosts, currentUserProfile, currentUserInteractions, postInteractions, userCringeTolerance, sortMode]);
+  }, [displayPosts, displayUserProfile, displayUserInteractions, postInteractions, userCringeTolerance, sortMode]);
 
   // Filter posts based on search
   const filteredPosts = useMemo(() => {
@@ -135,18 +183,6 @@ export default function Explore() {
   }, [sortedPosts, searchQuery]);
 
   const handleInteraction = useCallback(async (type, postId, currentState) => {
-    if (demoMode) {
-      // Demo mode: just update local state
-      setUserInteractions(prev => ({
-        ...prev,
-        [postId]: {
-          ...prev[postId],
-          [type]: !currentState
-        }
-      }));
-      return true;
-    }
-
     const userId = userProfile?.id;
     if (!userId) return;
 
@@ -204,14 +240,9 @@ export default function Explore() {
     } catch (error) {
       console.error(`Error handling ${type}:`, error);
     }
-  }, [userProfile?.id, setPosts, setUserInteractions, posts, demoMode]);
+  }, [userProfile?.id, setPosts, setUserInteractions, posts]);
 
   const handleComment = useCallback(async (postId, content) => {
-    if (demoMode) {
-      // Demo mode: just return success
-      return true;
-    }
-
     try {
       const success = await submitComment(postId, userProfile?.id, content);
       if (success !== false) {
@@ -225,11 +256,9 @@ export default function Explore() {
     } catch (error) {
       console.error('Error submitting comment:', error);
     }
-  }, [userProfile?.id, setPosts, demoMode]);
+  }, [userProfile?.id, setPosts]);
 
   const handleViewPostCallback = useCallback(async (postId) => {
-    if (demoMode) return true; // Demo mode: no-op
-
     try {
       const success = await handleViewPost(postId, userProfile?.id);
       if (success) {
@@ -242,9 +271,9 @@ export default function Explore() {
     } catch (error) {
       console.error('Error handling view:', error);
     }
-  }, [userProfile?.id, setPosts, demoMode]);
+  }, [userProfile?.id, setPosts]);
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
         <SideBar />
@@ -267,20 +296,7 @@ export default function Explore() {
       <div className="min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72 xl:mr-80">
         <div className="max-w-2xl mx-auto">
           <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-200/50 p-4 z-10 shadow-xl rounded-t-2xl">
-            <div className="flex items-center justify-between">
-              <h1 className="text-xl font-black text-gray-900">Explore</h1>
-              {/* Demo mode toggle */}
-              <button
-                onClick={() => setDemoMode(!demoMode)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
-                  demoMode 
-                    ? 'bg-green-100 text-green-800 hover:bg-green-200' 
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                {demoMode ? '🎭 Demo Mode' : 'Enable Demo'}
-              </button>
-            </div>
+            <h1 className="text-xl font-black text-gray-900">Explore</h1>
           </div>
             
           <SearchAndSort 
@@ -299,11 +315,11 @@ export default function Explore() {
           ) : (
             <PostsList
               posts={filteredPosts}
-              userInteractions={currentUserInteractions}
+              userInteractions={displayUserInteractions}
               onInteraction={handleInteraction}
               onComment={handleComment}
               onViewPost={handleViewPostCallback}
-              userProfile={currentUserProfile}
+              userProfile={displayUserProfile}
               searchQuery={searchQuery}
               sortMode={sortMode}
             />
@@ -312,7 +328,7 @@ export default function Explore() {
       </div>
 
       <div className="hidden xl:block">
-        <ProfileBar currentUser={currentUserProfile} />
+        <ProfileBar currentUser={displayUserProfile} />
       </div>
     </div>
   );

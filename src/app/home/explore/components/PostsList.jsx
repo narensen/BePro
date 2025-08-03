@@ -46,7 +46,7 @@ export default function PostsList({
 }) {
   return (
     <motion.div 
-      className="bg-white/95 backdrop-blur-sm border border-white/30 rounded-2xl overflow-hidden shadow-xl"
+      className="space-y-0"
       variants={containerVariants}
       initial="hidden"
       animate="show"

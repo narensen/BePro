@@ -86,33 +86,25 @@ const PostCard = ({
 
   return (
     <motion.article
-      className="relative group"
+      className="relative group mb-6"
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       whileHover={{ 
-        y: -2,
+        y: -1,
         transition: { duration: 0.2, ease: "easeOut" }
       }}
       layout
     >
-      {/* X.com-style card with subtle border and hover effects */}
-      <div className="relative border-b border-gray-100/50 bg-white/95 backdrop-blur-sm transition-all duration-300 ease-out cursor-pointer hover:bg-white hover:shadow-lg hover:shadow-gray-200/25 group-hover:border-gray-200/75">
+      {/* Clean minimal post design - no heavy cards */}
+      <div className="relative bg-white/70 backdrop-blur-sm transition-all duration-300 ease-out hover:bg-white/80 rounded-xl p-6 mx-4">
         
-        {/* Subtle left accent border on hover */}
-        <motion.div 
-          className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-400 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          initial={{ scaleY: 0 }}
-          animate={{ scaleY: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-        />
-
-        {/* Main content area with improved padding */}
-        <div className="px-4 sm:px-6 py-4 relative">
+        {/* Main content area with improved spacing */}
+        <div className="relative">
           <PostHeader post={post} />
           <PostContent post={post} searchQuery={searchQuery} /> 
         </div>
 
-        {/* Enhanced interactions with better spacing */}
+        {/* Clean interactions with better spacing */}
         <PostInteractions
           post={post}
           userInteractions={userInteractions}
@@ -148,14 +140,6 @@ const PostCard = ({
             onLoadReplies={handleLoadReplies}
           />
         </motion.div>
-
-        {/* Subtle glow effect on hover */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-amber-400/5 via-transparent to-orange-400/5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 rounded-sm"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-        />
       </div>
     </motion.article>
   );
