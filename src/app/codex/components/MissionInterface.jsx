@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase_client';
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
 import MissionHeader from './MissionInterface/MissionHeader';
 import MissionSidebar from './MissionInterface/MissionSidebar';
 import ChatArea from './MissionInterface/ChatArea';

@@ -4,7 +4,13 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Code2, Brain, Target, Menu, X } from 'lucide-react';
 
-import { supabase } from '@/app/lib/supabase_client';
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
 import useUserStore from '@/app/store/useUserStore';
 import { useMousePosition } from '@/app/hooks/useMousePosition';
 
