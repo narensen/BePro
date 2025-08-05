@@ -5,21 +5,9 @@ import { supabase } from '@/app/lib/supabase_client'
 
 export default function ConfirmEmailPage() {
   const [checking, setChecking] = useState(true)
-  const [isConfigured, setIsConfigured] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    // Check if Supabase is properly configured
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    
-    if (!supabaseUrl || !supabaseKey || supabaseUrl === 'https://placeholder.supabase.co') {
-      setIsConfigured(false)
-      setChecking(false)
-      return
-    }
-    
-    setIsConfigured(true)
 
     const interval = setInterval(async () => {
       try {
