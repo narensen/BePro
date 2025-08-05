@@ -1,4 +1,4 @@
-# BePro 🚀
+# BePro
 
 **Forge Your Tech Career with AI-Powered Precision**
 
@@ -6,20 +6,20 @@ BePro is an elite platform that combines AI-powered career pathing with a high-t
 
 ---
 
-## 🎯 Why BePro?
+## Why BePro?
 
 > *"We are not for the casual learner; we are for the obsessed builder. We are not for the 95% who seek comfort; we are for the 5% who seek the throne."*
 
-- **🧠 AI-Powered Roadmaps**: The Codex deconstructs elite tech roles and creates personalized, step-by-step conquest plans
-- **🏰 Elite Community**: College-specific fortresses where only the most ambitious builders gather  
-- **🎯 Precision Learning**: Weekly focused missions with curated resources and AI feedback
-- **⚡ Real Results**: Living portfolio that showcases your growing mastery
+- **AI-Powered Roadmaps**: The Codex deconstructs elite tech roles and creates personalized, step-by-step conquest plans
+- **Elite Community**: College-specific fortresses where only the most ambitious builders gather  
+- **Precision Learning**: Weekly focused missions with curated resources and AI feedback
+- **Real Results**: Living portfolio that showcases your growing mastery
 
 ---
 
-## 📸 Visual Overview
+## Visual Overview
 
-### 🏠 Homepage & Landing Experience
+### Homepage & Landing Experience
 Experience BePro's bold, gradient-rich interface designed to inspire and motivate ambitious developers.
 
 ![BePro Homepage](<img width="1920" height="930" alt="image" src="https://github.com/user-attachments/assets/d6e77d7a-2291-486c-93a7-b4f60fda9612" />
@@ -29,7 +29,7 @@ Experience BePro's bold, gradient-rich interface designed to inspire and motivat
 
 ---
 
-### 📊 Dashboard Overview
+### Dashboard Overview
 Your command center for tracking progress and accessing all platform features through an intuitive sidebar navigation.
 
 ![Dashboard Overview](<img width="1920" height="930" alt="image" src="https://github.com/user-attachments/assets/dce18f45-238f-4245-982f-1968ba171e62" />
@@ -39,7 +39,7 @@ Your command center for tracking progress and accessing all platform features th
 
 ---
 
-### 🧠 The Codex: AI Career Roadmaps
+### The Codex: AI Career Roadmaps
 The heart of BePro - your personalized AI mentor that creates step-by-step roadmaps to elite tech roles.
 
 ![Codex Roadmap Interface](<img width="1920" height="930" alt="image" src="https://github.com/user-attachments/assets/40170ea2-6262-4f35-a5b4-928978861d29" />
@@ -54,7 +54,7 @@ The heart of BePro - your personalized AI mentor that creates step-by-step roadm
 
 ---
 
-### 🌐 Community Fortress
+### Community Fortress
 Connect with elite builders from your university. Compete, collaborate, and conquer together.
 
 *Dynamic social feed with smart recommendations, interaction tracking, and networking opportunities within your college community.*
@@ -66,7 +66,7 @@ Connect with elite builders from your university. Compete, collaborate, and conq
 
 ---
 
-### 🎯 Mission Interface
+### Mission Interface
 Deep-dive into focused learning missions with curated resources and clear objectives.
 
 *Immersive mission experience with progress tracking, learning objectives, curated resources, and submission workflow.*
@@ -78,7 +78,7 @@ Deep-dive into focused learning missions with curated resources and clear object
 
 ---
 
-### 👤 Profile & Progress Tracking
+### Profile & Progress Tracking
 Showcase your journey with a living portfolio that demonstrates your growing expertise.
 
 ![Profile Management](<img width="1920" height="930" alt="image" src="https://github.com/user-attachments/assets/12f3becb-a3e5-4219-854b-a967b49c0d47" />
@@ -88,7 +88,7 @@ Showcase your journey with a living portfolio that demonstrates your growing exp
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js 18+ 
@@ -124,7 +124,7 @@ Showcase your journey with a living portfolio that demonstrates your growing exp
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend**: Next.js 15, React 19, Tailwind CSS
 - **Backend**: Supabase (Database, Auth, Real-time)
@@ -135,7 +135,7 @@ Showcase your journey with a living portfolio that demonstrates your growing exp
 
 ---
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 BePro/
@@ -154,7 +154,7 @@ BePro/
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions from obsessed builders! Here's how to get involved:
 
@@ -172,13 +172,13 @@ We welcome contributions from obsessed builders! Here's how to get involved:
 
 ---
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🌟 Community & Support
+## Community & Support
 
 - **Discord**: Join our community of elite builders
 - **Email**: hello@bepro.dev
@@ -201,6 +201,6 @@ BePro is constantly evolving. Upcoming features include:
 
 **Ready to forge your elite tech career?**
 
-[🚀 Start Your Journey](https://bepro.live) • [📖 Documentation](docs/) • [💬 Community](https://discord.gg/bepro)
+[Start Your Journey](https://bepro.live) • [Documentation](docs/) • [Community](https://discord.gg/bepro)
 
 </div>
