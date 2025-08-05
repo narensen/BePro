@@ -8,9 +8,6 @@ export default function ConfirmEmailPage() {
           We&apos;ve sent you a link to confirm your email.
           <br /> Check your spam if not present
         </p>
-        <p className="text-sm text-black/70">
-          {checking ? 'Checking your status...' : 'Waiting for confirmation...'}
-        </p>
       </div>
     </main>
   )
