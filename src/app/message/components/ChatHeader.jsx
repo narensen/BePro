@@ -22,7 +22,7 @@ export default function ChatHeader({ activeConversation, otherUserTyping, isConn
       </div>
       <div>
         <a 
-          href={`https://bepro.live/${activeConversation.otherUsername}`}
+          href={`${process.env.NEXT_PUBLIC_APP_BASE_URL}/${activeConversation.otherUsername}`}
           target="_blank" 
           rel="noopener noreferrer"
           className="font-semibold text-gray-900 hover:underline"

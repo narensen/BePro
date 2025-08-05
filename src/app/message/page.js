@@ -86,7 +86,7 @@ export default function MessagesPage() {
   useEffect(() => {
     if (username && user?.id) {
       const socketUrl = process.env.NODE_ENV === 'production' 
-        ? 'https://bepro-socket.onrender.com/' 
+        ? process.env.NEXT_PUBLIC_SOCKET_SERVER_URL 
         : 'http://localhost:3001'
       
       const socketInstance = io(socketUrl, {

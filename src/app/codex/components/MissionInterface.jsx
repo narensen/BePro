@@ -164,7 +164,7 @@ const MissionInterface = ({
       
       const conversationHistory = messages.length > 0 ? recentMessages : 'Starting new mission conversation';
 
-      const response = await fetch('https://bepro-mentor.onrender.com/codex', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_MENTOR_API_URL}/codex`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

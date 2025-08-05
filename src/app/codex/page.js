@@ -257,7 +257,7 @@ export default function Codex() {
     setIsGeneratingRoadmap(true);
 
     try {
-      const response = await fetch('https://bepro-codex.onrender.com/create-roadmap', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CODEX_API_URL}/create-roadmap`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
