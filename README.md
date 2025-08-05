@@ -22,7 +22,8 @@ BePro is an elite platform that combines AI-powered career pathing with a high-t
 ### 🏠 Homepage & Landing Experience
 Experience BePro's bold, gradient-rich interface designed to inspire and motivate ambitious developers.
 
-![BePro Homepage](docs/images/homepage-hero.png)
+![BePro Homepage](<img width="1920" height="930" alt="image" src="https://github.com/user-attachments/assets/d6e77d7a-2291-486c-93a7-b4f60fda9612" />
+)
 
 *The BePro landing page features our signature gradient design, clear value proposition, and compelling call-to-action that sets the tone for your career transformation journey.*
 
@@ -31,7 +32,8 @@ Experience BePro's bold, gradient-rich interface designed to inspire and motivat
 ### 📊 Dashboard Overview
 Your command center for tracking progress and accessing all platform features through an intuitive sidebar navigation.
 
-![Dashboard Overview](docs/images/dashboard-overview.png)
+![Dashboard Overview](<img width="1920" height="930" alt="image" src="https://github.com/user-attachments/assets/dce18f45-238f-4245-982f-1968ba171e62" />
+)
 
 *Clean, professional dashboard with easy navigation to all major features: Codex, Explore, Messages, and Profile management.*
 
@@ -40,7 +42,8 @@ Your command center for tracking progress and accessing all platform features th
 ### 🧠 The Codex: AI Career Roadmaps
 The heart of BePro - your personalized AI mentor that creates step-by-step roadmaps to elite tech roles.
 
-![Codex Roadmap Interface](docs/images/codex-roadmap.png)
+![Codex Roadmap Interface](<img width="1920" height="930" alt="image" src="https://github.com/user-attachments/assets/40170ea2-6262-4f35-a5b4-928978861d29" />
+)
 
 *Interactive mission grid showing your personalized career path with clear progress tracking, active missions, and upcoming challenges.*
 
@@ -54,8 +57,6 @@ The heart of BePro - your personalized AI mentor that creates step-by-step roadm
 ### 🌐 Community Fortress
 Connect with elite builders from your university. Compete, collaborate, and conquer together.
 
-![Community Feed](docs/images/community-feed.png)
-
 *Dynamic social feed with smart recommendations, interaction tracking, and networking opportunities within your college community.*
 
 **Community Features:**
@@ -67,8 +68,6 @@ Connect with elite builders from your university. Compete, collaborate, and conq
 
 ### 🎯 Mission Interface
 Deep-dive into focused learning missions with curated resources and clear objectives.
-
-![Mission Interface](docs/images/mission-interface.png)
 
 *Immersive mission experience with progress tracking, learning objectives, curated resources, and submission workflow.*
 
@@ -82,7 +81,8 @@ Deep-dive into focused learning missions with curated resources and clear object
 ### 👤 Profile & Progress Tracking
 Showcase your journey with a living portfolio that demonstrates your growing expertise.
 
-![Profile Management](docs/images/profile-page.png)
+![Profile Management](<img width="1920" height="930" alt="image" src="https://github.com/user-attachments/assets/12f3becb-a3e5-4219-854b-a967b49c0d47" />
+)
 
 *Comprehensive profile system tracking mission completion, skill development, community engagement, and career progression.*
 
