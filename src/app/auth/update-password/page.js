@@ -1,6 +1,12 @@
 'use client'
 import { useState } from 'react'
-import { supabase } from '@/app/lib/supabase_client'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
 
 export default function UpdatePassword() {
   const [password, setPassword] = useState('')
