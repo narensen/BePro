@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Brain, Sparkles, AlertTriangle } from 'lucide-react';
-
-// AIMentorFeedback component
 const AIMentorFeedback = ({ feedback }) => {
   if (!feedback) return null;
 
@@ -32,8 +30,6 @@ export default function ResponsiveInteractiveDemo() {
   const [currentFeedback, setCurrentFeedback] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  // Debounced feedback fetching
   useEffect(() => {
     if (!code.trim()) {
       setCurrentFeedback(null);
@@ -80,7 +76,7 @@ export default function ResponsiveInteractiveDemo() {
   return (
     <div className="relative w-full">
       <div className="bg-gray-900 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-gray-700/50 backdrop-blur-xl">
-        {/* Terminal Header */}
+        {}
         <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
           <div className="flex gap-1 sm:gap-2">
             <div className="w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full"></div>
@@ -96,7 +92,7 @@ export default function ResponsiveInteractiveDemo() {
           </div>
         </div>
         
-        {/* Code Editor */}
+        {}
         <div className="relative">
           <textarea
             value={code}

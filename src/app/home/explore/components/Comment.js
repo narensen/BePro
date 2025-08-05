@@ -38,14 +38,10 @@ const Comment = ({
 
   const maxDepth = 3;
   const indentClass = level > 0 ? `ml-${Math.min(level * 4, 12)}` : '';
-  
-  // Different background colors for different nesting levels
   const getBackgroundColor = (level) => {
     const colors = ['bg-white', 'bg-gray-50', 'bg-blue-50', 'bg-yellow-50'];
     return colors[level] || colors[colors.length - 1];
   };
-
-  // Different border colors for different nesting levels
   const getBorderColor = (level) => {
     const colors = ['border-gray-200', 'border-gray-300', 'border-blue-200', 'border-yellow-200'];
     return colors[level] || colors[colors.length - 1];
@@ -112,7 +108,7 @@ const Comment = ({
         </div>
       </div>
 
-      {/* Reply Form */}
+      {}
       {showReplyForm && (
         <div className="mt-3 ml-4 transform transition-all duration-300 animate-in slide-in-from-top-2">
           <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
@@ -146,7 +142,7 @@ const Comment = ({
         </div>
       )}
 
-      {/* Nested Replies */}
+      {}
       {showReplies && replies.length > 0 && (
         <div className="mt-4 space-y-3 animate-in slide-in-from-top-3 duration-300">
           {replies.map((reply, index) => (

@@ -14,8 +14,6 @@ export const useFollowers = (userId) => {
     
     try {
       setLoading(true);
-      
-      // Get followers
       const { data: followersData, error: followersError } = await supabase
         .from('followers')
         .select(`
@@ -33,8 +31,6 @@ export const useFollowers = (userId) => {
         .order('created_at', { ascending: false });
 
       if (followersError) throw followersError;
-
-      // Get following
       const { data: followingData, error: followingError } = await supabase
         .from('followers')
         .select(`

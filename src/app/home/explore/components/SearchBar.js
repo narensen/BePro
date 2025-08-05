@@ -2,7 +2,7 @@ import React from 'react';
 import { Search } from 'lucide-react';
 
 const SearchBar = ({ searchQuery, setSearchQuery }) => {
-  console.log('SearchBar rendering with:', { searchQuery, setSearchQuery }); // Debug log
+  console.log('SearchBar rendering with:', { searchQuery, setSearchQuery });
   
   return (
     <div className="relative mb-4 sm:mb-6">

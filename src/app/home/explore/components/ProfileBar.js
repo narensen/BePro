@@ -7,23 +7,19 @@ export default function ProfileBar({ currentUser }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
-  const [allRecommendations, setAllRecommendations] = useState([]); // Store all fetched recommendations
+  const [allRecommendations, setAllRecommendations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState(null);
-  const [showCount, setShowCount] = useState(5); // How many recommendations to show
-  const [searchOffset, setSearchOffset] = useState(0); // For search pagination
-  const [hasMoreSearch, setHasMoreSearch] = useState(true); // Whether there are more search results
+  const [showCount, setShowCount] = useState(5);
+  const [searchOffset, setSearchOffset] = useState(0);
+  const [hasMoreSearch, setHasMoreSearch] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false); // Loading state for "show more"
-
-  // Calculate similarity score between two users
   const calculateSimilarity = useCallback((user1, user2) => {
     if (!user1 || !user2) return 0;
     
     let score = 0;
     let maxScore = 0;
-
-    // Tags similarity (highest priority - 60%)
     if (user1.tags && user2.tags && Array.isArray(user1.tags) && Array.isArray(user2.tags)) {
       const tags1 = user1.tags;
       const tags2 = user2.tags;
@@ -34,16 +30,12 @@ export default function ProfileBar({ currentUser }) {
       }
     }
     maxScore += 0.6;
-
-    // Location similarity (second priority - 30%)
     if (user1.location && user2.location && 
         typeof user1.location === 'string' && typeof user2.location === 'string') {
       const locationSimilarity = user1.location.toLowerCase().trim() === user2.location.toLowerCase().trim() ? 1 : 0;
       score += locationSimilarity * 0.3;
     }
     maxScore += 0.3;
-
-    // University similarity (third priority - 10%)
     if (user1.university && user2.university && 
         typeof user1.university === 'string' && typeof user2.university === 'string') {
       const universitySimilarity = user1.university.toLowerCase().trim() === user2.university.toLowerCase().trim() ? 1 : 0;
@@ -53,15 +45,11 @@ export default function ProfileBar({ currentUser }) {
 
     return maxScore > 0 ? score / maxScore : 0;
   }, []);
-
-  // Handle user profile navigation
   const handleUserClick = (username) => {
     if (username) {
       router.push(`/${username}`);
     }
   };
-
-  // Fetch recommended users based on similarity
   const fetchRecommendations = useCallback(async () => {
     if (!currentUser?.id) {
       console.warn('No current user ID provided');
@@ -76,7 +64,7 @@ export default function ProfileBar({ currentUser }) {
         .from('profile')
         .select('id, username, email, location, university, tags, avatar_url, created_at')
         .neq('id', currentUser.id)
-        .limit(100); // Fetch more users for better recommendations
+        .limit(100);
 
       if (error) {
         console.error('Supabase error details:', {
@@ -141,7 +129,7 @@ export default function ProfileBar({ currentUser }) {
         .select('id, username, email, location, university, tags, avatar_url, created_at')
         .neq('id', currentUser?.id)
         .or(`username.ilike.%${query}%,email.ilike.%${query}%,location.ilike.%${query}%,university.ilike.%${query}%`)
-        .range(offset, offset + 9) // Fetch 10 results (0-9)
+        .range(offset, offset + 9)
         .limit(10);
 
       if (error) {
@@ -157,7 +145,7 @@ export default function ProfileBar({ currentUser }) {
       }
 
       const newResults = users || [];
-      setHasMoreSearch(newResults.length === 10); // If we got 10 results, there might be more
+      setHasMoreSearch(newResults.length === 10);
       
       if (append) {
         setSearchResults(prev => [...prev, ...newResults]);
@@ -174,8 +162,6 @@ export default function ProfileBar({ currentUser }) {
       setIsSearching(false);
     }
   }, [currentUser?.id]);
-
-  // Load more search results
   const loadMoreSearchResults = useCallback(async () => {
     if (!hasMoreSearch || isSearching || !searchQuery.trim()) return;
     
@@ -183,15 +169,11 @@ export default function ProfileBar({ currentUser }) {
     await searchUsers(searchQuery, searchOffset, true);
     setLoadingMore(false);
   }, [hasMoreSearch, isSearching, searchQuery, searchOffset, searchUsers]);
-
-  // Show more recommendations
   const showMoreRecommendations = useCallback(() => {
     const newShowCount = showCount + 5;
     setShowCount(newShowCount);
     setRecommendations(allRecommendations.slice(0, newShowCount));
   }, [showCount, allRecommendations]);
-
-  // Debounced search
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setSearchOffset(0);
@@ -201,13 +183,9 @@ export default function ProfileBar({ currentUser }) {
 
     return () => clearTimeout(timeoutId);
   }, [searchQuery, searchUsers]);
-
-  // Fetch recommendations on mount
   useEffect(() => {
     fetchRecommendations();
   }, [fetchRecommendations]);
-
-  // Update recommendations when showCount changes
   useEffect(() => {
     if (allRecommendations.length > 0) {
       setRecommendations(allRecommendations.slice(0, showCount));
@@ -256,7 +234,7 @@ export default function ProfileBar({ currentUser }) {
           </div>
         </div>
         
-        {/* Tags */}
+        {}
         {user.tags && Array.isArray(user.tags) && user.tags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
             {user.tags.slice(0, 3).map((tag, index) => (
@@ -303,13 +281,13 @@ export default function ProfileBar({ currentUser }) {
   return (
     <div className="w-80 bg-white/90 backdrop-blur-sm border-r border-gray-200/50 border-l-2 border-amber-400 h-full fixed right-0 top-0 overflow-y-auto shadow-2xl font-mono z-30">
       <div className="p-6">
-        {/* Header */}
+        {}
         <div className="mb-6">
           <h2 className="text-2xl font-black mb-2">Discover People</h2>
           <p className="text-gray-600 text-sm">Find and connect with others</p>
         </div>
 
-        {/* Error Display */}
+        {}
         {error && (
           <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl">
             <p className="text-red-200 text-sm">{error}</p>
@@ -322,7 +300,7 @@ export default function ProfileBar({ currentUser }) {
           </div>
         )}
 
-        {/* Search Bar */}
+        {}
         <div className="mb-8 font-mono">
           <div className="relative">
             <input
@@ -344,7 +322,7 @@ export default function ProfileBar({ currentUser }) {
           </div>
         </div>
 
-        {/* Search Results */}
+        {}
         {searchQuery && (
           <div className="mb-8">
             <h3 className="text-xl font-bold text-amber-300 mb-4 flex items-center">
@@ -379,7 +357,7 @@ export default function ProfileBar({ currentUser }) {
           </div>
         )}
 
-        {/* Recommendations */}
+        {}
         {!searchQuery && (
           <div>
             <h3 className="text-xl font-bold mb-4 flex items-center">

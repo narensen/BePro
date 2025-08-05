@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Brain, Sparkles, AlertTriangle } from 'lucide-react';
-
-
 const AIMentorFeedback = ({ feedback }) => {
   if (!feedback) return null;
 
@@ -26,33 +24,27 @@ const AIMentorFeedback = ({ feedback }) => {
     </div>
   );
 };
-
-
 export const InteractiveDemo = () => {
   const [code, setCode] = useState('');
   const [currentFeedback, setCurrentFeedback] = useState(null);
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false); // Optional: for loading state
-
-  // This useEffect hook now implements debouncing
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    // If there's no code, clear feedback and do nothing
+
     if (!code.trim()) {
       setCurrentFeedback(null);
       setError(null);
       return;
     }
 
-    setIsLoading(true); // Set loading state
-
-    // Set a timer to fetch feedback after 1 second of inactivity
+    setIsLoading(true);
     const handler = setTimeout(() => {
       const fetchFeedback = async () => {
         try {
           const response = await fetch(`https://bepro-mentor.onrender.com/mentor?input=${encodeURIComponent(code)}`);
           
           if (!response.ok) {
-            // Try to get a more specific error message from the backend
+
             const errorData = await response.json().catch(() => null);
             const detail = errorData?.detail || `Server responded with status: ${response.status}`;
             throw new Error(detail);
@@ -67,21 +59,19 @@ export const InteractiveDemo = () => {
           setError(err.message || "Failed to process Codex response. Please try again.");
           setCurrentFeedback(null);
         } finally {
-          setIsLoading(false); // Unset loading state
+          setIsLoading(false);
         }
       };
 
       fetchFeedback();
-    }, 1000); // 1-second delay after user stops typing
+    }, 1000);
 
-    // This is the cleanup function. It runs every time the 'code' changes.
-    // It clears the previous timeout, so the API call only happens once the user pauses.
     return () => {
       clearTimeout(handler);
       setIsLoading(false);
     };
 
-  }, [code]); // The effect re-runs every time the 'code' changes
+  }, [code]);
 
   return (
     <div className="relative">

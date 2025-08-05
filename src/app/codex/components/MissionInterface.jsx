@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase_client';
-
-// Import components
 import MissionHeader from './MissionInterface/MissionHeader';
 import MissionSidebar from './MissionInterface/MissionSidebar';
 import ChatArea from './MissionInterface/ChatArea';
@@ -22,10 +20,8 @@ const MissionInterface = ({
   const [isLoading, setIsLoading] = useState(false);
   const [codeInput, setCodeInput] = useState('');
   const [showCodeEditor, setShowCodeEditor] = useState(false);
-  const [showSidebar, setShowSidebar] = useState(false); // Start with sidebar closed
+  const [showSidebar, setShowSidebar] = useState(false);
   const [sessionLoaded, setSessionLoaded] = useState(false);
-
-  // Load existing session messages for this mission
   useEffect(() => {
     const loadMissionSession = async () => {
       try {
@@ -60,8 +56,6 @@ const MissionInterface = ({
 
     loadMissionSession();
   }, [missionNumber, missionTitle, username]);
-
-  // Save session to Supabase
   const saveMissionSession = async (newMessages) => {
     try {
       const { data, error: fetchError } = await supabase
@@ -95,8 +89,6 @@ const MissionInterface = ({
       console.error('Error in saveMissionSession:', error);
     }
   };
-
-  // Handle automatic mission completion
   const handleAutoMissionComplete = async () => {
     try {
       const { data, error: fetchError } = await supabase

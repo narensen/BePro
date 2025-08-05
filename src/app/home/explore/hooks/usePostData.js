@@ -12,7 +12,7 @@ export const usePostData = (user) => {
       if (!user?.email) return;
 
       try {
-        // Get user profile
+
         const { data: profile } = await supabase
           .from('profile')
           .select('*')
@@ -22,22 +22,18 @@ export const usePostData = (user) => {
         if (profile) {
           setUserProfile(profile);
         }
-
-        // Get posts
         const { data: allPosts } = await supabase
           .from('posts')
           .select('*')
           .order('created_at', { ascending: false });
 
         if (allPosts) {
-          // Get interaction counts
+
           const postIds = allPosts.map(post => post.id);
           const { data: interactions } = await supabase
             .from('post_interactions')
             .select('post_id, type')
             .in('post_id', postIds);
-
-          // Count interactions
           const interactionCounts = {};
           interactions?.forEach(interaction => {
             if (!interactionCounts[interaction.post_id]) {
@@ -49,8 +45,6 @@ export const usePostData = (user) => {
             }
             interactionCounts[interaction.post_id][`${interaction.type}_count`]++;
           });
-
-          // Get user interactions
           const { data: userInteractionData } = await supabase
             .from('post_interactions')
             .select('post_id, type')
@@ -65,8 +59,6 @@ export const usePostData = (user) => {
           });
 
           setUserInteractions(userInteractionMap);
-
-          // Get comment counts
           const { data: commentCounts } = await supabase
             .from('comments')
             .select('post_id')
@@ -76,8 +68,6 @@ export const usePostData = (user) => {
           commentCounts?.forEach(comment => {
             commentCountMap[comment.post_id] = (commentCountMap[comment.post_id] || 0) + 1;
           });
-
-          // Combine data
           const enrichedPosts = allPosts.map(post => ({
             ...post,
             ...interactionCounts[post.id],

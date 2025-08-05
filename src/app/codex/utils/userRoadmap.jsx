@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase_client';
-
-
 export const checkUsername = async (username) => {
   const { data, error } = await supabase
     .from('codex')
@@ -18,8 +16,6 @@ export const checkUsername = async (username) => {
 
   return !!data;
 };
-
-
 export const loadMissions = async (username) => {
   const { data, error } = await supabase
     .from('codex')

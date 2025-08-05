@@ -10,7 +10,7 @@ const CodeEditor = ({
 }) => {
   const handleCopyCode = () => {
     navigator.clipboard.writeText(codeInput);
-    // Simple feedback - you could enhance this with a toast
+
     const button = document.activeElement;
     const originalText = button.textContent;
     button.textContent = 'Copied!';

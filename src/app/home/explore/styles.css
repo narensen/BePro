@@ -1,5 +1,3 @@
-/* Explore Page Styles */
-
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -30,15 +28,11 @@
     opacity: 0.5;
   }
 }
-
-/* Global transition properties */
 * {
   transition-property: transform, opacity, background-color, border-color, box-shadow, color, scale;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 0.3s;
 }
-
-/* Hover effects */
 .hover\:scale-105:hover {
   transform: scale(1.05);
 }
@@ -58,8 +52,6 @@
 .hover\:shadow-xl:hover {
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
-
-/* Animation utilities */
 .animate-fadeInUp {
   animation: fadeInUp 0.6s ease-out both;
 }
@@ -71,8 +63,6 @@
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
-
-/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -90,16 +80,12 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
 }
-
-/* Focus styles */
 button:focus,
 input:focus,
 textarea:focus {
   outline: 2px solid rgba(245, 158, 11, 0.5);
   outline-offset: 2px;
 }
-
-/* Glass morphism effects */
 .glass {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
@@ -111,8 +97,6 @@ textarea:focus {
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
-
-/* Gradient backgrounds */
 .gradient-primary {
   background: linear-gradient(135deg, #fbbf24, #f59e0b, #ea580c);
 }
@@ -120,8 +104,6 @@ textarea:focus {
 .gradient-secondary {
   background: linear-gradient(135deg, #fef3c7, #fde68a, #fbbf24);
 }
-
-/* Button styles */
 .btn-primary {
   @apply px-4 py-2 rounded-full font-medium transition-all duration-300 bg-white text-orange-600 hover:bg-white/90 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-400;
 }
@@ -133,8 +115,6 @@ textarea:focus {
 .btn-ghost {
   @apply px-3 py-2 rounded-lg font-medium transition-all duration-300 text-white/80 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-400;
 }
-
-/* Card styles */
 .card {
   @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-xl transition-all duration-300 hover:bg-white/20 hover:scale-[1.01] hover:shadow-lg;
 }
@@ -142,26 +122,18 @@ textarea:focus {
 .card-elevated {
   @apply bg-white/20 backdrop-blur-md border border-white/30 rounded-xl shadow-lg transition-all duration-300 hover:bg-white/30 hover:scale-[1.01] hover:shadow-xl;
 }
-
-/* Input styles */
 .input-glass {
   @apply w-full px-4 py-2 bg-white/20 border border-white/30 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-300;
 }
-
-/* Text styles */
 .text-gradient {
   background: linear-gradient(135deg, #fbbf24, #ea580c);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
-/* Loading spinner */
 .spinner {
   @apply w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin;
 }
-
-/* Responsive design */
 @media (max-width: 768px) {
   .mobile-stack {
     @apply flex-col;
@@ -175,8 +147,6 @@ textarea:focus {
     @apply hidden;
   }
 }
-
-/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -186,15 +156,11 @@ textarea:focus {
     transition-duration: 0.01ms !important;
   }
 }
-
-/* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .auto-dark {
     @apply bg-gray-900 text-white;
   }
 }
-
-/* Print styles */
 @media print {
   .no-print {
     display: none !important;

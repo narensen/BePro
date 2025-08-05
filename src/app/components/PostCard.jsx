@@ -40,11 +40,9 @@ export default function PlainPost({
         : part
     )
   }
-
-  // Show comments
   const handleToggleComments = async () => {
     if (!showComments) {
-      const fetched = await submitComment(post.id, userProfile?.id, null, true) // fetch only
+      const fetched = await submitComment(post.id, userProfile?.id, null, true)
       if (Array.isArray(fetched)) setComments(fetched)
     }
     setShowComments(!showComments)
@@ -52,7 +50,7 @@ export default function PlainPost({
 
   return (
     <div className="bg-white/90 rounded-xl border border-white/30 p-5 mb-4 shadow hover:scale-105 transition-all">
-      {/* User/Avatar */}
+      {}
       <div className="flex items-center mb-2">
         <div className="flex-shrink-0 w-9 h-9 rounded-full bg-white/30 border border-orange-200 mr-2" />
         <div>
@@ -60,11 +58,11 @@ export default function PlainPost({
           <span className="ml-1 text-xs text-white/70">@{post.username || 'user'}</span>
         </div>
       </div>
-      {/* Content */}
+      {}
       <div className="text-lg text-orange-950 mb-2" style={{ wordBreak: 'break-word' }}>
         {highlight(post.content, searchQuery)}
       </div>
-      {/* Tags */}
+      {}
       {post.tags?.length > 0 && (
         <div className="mb-2 flex flex-wrap gap-1">
           {post.tags.map(tag => (
@@ -72,7 +70,7 @@ export default function PlainPost({
           ))}
         </div>
       )}
-      {/* Actions */}
+      {}
       <div className="flex items-center justify-between mt-4 text-xs text-white/90">
         <div className="flex gap-2">
           <button
@@ -104,18 +102,18 @@ export default function PlainPost({
             <Bookmark size={16} />
           </button>
         </div>
-        {/* Comments toggle */}
+        {}
         <button onClick={handleToggleComments} className={`flex items-center gap-1 hover:text-orange-700 transition`}>
           <MessageCircle size={16} />
           <span>{post.comment_count || comments.length || 0}</span>
           {showComments ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </button>
       </div>
-      {/* Recommendation score */}
+      {}
       {showRecommendationScore && typeof post._recommendationScore === 'number' && (
         <div className="mt-2 text-xs text-orange-700 font-bold">Score: {post._recommendationScore.toFixed(2)}</div>
       )}
-      {/* Comments Section */}
+      {}
       {showComments && (
         <div className="mt-4 space-y-3">
           {comments.length === 0 ? (

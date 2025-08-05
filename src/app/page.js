@@ -61,9 +61,9 @@ export default function LandingPage() {
   }
 
   return (
-    // overflow-x-hidden is crucial for preventing horizontal scroll on mobile
+
     <main className="relative bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 overflow-x-hidden font-mono">
-      {/* This mouse-following effect is decorative. It gracefully degrades on touch devices. */}
+      {}
       <div 
         className="fixed inset-0 opacity-30 pointer-events-none transition-all duration-300"
         style={{
@@ -71,7 +71,7 @@ export default function LandingPage() {
         }}
       />
       
-      {/* Responsive Floating Elements: Adjusted size and position for smaller screens */}
+      {}
       <FloatingElement delay={0} className="absolute top-16 left-4 md:top-20 md:left-10 opacity-20">
         <Code2 className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-white" />
       </FloatingElement>
@@ -86,12 +86,12 @@ export default function LandingPage() {
 
       <ResponsiveHeroSection user={user} onAuthAction={handleAuthAction} />
 
-      {/* Responsive Section Padding: Reduced vertical padding on mobile (py-20) and increased on larger screens (sm:py-24, md:py-32) */}
+      {}
       <AnimatedSection className="py-20 sm:py-24 md:py-32 px-4 sm:px-6" background="bg-white/10 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto">
-          {/* Responsive Margins: Reduced bottom margin on mobile (mb-12) and increased on larger screens (md:mb-20) */}
+          {}
           <div className="text-center mb-12 md:mb-20">
-            {/* Responsive Typography: Added more breakpoints for smoother font size scaling */}
+            {}
             <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 md:mb-8 text-gray-900">Meet Your <span className="text-white">AI Mentor</span></h2>
             <p className="max-w-4xl mx-auto text-lg sm:text-xl md:text-2xl text-gray-800 leading-relaxed font-bold">
               Like having a senior developer watching over your shoulder. Your AI mentor provides instant feedback and guides you towards mastery.
@@ -119,7 +119,7 @@ export default function LandingPage() {
              The Codex deconstructs the path to any elite tech role and creates a personalized, step-by-step roadmap for your conquest.
             </p>
           </div>
-          {/* This grid is already responsive: it stacks on mobile and becomes 3 columns on medium screens and up. This is a great pattern. */}
+          {}
           <div className="grid md:grid-cols-3 gap-8">
             <ResponsiveFeatureCard icon={<CodexIcon />} title="Deconstruction" description="The Codex analyzes thousands of data points to generate a master blueprint of the exact skills and projects required." delay={0} />
             <ResponsiveFeatureCard icon={<CodexIcon />} title="Prescription" description="You receive a single, focused mission each week. The Codex provides the curated resources you need to win." delay={200} />
@@ -157,7 +157,7 @@ export default function LandingPage() {
       
       <ResponsiveFooter />
 
-      {/* No changes needed here. Animations are not screen-size dependent. */}
+      {}
       <style jsx>{`
         @keyframes fade-in-down { 0% { opacity: 0; transform: translateY(-30px); } 100% { opacity: 1; transform: translateY(0); } }
         @keyframes fade-in-up { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }

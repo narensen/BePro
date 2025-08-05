@@ -3,8 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
-
-
 export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
@@ -15,17 +13,17 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
     <header className="fixed top-0 left-0 right-0 z-50 p-2 sm:p-4">
       <div className="backdrop-blur-2xl bg-white/10 border border-white/20 rounded-2xl px-4 sm:px-6 py-2 sm:py-3 mx-auto max-w-7xl shadow-2xl">
         <div className="flex justify-between items-center">
-          {/* Logo */}
+          {}
           <div className="text-2xl sm:text-3xl font-black text-gray-900">BePro</div>
           
-          {/* Desktop Navigation */}
+          {}
           <nav className="hidden md:flex space-x-6 lg:space-x-8">
             <a href="#codex" className="text-gray-800 hover:text-gray-900 transition-colors font-bold text-sm lg:text-base">The Codex</a>
             <a href="#fortress" className="text-gray-800 hover:text-gray-900 transition-colors font-bold text-sm lg:text-base">The Fortress</a>
             <a href="#philosophy" className="text-gray-800 hover:text-gray-900 transition-colors font-bold text-sm lg:text-base">The Philosophy</a>
           </nav>
           
-          {/* Desktop Auth Buttons */}
+          {}
           <div className="hidden md:flex items-center gap-3 lg:gap-4">
             {user ? (
               <>
@@ -52,7 +50,7 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
+          {}
           <button
             onClick={toggleMenu}
             className="md:hidden p-2 text-gray-900 hover:bg-white/20 rounded-lg transition-colors"
@@ -62,7 +60,7 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {}
         {isMenuOpen && (
           <div className="md:hidden mt-4 pt-4 border-t border-white/20">
             <nav className="flex flex-col space-y-3 mb-4">
@@ -89,7 +87,7 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
               </a>
             </nav>
             
-            {/* Mobile Auth Buttons */}
+            {}
             <div className="flex flex-col gap-3">
               {user ? (
                 <>

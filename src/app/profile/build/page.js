@@ -17,8 +17,6 @@ const ProfileBuilder = () => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // Avatar upload states
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [avatarUploading, setAvatarUploading] = useState(false);
@@ -110,13 +108,11 @@ const ProfileBuilder = () => {
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check file size (max 5MB)
+
       if (file.size > 5 * 1024 * 1024) {
         setError('Image size must be less than 5MB');
         return;
       }
-
-      // Check file type
       if (!file.type.startsWith('image/')) {
         setError('Please select an image file');
         return;
@@ -124,8 +120,6 @@ const ProfileBuilder = () => {
 
       setAvatarFile(file);
       setError('');
-      
-      // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
         setAvatarPreview(e.target.result);
@@ -139,14 +133,12 @@ const ProfileBuilder = () => {
 
   setAvatarUploading(true);
   try {
-    // Generate unique filename
+
     const fileExt = avatarFile.name.split('.').pop();
     const fileName = `${Date.now()}.${fileExt}`;
-    const filePath = `${user.id}/${fileName}`; // ✅ This satisfies the RLS policy
+    const filePath = `${user.id}/${fileName}`;
 
     console.log('Uploading file:', filePath, 'to avatars bucket');
-
-    // Upload file to avatars bucket under the user's UID folder
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('avatars')
       .upload(filePath, avatarFile, {
@@ -170,8 +162,6 @@ const ProfileBuilder = () => {
     if (!uploadData?.path) {
       throw new Error('Upload completed but no file path returned');
     }
-
-    // Get public URL
     const { data: { publicUrl }, error: urlError } = supabase.storage
       .from('avatars')
       .getPublicUrl(uploadData.path);
@@ -192,8 +182,6 @@ const ProfileBuilder = () => {
     setAvatarUploading(false);
   }
 };
-
-
   const handleCreateProfile = async () => {
     if (!user) return;
 
@@ -201,7 +189,7 @@ const ProfileBuilder = () => {
     setError('');
 
     try {
-      // Upload avatar if selected
+
       let uploadedAvatarUrl = '';
       if (avatarFile) {
         uploadedAvatarUrl = await uploadAvatar();
@@ -270,14 +258,10 @@ const ProfileBuilder = () => {
     acc[tag.category].push(tag);
     return acc;
   }, {});
-
-  // Debug function to check storage access
   const checkStorageAccess = async () => {
     try {
       console.log('Checking storage access...');
       console.log('Current user:', user?.id);
-      
-      // Test bucket access
       const { data: testData, error: testError } = await supabase.storage
         .from('avatars')
         .list('', { limit: 1 });
@@ -293,8 +277,6 @@ const ProfileBuilder = () => {
       console.error('Storage check error:', error);
     }
   };
-
-  // Call this in development to debug
   useEffect(() => {
     if (process.env.NODE_ENV === 'development' && user) {
       checkStorageAccess();
@@ -306,14 +288,14 @@ const ProfileBuilder = () => {
       <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl w-full max-w-4xl p-8 animate-fadeIn transition-all duration-700">
         {currentStep === 1 && (
           <div className="transition-opacity duration-500 ease-in-out opacity-100">
-            {/* Step 1: Username & Avatar */}
+            {}
             <div className="text-center mb-6">
               <User className="w-10 h-10 mx-auto text-gray-800" />
               <h2 className="text-2xl font-bold text-gray-900">Set up your profile</h2>
               <p className="text-sm text-gray-600">Choose a username and upload your avatar</p>
             </div>
 
-            {/* Avatar Upload Section */}
+            {}
             <div className="mb-6 flex flex-col items-center">
               <div className="relative mb-4">
                 <div className="w-24 h-24 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
@@ -367,7 +349,7 @@ const ProfileBuilder = () => {
               </p>
             </div>
 
-            {/* Username Input */}
+            {}
             <div className="relative mb-4">
               <input
                 type="text"
@@ -416,7 +398,7 @@ const ProfileBuilder = () => {
 
         {currentStep === 2 && (
           <div className="transition-opacity duration-500 ease-in-out opacity-100">
-            {/* Step 2: Tag selection */}
+            {}
             <div className="text-center mb-6">
               <Tag className="w-10 h-10 mx-auto text-gray-800" />
               <h2 className="text-2xl font-bold text-gray-900">Pick your interests</h2>

@@ -37,7 +37,7 @@ const PostHeader = ({ post }) => {
             alt={`${username}'s avatar`}
             className="w-full h-full object-cover"
             onError={(e) => {
-              // Fallback to initial if image fails to load
+
               e.target.style.display = 'none';
               e.target.nextSibling.style.display = 'flex';
             }}
