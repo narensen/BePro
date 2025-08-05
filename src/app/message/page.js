@@ -27,7 +27,6 @@ export default function MessagesPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [isSearching, setIsSearching] = useState(false)
-  const [notifications, setNotifications] = useState([])
   const [unreadCounts, setUnreadCounts] = useState({});
   const [showConversationsList, setShowConversationsList] = useState(true)
   const messagesEndRef = useRef(null)
