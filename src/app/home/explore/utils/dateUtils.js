@@ -5,8 +5,6 @@ export const formatDate = (dateString) => {
   
   if (diffHours < 1) return 'Just now';
   if (diffHours < 24) return `${diffHours}h ago`;
-  
-  // If more than a day, show the actual date
   return date.toLocaleDateString('en-US', { 
     month: 'short', 
     day: 'numeric', 

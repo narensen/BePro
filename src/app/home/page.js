@@ -25,12 +25,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-x-hidden relative">
-      {/* Desktop Sidebar */}
+      {}
       <div className="hidden lg:block fixed left-0 top-0 h-full z-40 w-72">
         <SideBar user={user} username={username} onSignOut={handleSignOut} />
       </div>
 
-      {/* Mobile Sidebar */}
+      {}
       <SideBar user={user} username={username} onSignOut={handleSignOut} />
 
       <div className="transition-all duration-300 ease-in-out pb-20 lg:pb-0 lg:ml-72">
@@ -48,7 +48,7 @@ export default function Home() {
 
         <main className="p-4 sm:p-6 pt-16 lg:pt-4 min-h-[calc(100vh-80px)] flex items-center justify-center">
           <div className="text-center">
-            {/* Mobile Title */}
+            {}
             <div className="lg:hidden mb-8">
               <h1 className="text-3xl font-black text-gray-900 mb-2">Dashboard</h1>
               <p className="text-gray-600">Welcome to your BePro dashboard</p>

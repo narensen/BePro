@@ -61,7 +61,7 @@ export default function UpdatePassword() {
   if (success) {
     return (
       <main className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 font-sans min-h-screen relative overflow-hidden">
-        {/* Background decoration */}
+        {}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gray-900 rounded-full blur-3xl"></div>
           <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-amber-600 rounded-full blur-3xl"></div>
@@ -90,7 +90,7 @@ export default function UpdatePassword() {
 
   return (
     <main className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 font-sans min-h-screen relative overflow-hidden">
-      {/* Background decoration */}
+      {}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gray-900 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-amber-600 rounded-full blur-3xl"></div>
@@ -98,7 +98,7 @@ export default function UpdatePassword() {
 
       <div className="flex items-center justify-center min-h-screen px-4 relative z-10">
         <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-2xl border border-gray-200 max-w-md w-full">
-          {/* BePro Logo */}
+          {}
           <div className="text-center mb-8">
             <h1 className="text-4xl font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent mb-2">
               BePro
@@ -107,7 +107,7 @@ export default function UpdatePassword() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* New Password Input */}
+            {}
             <div>
               <label className="block text-gray-700 font-bold mb-2" htmlFor="password">
                 New Password
@@ -132,7 +132,7 @@ export default function UpdatePassword() {
               </div>
             </div>
 
-            {/* Confirm Password Input */}
+            {}
             <div>
               <label className="block text-gray-700 font-bold mb-2" htmlFor="confirmPassword">
                 Confirm New Password
@@ -157,19 +157,19 @@ export default function UpdatePassword() {
               </div>
             </div>
 
-            {/* Error Message */}
+            {}
             {error && (
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl">
                 {error}
               </div>
             )}
 
-            {/* Password Requirements */}
+            {}
             <div className="text-sm text-gray-600 bg-amber-50 p-3 rounded-xl">
               Password must be at least 6 characters long
             </div>
 
-            {/* Submit Button */}
+            {}
             <button
               type="submit"
               className="w-full bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 px-6 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer"

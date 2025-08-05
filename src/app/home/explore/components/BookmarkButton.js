@@ -38,7 +38,7 @@ const BookmarkButton = ({ postId, userId, className = "" }) => {
   }, [postId, userId]);
 
   const handleToggleBookmark = async (e) => {
-    e.stopPropagation(); // Prevent triggering parent click events
+    e.stopPropagation();
     
     if (loading || !postId || !userId) {
       console.log('Cannot toggle bookmark:', { loading, postId, userId });
@@ -50,7 +50,7 @@ const BookmarkButton = ({ postId, userId, className = "" }) => {
     
     try {
       if (isBookmarked) {
-        // Remove bookmark
+
         console.log('Removing bookmark...');
         const { error } = await supabase
           .from('bookmarks')
@@ -66,7 +66,7 @@ const BookmarkButton = ({ postId, userId, className = "" }) => {
           console.log('Bookmark removed successfully');
         }
       } else {
-        // Add bookmark
+
         console.log('Adding bookmark...');
         const { data, error } = await supabase
           .from('bookmarks')

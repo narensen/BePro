@@ -1,7 +1,7 @@
 export function highlightQuery(text, query) {
   if (!query) return text;
 
-  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // escape regex chars
+  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const regex = new RegExp(`(${escapedQuery})`, 'gi');
   const parts = text.split(regex);
 

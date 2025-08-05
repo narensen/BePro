@@ -4,22 +4,22 @@ const LoadingScreen = () => {
   return (
     <div className="min-h-screen flex items-center justify-center p-8 bg-gradient-to-br from-yellow-50 via-amber-100 to-yellow-200">
       <div className="text-center max-w-2xl">
-        {/* Main Loading Animation */}
+        {}
         <div className="relative mb-12">
-          {/* Yellow/Amber spinning rings */}
+          {}
           <div className="w-32 h-32 mx-auto relative">
             <div className="absolute inset-0 border-4 border-transparent border-t-yellow-400 border-r-amber-400 border-b-yellow-600 border-l-amber-300 rounded-full animate-spin"></div>
             <div className="absolute inset-2 border-4 border-transparent border-t-yellow-200 border-r-amber-200 border-b-yellow-300 border-l-amber-50 rounded-full animate-spin animation-delay-500" style={{animationDirection: 'reverse'}}></div>
             <div className="absolute inset-4 border-4 border-transparent border-t-yellow-100 border-r-amber-100 border-b-yellow-200 border-l-amber-100 rounded-full animate-spin"></div>
             
-            {/* Center Atom icon */}
+            {}
             <div className="absolute inset-0 flex items-center justify-center">
               <Atom className="w-14 h-14 text-amber-400 drop-shadow-lg animate-pulse" />
             </div>
           </div>
         </div>
 
-        {/* Loading Text */}
+        {}
         <div className="mb-8">
           <h2 className="text-4xl font-black text-amber-700 mb-4 animate-pulse">
             Codex is thinking...
@@ -29,7 +29,7 @@ const LoadingScreen = () => {
           </p>
         </div>
 
-        {/* Progress Steps */}
+        {}
         <div className="space-y-4 mb-8">
           {[
             { icon: Sparkles, text: "Analyzing your learning goal", delay: "0s" },
@@ -47,7 +47,7 @@ const LoadingScreen = () => {
           ))}
         </div>
 
-        {/* Animated Dots */}
+        {}
         <div className="flex justify-center space-x-2">
           {[...Array(5)].map((_, i) => (
             <div

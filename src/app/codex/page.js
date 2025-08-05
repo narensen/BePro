@@ -30,14 +30,10 @@ function useIsMobile() {
   }, []);
   return isMobile;
 }
-
-
 export default function Codex() {
   const [userHasRoadmap, setUserHasRoadmap] = useState(null);
   const [missions, setMissions] = useState([]);
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
-  
-  // Mission Interface state
   const [showMissionInterface, setShowMissionInterface] = useState(false);
   const [activeMissionData, setActiveMissionData] = useState(null);
 
@@ -61,7 +57,7 @@ export default function Codex() {
       setInitialDataLoaded(false);
       
       try {
-        // Directly check if username exists in codex table
+
         const { data, error } = await supabase
           .from('codex')
           .select('username')
@@ -72,34 +68,30 @@ export default function Codex() {
           console.error("Error checking user roadmap:", error);
           setUserHasRoadmap(false);
         } else {
-          // User exists in codex table if we got data
+
           const exists = !!data;
           setUserHasRoadmap(exists);
           
           if (exists) {
-            // Load the missions data
+
             const roadmap = await loadMissions(username);
             if (roadmap) {
               const parsed = parseTaggedResponse(roadmap);
-              
-              // Handle both object and array formats
               let missionsData;
               if (Array.isArray(parsed)) {
-                // Convert array to object format expected by RoadmapGrid
+
                 missionsData = {};
                 parsed.forEach((mission, index) => {
                   missionsData[index] = mission;
                 });
               } else if (parsed && typeof parsed === 'object') {
-                // Already in object format
+
                 missionsData = parsed;
               } else {
                 console.error('Parsed roadmap is neither array nor object:', parsed);
                 setMissions({});
                 return;
               }
-              
-              // Get the current active_status from database
               const { data: statusData } = await supabase
                 .from('codex')
                 .select('active_status')
@@ -107,8 +99,6 @@ export default function Codex() {
                 .single();
               
               const activeStatus = statusData?.active_status || 0;
-              
-              // Set mission statuses based on active_status
               Object.keys(missionsData).forEach((key, index) => {
                 if (index < activeStatus) {
                   missionsData[key].status = "completed";
@@ -138,8 +128,6 @@ export default function Codex() {
 
     checkUserRoadmap();
   }, [username, setLoading]);
-
-  // Function to get the active mission data
   const getActiveMissionData = async () => {
     try {
       const { data, error } = await supabase
@@ -155,12 +143,8 @@ export default function Codex() {
 
       const activeStatus = data.active_status || 0;
       const roadmap = data.roadmap || {};
-      
-      // Convert roadmap object to array for easier processing
       const roadmapArray = Object.entries(roadmap).map(([key, mission]) => ({ ...mission, id: key }));
       const activeMissionNumber = activeStatus + 1;
-
-      // Check if there's an active mission available
       if (activeMissionNumber <= roadmapArray.length) {
         const activeMission = roadmapArray[activeStatus];
         return {
@@ -171,14 +155,12 @@ export default function Codex() {
         };
       }
 
-      return null; // All missions completed
+      return null;
     } catch (error) {
       console.error('Error in getActiveMissionData:', error);
       return null;
     }
   };
-
-  // Function to handle starting a mission
   const handleStartMission = async () => {
     const missionData = await getActiveMissionData();
     
@@ -189,16 +171,12 @@ export default function Codex() {
       alert('🎉 Congratulations! You have completed all missions in your roadmap!');
     }
   };
-
-  // Function to handle mission completion
   const handleMissionComplete = async (completedMissionNumber) => {
     try {
-      // Refresh the missions data to reflect the updated status
+
       const roadmap = await loadMissions(username);
       if (roadmap) {
         const parsed = parseTaggedResponse(roadmap);
-        
-        // Handle both object and array formats
         let missionsData;
         if (Array.isArray(parsed)) {
           missionsData = {};
@@ -211,8 +189,6 @@ export default function Codex() {
           console.error('Error parsing roadmap after completion');
           return;
         }
-        
-        // Get the updated active status
         const { data } = await supabase
           .from('codex')
           .select('active_status')
@@ -220,8 +196,6 @@ export default function Codex() {
           .single();
         
         const activeStatus = data?.active_status || 0;
-        
-        // Update mission statuses based on active_status
         Object.keys(missionsData).forEach((key, index) => {
           if (index < activeStatus) {
             missionsData[key].status = "completed";
@@ -234,19 +208,13 @@ export default function Codex() {
         
         setMissions(missionsData);
       }
-      
-      // Go back to the main codex page
       setShowMissionInterface(false);
       setActiveMissionData(null);
-      
-      // Show success message
       alert(`🎉 Mission ${completedMissionNumber} completed successfully!`);
     } catch (error) {
       console.error('Error handling mission completion:', error);
     }
   };
-
-  // Function to handle going back to codex
   const handleBackToCodex = () => {
     setShowMissionInterface(false);
     setActiveMissionData(null);
@@ -257,7 +225,7 @@ export default function Codex() {
     setIsGeneratingRoadmap(true);
 
     try {
-      const response = await fetch('https://bepro-codex.onrender.com/create-roadmap', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CODEX_API_URL}/create-roadmap`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -304,10 +272,6 @@ export default function Codex() {
     }
   };
 
-  // Show loading screen when:
-  // 1. Initial data hasn't loaded yet
-  // 2. We're checking if the user has a roadmap (userHasRoadmap is null)
-  // 3. We're generating a roadmap
   if (!initialDataLoaded || userHasRoadmap === null || isGeneratingRoadmap) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
@@ -342,8 +306,6 @@ export default function Codex() {
       </div>
     );
   }
-
-  // Main render with mission interface integration
   return (
     <>
       {showMissionInterface ? (

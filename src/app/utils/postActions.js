@@ -5,7 +5,7 @@ export const toggleLike = async (postId, userId, currentState) => {
 
   try {
     if (currentState) {
-      // Remove like
+
       const { error } = await supabase
         .from('post_interactions')
         .delete()
@@ -15,15 +15,13 @@ export const toggleLike = async (postId, userId, currentState) => {
 
       return !error;
     } else {
-      // Remove any existing dislike first
+
       await supabase
         .from('post_interactions')
         .delete()
         .eq('post_id', postId)
         .eq('user_id', userId)
         .eq('type', 'dislike');
-
-      // Add like
       const { error } = await supabase
         .from('post_interactions')
         .insert([{
@@ -45,7 +43,7 @@ export const toggleDislike = async (postId, userId, currentState) => {
 
   try {
     if (currentState) {
-      // Remove dislike
+
       const { error } = await supabase
         .from('post_interactions')
         .delete()
@@ -55,15 +53,13 @@ export const toggleDislike = async (postId, userId, currentState) => {
 
       return !error;
     } else {
-      // Remove any existing like first
+
       await supabase
         .from('post_interactions')
         .delete()
         .eq('post_id', postId)
         .eq('user_id', userId)
         .eq('type', 'like');
-
-      // Add dislike
       const { error } = await supabase
         .from('post_interactions')
         .insert([{
@@ -85,7 +81,7 @@ export const toggleBookmark = async (postId, userId, currentState) => {
 
   try {
     if (currentState) {
-      // Remove bookmark
+
       const { error } = await supabase
         .from('post_interactions')
         .delete()
@@ -95,7 +91,7 @@ export const toggleBookmark = async (postId, userId, currentState) => {
 
       return !error;
     } else {
-      // Add bookmark
+
       const { error } = await supabase
         .from('post_interactions')
         .insert([{
@@ -162,7 +158,7 @@ export const handleViewPost = async (postId, userId) => {
   if (!postId || !userId) return false;
 
   try {
-    // Check if user has already viewed this post
+
     const { data: existingView, error: checkError } = await supabase
       .from('post_views')
       .select('id')
@@ -174,8 +170,6 @@ export const handleViewPost = async (postId, userId) => {
       console.error('Error checking existing view:', checkError);
       return false;
     }
-
-    // If user hasn't viewed this post, add a new view
     if (!existingView) {
       const { error: insertError } = await supabase
         .from('post_views')
@@ -189,8 +183,6 @@ export const handleViewPost = async (postId, userId) => {
         console.error('Error inserting view:', insertError);
         return false;
       }
-
-      // Increment view count in posts table
       const { error: updateError } = await supabase
         .from('posts')
         .update({ 
@@ -207,7 +199,7 @@ export const handleViewPost = async (postId, userId) => {
       return true;
     }
 
-    return false; // User has already viewed this post
+    return false;
   } catch (error) {
     console.error('Error handling view:', error);
     return false;
@@ -218,7 +210,7 @@ export const deletePost = async (postId, userId) => {
   if (!postId || !userId) return false;
 
   try {
-    // First, check if the user owns the post
+
     const { data: post, error: postError } = await supabase
       .from('posts')
       .select('user_id')
@@ -234,8 +226,6 @@ export const deletePost = async (postId, userId) => {
       console.error('User does not own this post');
       return false;
     }
-
-    // Delete the post (cascade should handle related data)
     const { error } = await supabase
       .from('posts')
       .delete()
@@ -253,7 +243,7 @@ export const editPost = async (postId, userId, content, tags = []) => {
   if (!postId || !userId || !content?.trim()) return false;
 
   try {
-    // First, check if the user owns the post
+
     const { data: post, error: postError } = await supabase
       .from('posts')
       .select('user_id')
@@ -269,8 +259,6 @@ export const editPost = async (postId, userId, content, tags = []) => {
       console.error('User does not own this post');
       return false;
     }
-
-    // Update the post
     const { data, error } = await supabase
       .from('posts')
       .update({
@@ -382,7 +370,7 @@ export const deleteComment = async (commentId, userId) => {
   if (!commentId || !userId) return false;
 
   try {
-    // First, check if the user owns the comment
+
     const { data: comment, error: commentError } = await supabase
       .from('comments')
       .select('user_id')
@@ -398,8 +386,6 @@ export const deleteComment = async (commentId, userId) => {
       console.error('User does not own this comment');
       return false;
     }
-
-    // Delete the comment
     const { error } = await supabase
       .from('comments')
       .delete()
@@ -417,7 +403,7 @@ export const editComment = async (commentId, userId, content) => {
   if (!commentId || !userId || !content?.trim()) return false;
 
   try {
-    // First, check if the user owns the comment
+
     const { data: comment, error: commentError } = await supabase
       .from('comments')
       .select('user_id')
@@ -433,8 +419,6 @@ export const editComment = async (commentId, userId, content) => {
       console.error('User does not own this comment');
       return false;
     }
-
-    // Update the comment
     const { data, error } = await supabase
       .from('comments')
       .update({

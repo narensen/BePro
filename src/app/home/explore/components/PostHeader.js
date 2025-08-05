@@ -37,7 +37,7 @@ const PostHeader = ({ post }) => {
             alt={`${username}'s avatar`}
             className="w-full h-full object-cover"
             onError={(e) => {
-              // Fallback to initial if image fails to load
+
               e.target.style.display = 'none';
               e.target.nextSibling.style.display = 'flex';
             }}
@@ -59,7 +59,7 @@ const PostHeader = ({ post }) => {
       <div className="flex items-center gap-2">
         <button
           className="font-bold text-black/80 cursor-pointer hover:underline"
-          onClick={() => window.open(`https://bepro.live/${username}`, "_blank")}
+          onClick={() => window.open(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/${username}`, "_blank")}
         >
           {`@${username}`}
         </button>

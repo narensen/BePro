@@ -6,16 +6,12 @@ export const useFollowUser = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { user, username } = useUserStore();
-
-  // Helper function to get user ID from identifier
   const getUserId = useCallback(async (identifier) => {
     if (!identifier) return null;
-
-    // Check if identifier is already a UUID
     const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
     
     if (isUUID) {
-      // Verify the UUID exists in the profile table
+
       const { data, error } = await supabase
         .from('profile')
         .select('id')
@@ -28,7 +24,7 @@ export const useFollowUser = () => {
       }
       return identifier;
     } else {
-      // Look up by username
+
       const { data, error } = await supabase
         .from('profile')
         .select('id')
@@ -42,8 +38,6 @@ export const useFollowUser = () => {
       return data.id;
     }
   }, []);
-
-  // Helper function to get current user ID
   const getCurrentUserId = useCallback(async () => {
     if (!username) return null;
 
@@ -74,28 +68,20 @@ export const useFollowUser = () => {
         setError('You must be logged in to follow users');
         return false;
       }
-
-      // Get current user ID
       const currentUserId = await getCurrentUserId();
       if (!currentUserId) {
         setError('Current user not found. Please log in again.');
         return false;
       }
-
-      // Get target user ID
       const targetUserId = await getUserId(targetUserIdentifier);
       if (!targetUserId) {
         setError('User not found');
         return false;
       }
-
-      // Check if trying to follow yourself
       if (currentUserId === targetUserId) {
         setError('Cannot follow yourself');
         return false;
       }
-
-      // Check if already following
       const { data: existingFollow, error: checkError } = await supabase
         .from('followers')
         .select('id')
@@ -110,11 +96,9 @@ export const useFollowUser = () => {
       }
 
       if (existingFollow) {
-        // Already following, return success
+
         return true;
       }
-
-      // Create follow relationship
       const { error: insertError } = await supabase
         .from('followers')
         .insert([{
@@ -124,13 +108,11 @@ export const useFollowUser = () => {
 
       if (insertError) {
         console.error('Error creating follow relationship:', insertError);
-        
-        // Handle specific error types
         if (insertError.code === '23505') {
-          // Unique constraint violation - already following
+
           return true;
         } else if (insertError.code === '23503') {
-          // Foreign key constraint violation
+
           if (insertError.message.includes('followers_follower_id_fkey')) {
             setError('Your profile is invalid. Please log out and back in.');
           } else {
@@ -166,22 +148,16 @@ export const useFollowUser = () => {
         setError('You must be logged in to unfollow users');
         return false;
       }
-
-      // Get current user ID
       const currentUserId = await getCurrentUserId();
       if (!currentUserId) {
         setError('Current user not found. Please log in again.');
         return false;
       }
-
-      // Get target user ID
       const targetUserId = await getUserId(targetUserIdentifier);
       if (!targetUserId) {
         setError('User not found');
         return false;
       }
-
-      // Delete follow relationship
       const { error: deleteError } = await supabase
         .from('followers')
         .delete()

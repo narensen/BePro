@@ -56,7 +56,7 @@ export default function TagSelector({ tags, removeTag, expandedCategories, toggl
         <span className="text-gray-600 text-sm font-semibold">({tags.length}/6)</span>
       </div>
 
-      {/* Selected Tags */}
+      {}
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-4">
           {tags.map((tag) => (
@@ -70,7 +70,7 @@ export default function TagSelector({ tags, removeTag, expandedCategories, toggl
         </div>
       )}
 
-      {/* Tag Categories */}
+      {}
       <div className="space-y-3 lg:space-y-4">
         {Object.entries(groupedTags).map(([category, tagsInCategory]) => (
           <div key={category}>

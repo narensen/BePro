@@ -101,7 +101,7 @@ const MissionSidebar = ({
           </div>
         </div>
         
-        {/* Quick Actions */}
+        {}
         <div className="space-y-3">
           <h3 className="text-md font-black text-amber-300 flex items-center gap-2">
             <span className="text-lg">⚡</span>

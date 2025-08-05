@@ -10,7 +10,7 @@ export const formatMessageDate = (timestamp) => {
   } else if (messageDate.getTime() === yesterday.getTime()) {
     return 'Yesterday';
   } else {
-    // Check if it's within the current week
+
     const daysDiff = Math.floor((today - messageDate) / (24 * 60 * 60 * 1000));
     if (daysDiff < 7) {
       return date.toLocaleDateString('en-US', { weekday: 'long' });

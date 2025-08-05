@@ -5,16 +5,12 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '../../lib/supabase_client';
 import SideBar from '../../components/SideBar';
 import useUserStore from '../../store/useUserStore';
-
-// Components
 import ExploreHeader from './components/ExploreHeader';
 import SearchAndSort from './components/SearchAndSort';
 import PostsList from './components/PostsList';
 import EmptyState from './components/EmptyState';
 import LoadingSpinner from './components/LoadingSpinner';
 import ProfileBar from './components/ProfileBar';
-
-// Hooks and Utils
 import { usePostData } from './hooks/usePostData';
 import { handleViewPost } from './utils/viewsUtils';
 import {
@@ -37,8 +33,6 @@ export default function Explore() {
   const router = useRouter();
   const { user } = useUserStore();
   const { loading, posts, setPosts, userInteractions, setUserInteractions, userProfile } = usePostData(user);
-
-  // Fetch user interaction history for better recommendations
   useEffect(() => {
     const fetchInteractionHistory = async () => {
       if (!userProfile?.id) return;
@@ -63,14 +57,10 @@ export default function Explore() {
 
     fetchInteractionHistory();
   }, [userProfile?.id]);
-
-  // Calculate user's cringe tolerance based on their interaction history
   const userCringeTolerance = useMemo(() => {
     if (!userInteractions || !posts.length) return 0.5;
     return calculateUserCringeTolerance(userInteractions, posts);
   }, [userInteractions, posts]);
-
-  // Get recommended posts based on selected sort mode
   const sortedPosts = useMemo(() => {
     if (!posts.length || !userProfile) return posts;
 
@@ -101,8 +91,6 @@ export default function Explore() {
         return posts;
     }
   }, [posts, userProfile, userInteractions, postInteractions, userCringeTolerance, sortMode]);
-
-  // Filter posts based on search
   const filteredPosts = useMemo(() => {
     if (!searchQuery) return sortedPosts;
     
@@ -128,7 +116,7 @@ export default function Explore() {
       }
 
       if (success !== false) {
-        // Update posts
+
         setPosts(prevPosts => 
           prevPosts.map(post => {
             if (post.id === postId) {
@@ -145,8 +133,6 @@ export default function Explore() {
             return post;
           })
         );
-
-        // Update user interactions
         setUserInteractions(prev => ({
           ...prev,
           [postId]: {
@@ -154,8 +140,6 @@ export default function Explore() {
             [type]: !currentState
           }
         }));
-
-        // Update interaction history for better future recommendations
         const post = posts.find(p => p.id === postId);
         if (post) {
           setPostInteractions(prev => [{

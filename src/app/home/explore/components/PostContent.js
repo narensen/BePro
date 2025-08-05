@@ -3,12 +3,12 @@ import { highlightQuery } from '../utils/highlightQuery';
 
 const PostContent = ({ post, searchQuery }) => (
   <div>
-    {/* Highlighted Post Content */}
+    {}
     <p className="text-gray-800 mb-4 leading-relaxed transition-colors duration-300 hover:text-gray-900">
       {highlightQuery(post.content, searchQuery)}
     </p>
 
-    {/* Post Tags */}
+    {}
     {post.tags && post.tags.length > 0 && (
       <div className="flex flex-wrap gap-2 mb-4">
         {post.tags.map((tag, index) => (

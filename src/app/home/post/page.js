@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation'
 import { supabase } from '../../lib/supabase_client'
 import SideBar from '../../components/SideBar'
 import useUserStore from '../../store/useUserStore'
-
-// Components
 import PostHeader from './components/PostHeader'
 import PostForm from './components/PostForm'
 import TagSelector from './components/TagSelector'

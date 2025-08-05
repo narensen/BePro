@@ -36,7 +36,7 @@ const ProfileSearch = () => {
           <div
             key={user.id}
             className="flex items-center gap-3 py-2 cursor-pointer hover:bg-orange-100 rounded-lg"
-            onClick={() => window.open(`https://bepro.live/${user.username}`, "_blank")}
+            onClick={() => window.open(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/${user.username}`, "_blank")}
           >
             <img src={user.avatar_url || '/default-avatar.png'} alt="profile" className="w-8 h-8 rounded-full border" />
             <span className="text-orange-800 font-medium">{user.username}</span>

@@ -1,11 +1,9 @@
-/* === ANIMATABLE ANGLE PROPERTY === */
+
 @property --angle {
   syntax: '<angle>';
   inherits: false;
   initial-value: 0deg;
 }
-
-/* === MAIN GLOW CONTAINER === */
 .glow-container {
   width: 100%;
   max-width: 640px;
@@ -15,8 +13,6 @@
   padding: 2px;
   background: transparent;
 }
-
-/* === STATIC BACKGROUND BORDER (SPINNING ONLY THE OUTLINE) === */
 .glow-container::before {
   content: '';
   position: absolute;
@@ -42,8 +38,6 @@
   -webkit-mask-composite: destination-out;
   filter: blur(20px);
 }
-
-/* === TEXTAREA CLEAN STYLES === */
 .glow-container textarea {
   width: 100%;
   height: 100%;
@@ -61,8 +55,6 @@
   box-shadow: none;
   transition: box-shadow 0.2s ease;
 }
-
-/* === ANIMATION === */
 @keyframes spin {
   from {
     --angle: 0deg;

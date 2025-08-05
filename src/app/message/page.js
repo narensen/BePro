@@ -7,7 +7,6 @@ import SideBar from '../components/SideBar'
 import useUserStore from '../store/useUserStore'
 import io from 'socket.io-client'
 
-// Components
 import MessagesHeader from './components/MessagesHeader'
 import ConversationsList from './components/ConversationsList'
 import ChatArea from './components/ChatArea'
@@ -39,7 +38,6 @@ export default function MessagesPage() {
     activeConversationRef.current = activeConversation;
   }, [activeConversation]);
 
-  // Mark messages as read function
   const markMessagesAsRead = async (conversationId, otherUsername) => {
     if (!username || !otherUsername) return;
     
@@ -54,7 +52,6 @@ export default function MessagesPage() {
       if (error) {
         console.error('Error marking messages as read:', error);
       } else {
-        // Update local unread counts
         setUnreadCounts(prev => ({
           ...prev,
           [conversationId]: 0
@@ -82,11 +79,10 @@ export default function MessagesPage() {
     checkSession()
   }, [router, clearUserSession])
 
-  // Initialize Socket.io connection
   useEffect(() => {
     if (username && user?.id) {
       const socketUrl = process.env.NODE_ENV === 'production' 
-        ? 'https://bepro-socket.onrender.com/' 
+        ? process.env.NEXT_PUBLIC_SOCKET_SERVER_URL 
         : 'http://localhost:3001'
       
       const socketInstance = io(socketUrl, {
@@ -128,14 +124,12 @@ export default function MessagesPage() {
       socketInstance.on('newDirectMessage', (message) => {
         console.log('Received new direct message:', message)
         
-        // Mark message as read if it's for the active conversation
         if (activeConversationRef.current?.conversationId === message.conversationId) {
           setMessages(prev => {
             const exists = prev.some(msg => msg.id === message.id)
             return exists ? prev : [...prev, message]
           })
           
-          // Mark as read if it's from the other user in active conversation
           if (message.senderUsername !== username) {
             markMessagesAsRead(message.conversationId, message.senderUsername);
           }
@@ -209,8 +203,6 @@ export default function MessagesPage() {
       }
     }
   }, [conversations, activeConversation]);
-
-  // Fetch avatars for conversations
   useEffect(() => {
     const fetchAvatarsForConversations = async () => {
       const convosWithoutAvatars = conversations.filter(
@@ -261,8 +253,6 @@ export default function MessagesPage() {
       fetchAvatarsForConversations();
     }
   }, [conversations]);
-
-  // Effect to fetch unread counts and subscribe to real-time updates
   useEffect(() => {
     if (!username) return;
 
@@ -304,13 +294,9 @@ export default function MessagesPage() {
       supabase.removeChannel(channel);
     };
   }, [username]);
-
-  // Scroll to bottom when messages change
   useEffect(() => {
     scrollToBottom()
   }, [messages])
-
-  // Search users
   const searchUsers = async (query) => {
     if (!query.trim()) {
       setSearchResults([])
@@ -340,8 +326,6 @@ export default function MessagesPage() {
       setIsSearching(false)
     }
   }
-
-  // Debounced search
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       searchUsers(searchQuery)
@@ -377,9 +361,7 @@ export default function MessagesPage() {
     setShowAddUser(false)
     setSearchQuery('')
     setSearchResults([])
-    setShowConversationsList(false) // Hide conversations list on mobile
-    
-    // Mark messages as read when starting a new conversation
+    setShowConversationsList(false)
     markMessagesAsRead(conversation.conversationId, otherUser.username);
     
     if (socket && isConnected) {
@@ -397,9 +379,7 @@ export default function MessagesPage() {
     setActiveConversation(conversation)
     setMessages([])
     setOtherUserTyping(false)
-    setShowConversationsList(false) // Hide conversations list on mobile
-    
-    // Mark messages as read when selecting a conversation
+    setShowConversationsList(false)
     markMessagesAsRead(conversation.conversationId, conversation.otherUsername);
     
     if (socket && isConnected) {
@@ -528,13 +508,13 @@ export default function MessagesPage() {
     <div className="h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-hidden relative">
       <SideBar />
 
-      {/* Desktop Messages Layout */}
+      {}
       <div className="hidden lg:flex h-screen lg:ml-72">
         <ConversationsList {...sharedProps} markMessagesAsRead={markMessagesAsRead} />
         <ChatArea {...sharedProps} markMessagesAsRead={markMessagesAsRead} />
       </div>
 
-      {/* Mobile Layout */}
+      {}
       <MobileLayout 
         {...sharedProps}
         showConversationsList={showConversationsList}

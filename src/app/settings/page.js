@@ -12,11 +12,9 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(false)
   const [message, setMessage] = useState('')
-  const [messageType, setMessageType] = useState('') // 'success' or 'error'
+  const [messageType, setMessageType] = useState('')
   const [activeTab, setActiveTab] = useState('profile')
   const router = useRouter()
-
-  // Complete form state with new fields
   const [formData, setFormData] = useState({
     email: '',
     fullName: '',
@@ -33,12 +31,8 @@ export default function SettingsPage() {
     newPassword: '',
     confirmPassword: ''
   })
-
-  // Tag system states
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedTags, setSelectedTags] = useState([])
-
-  // Avatar upload states
   const [avatarFile, setAvatarFile] = useState(null)
   const [avatarPreview, setAvatarPreview] = useState(null)
   const [avatarUploading, setAvatarUploading] = useState(false)
@@ -53,8 +47,6 @@ export default function SettingsPage() {
         }
 
         setUser(session.user)
-
-        // Fetch profile from database
         const { data: profileData } = await supabase
           .from('profile')
           .select('*')
@@ -74,8 +66,6 @@ export default function SettingsPage() {
             university: profileData.university || '',
             work_experience: profileData.work_experience || ''
           })
-
-          // Convert tag names to tag IDs for the structured system
           const tagIds = profileData.tags?.map(tagName => {
             const tag = availableTags.find(t => t.name === tagName)
             return tag ? tag.id : null
@@ -93,14 +83,10 @@ export default function SettingsPage() {
 
     fetchUserData()
   }, [router])
-
-  // Filter tags based on search query
   const filteredTags = availableTags.filter(tag =>
     tag.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     tag.category.toLowerCase().includes(searchQuery.toLowerCase())
   )
-
-  // Group tags by category
   const groupedTags = filteredTags.reduce((acc, tag) => {
     if (!acc[tag.category]) {
       acc[tag.category] = []
@@ -145,18 +131,18 @@ export default function SettingsPage() {
   const handleAvatarChange = (e) => {
     const file = e.target.files[0]
     if (file) {
-      // Check file size (max 5MB)
+
       if (file.size > 5 * 1024 * 1024) {
         showMessage('Image size must be less than 5MB', 'error')
         return
       }
-      // Check file type
+
       if (!file.type.startsWith('image/')) {
         showMessage('Please select an image file', 'error')
         return
       }
       setAvatarFile(file)
-      // Create preview
+
       const reader = new FileReader()
       reader.onload = (e) => {
         setAvatarPreview(e.target.result)
@@ -170,12 +156,10 @@ export default function SettingsPage() {
 
     setAvatarUploading(true)
     try {
-      // Generate unique filename with the same structure as ProfileBuilder
+
       const fileExt = avatarFile.name.split('.').pop()
       const fileName = `${Date.now()}.${fileExt}`
-      const filePath = `${user.id}/${fileName}` // ✅ This matches ProfileBuilder structure
-
-      // Upload file to avatars bucket under the user's UID folder
+      const filePath = `${user.id}/${fileName}`
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, avatarFile, {
@@ -198,8 +182,6 @@ export default function SettingsPage() {
       if (!uploadData?.path) {
         throw new Error('Upload completed but no file path returned')
       }
-
-      // Get public URL
       const { data: { publicUrl }, error: urlError } = supabase.storage
         .from('avatars')
         .getPublicUrl(uploadData.path)
@@ -230,7 +212,7 @@ export default function SettingsPage() {
     e.preventDefault()
     setUpdating(true)
     try {
-      // Upload avatar if a new one was selected
+
       let uploadedAvatarUrl = formData.avatar_url
       if (avatarFile) {
         const newAvatarUrl = await uploadAvatar()
@@ -241,14 +223,10 @@ export default function SettingsPage() {
           return
         }
       }
-
-      // Convert selected tag IDs to tag names
       const selectedTagNames = selectedTags.map(tagId => {
         const tag = availableTags.find(t => t.id === tagId)
         return tag ? tag.name : null
       }).filter(Boolean)
-
-      // Update auth user metadata
       const { error: authError } = await supabase.auth.updateUser({
         email: formData.email,
         data: {
@@ -260,8 +238,6 @@ export default function SettingsPage() {
       if (authError) {
         throw new Error(authError.message || 'Failed to update user authentication')
       }
-
-      // Only send updated fields (not empty/unchanged)
       const updateData = {
         email: formData.email,
         tags: selectedTagNames,
@@ -281,8 +257,6 @@ export default function SettingsPage() {
       if (profileError) {
         throw new Error(profileError.message || 'Failed to update profile')
       }
-
-      // Update local state
       setFormData(prev => ({
         ...prev,
         avatar_url: uploadedAvatarUrl,
@@ -347,15 +321,13 @@ export default function SettingsPage() {
   const handleDeleteAccount = async () => {
     if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
       try {
-        // Delete profile from database
+
         const { error: deleteError } = await supabase
           .from('profile')
           .delete()
           .eq('email', user.email)
 
         if (deleteError) throw deleteError
-
-        // Sign out user
         await supabase.auth.signOut()
         showMessage('Account deleted successfully', 'success')
         router.push('/')
@@ -383,12 +355,12 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
-      {/* Mobile-First Sidebar */}
+      {}
       <SideBar />
       
-      {/* Main Content */}
+      {}
       <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
-        {/* Mobile Header */}
+        {}
         <div className="hidden lg:block sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6">
           <div className="text-center lg:text-left">
             <h1 className="text-2xl lg:text-4xl font-black text-gray-900 mb-1 lg:mb-2">Settings</h1>
@@ -396,10 +368,10 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Content Container */}
+        {}
         <div className="px-3 lg:px-8 py-4 lg:py-8">
           <div className="max-w-4xl mx-auto">
-            {/* Mobile Title */}
+            {}
             <div className="lg:hidden mb-6 text-center">
               <h1 className="text-3xl font-black text-gray-900 mb-2">Settings</h1>
               <p className="text-amber-600 font-medium">Manage your account preferences and profile information</p>
@@ -411,7 +383,7 @@ export default function SettingsPage() {
               </div>
             )}
 
-            {/* Mobile-First Tab Navigation */}
+            {}
             <div className="mb-6 lg:mb-8">
               <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 lg:space-x-4 bg-gray-900/50 p-2 rounded-xl">
                 {['profile', 'password', 'account'].map((tab) => (
@@ -430,13 +402,13 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            {/* Profile Tab */}
+            {}
             {activeTab === 'profile' && (
               <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-2xl rounded-2xl p-4 lg:p-8 border border-gray-700">
                 <h2 className="text-xl lg:text-2xl font-black mb-4 lg:mb-6">Profile Information</h2>
                 
                 <form onSubmit={handleProfileUpdate} className="space-y-4 lg:space-y-6">
-                  {/* Avatar Upload Section - Mobile Optimized */}
+                  {}
                   <div className="flex flex-col items-center mb-4 lg:mb-6">
                     <div className="relative mb-3 lg:mb-4">
                       <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 flex items-center justify-center overflow-hidden border-4 border-amber-400 shadow-lg">
@@ -494,7 +466,7 @@ export default function SettingsPage() {
                     </p>
                   </div>
 
-                  {/* Form Fields - Mobile Optimized Grid */}
+                  {}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                     <div>
                       <label className="block text-amber-200 text-sm font-bold mb-2">
@@ -575,14 +547,14 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  {/* Enhanced Tags Section - Mobile Optimized */}
+                  {}
                   <div>
                     <label className="block text-amber-200 text-sm font-bold mb-2 flex items-center gap-2">
                       <Tag size={16} />
                       Interests & Tags
                     </label>
                     
-                    {/* Selected Tags Display */}
+                    {}
                     {selectedTags.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-4">
                         {selectedTags.map((tagId) => {
@@ -606,7 +578,7 @@ export default function SettingsPage() {
                       </div>
                     )}
 
-                    {/* Tag Search */}
+                    {}
                     <div className="relative mb-4">
                       <Search className="absolute left-3 top-3 text-gray-400" size={18} />
                       <input
@@ -618,7 +590,7 @@ export default function SettingsPage() {
                       />
                     </div>
 
-                    {/* Tag Categories - Mobile Optimized */}
+                    {}
                     <div className="max-h-48 lg:max-h-60 overflow-y-auto bg-gray-800/50 rounded-xl p-3 lg:p-4 border border-gray-700">
                       <div className="space-y-3 lg:space-y-4">
                         {Object.entries(groupedTags).map(([category, tags]) => (
@@ -654,7 +626,7 @@ export default function SettingsPage() {
                     </p>
                   </div>
 
-                  {/* Username Change Notice */}
+                  {}
                   <div className="bg-amber-500/20 text-amber-200 p-3 lg:p-4 rounded-xl border border-amber-500/30">
                     <p className="font-bold mb-2 text-sm lg:text-base">📧 Username Change Request</p>
                     <p className="text-xs lg:text-sm">
@@ -666,7 +638,7 @@ export default function SettingsPage() {
                     </p>
                   </div>
 
-                  {/* Submit Button */}
+                  {}
                   <button
                     type="submit"
                     disabled={updating || avatarUploading}
@@ -678,7 +650,7 @@ export default function SettingsPage() {
               </div>
             )}
 
-            {/* Password Tab */}
+            {}
             {activeTab === 'password' && (
               <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-2xl rounded-2xl p-4 lg:p-8 border border-gray-700">
                 <h2 className="text-xl lg:text-2xl font-black mb-4 lg:mb-6">Change Password</h2>
@@ -723,7 +695,7 @@ export default function SettingsPage() {
               </div>
             )}
 
-            {/* Account Tab */}
+            {}
             {activeTab === 'account' && (
               <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-2xl rounded-2xl p-4 lg:p-8 border border-gray-700">
                 <h2 className="text-xl lg:text-2xl font-black mb-4 lg:mb-6">Account Management</h2>
