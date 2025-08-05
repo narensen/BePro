@@ -142,7 +142,7 @@ export default function SideBar() {
   };
   return (
     <>
-      {/* Mobile Top Header with Profile */}
+      {}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-[100] bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 border-b border-white/20 shadow-lg">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center space-x-3">
@@ -185,7 +185,7 @@ export default function SideBar() {
                 </svg>
               </button>
               
-              {/* Mobile Profile Dropdown */}
+              {}
               {showProfileMenu && (
                 <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-white/30 py-2 z-50">
                   <button
@@ -227,7 +227,7 @@ export default function SideBar() {
         </div>
       </div>
 
-      {/* Sidebar */}
+      {}
       <div className="hidden lg:flex h-screen font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex-col fixed z-[70] w-72 left-0 top-0">
 
       <div className="p-6 border-b border-gray-200/30">
@@ -331,7 +331,7 @@ export default function SideBar() {
             </nav>
           </div>
 
-          {/* Bottom Buttons */}
+          {}
           <div className="p-4 border-t border-gray-200/30">
             <div className="space-y-1 cursor-pointer">
               {[...bottomItems,
@@ -388,9 +388,9 @@ export default function SideBar() {
       )}
     </div>
 
-     {/* Mobile Top Navigation Bar */}
+     {}
 
-     {/* Mobile Bottom Navigation Bar */}
+     {}
      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-white/95 backdrop-blur-sm border-t border-gray-200/50 shadow-2xl pb-safe">
        <div className="flex items-center justify-around py-2 px-4">
          {[...navItems.slice(0, 4), { name: 'Profile', icon: User, href: `/${username}` }].map((item) => {

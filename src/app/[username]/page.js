@@ -9,10 +9,8 @@ import FollowersModal from "../components/FollowersModal";
 import { useFollowers } from "../utils/useFollowers";
 
 export default function ProfilePage({ params }) {
-  // Unwrap params using React.use()
+
   const { username } = use(params);
-  
-  // Get current user from Zustand
   const { user: currentUser } = useUserStore();
   
   const [user, setUser] = useState(null)
@@ -23,16 +21,12 @@ export default function ProfilePage({ params }) {
   const [followersModalOpen, setFollowersModalOpen] = useState(false)
   const [followingModalOpen, setFollowingModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('posts')
-
-  // Use the followers hook
   const { followerCount, followingCount, refetch: refetchFollowers } = useFollowers(user?.id);
 
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
         setLoading(true)
-        
-        // Get user profile
         const { data: userData, error: userError } = await supabase
           .from("profile")
           .select("*")
@@ -46,8 +40,6 @@ export default function ProfilePage({ params }) {
         }
 
         setUser(userData)
-
-        // Get user's posts
         const { data: postsData } = await supabase
           .from("posts")
           .select("*")
@@ -55,8 +47,6 @@ export default function ProfilePage({ params }) {
           .order("created_at", { ascending: false });
 
         setUserPosts(postsData || [])
-
-        // Get user's liked posts
         const { data: likedData } = await supabase
           .from("post_interactions")
           .select(`
@@ -90,11 +80,9 @@ export default function ProfilePage({ params }) {
   }, [username])
 
   const handleFollowChange = (isNowFollowing) => {
-    // Refetch followers data when follow status changes
+
     refetchFollowers();
   };
-
-  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
@@ -111,8 +99,6 @@ export default function ProfilePage({ params }) {
       </div>
     )
   }
-
-  // Error state (user not found)
   if (error || !user) {
     const punchlines = [
       "Productivity not found. BePro, not BeLost.",
@@ -144,20 +130,18 @@ export default function ProfilePage({ params }) {
       </div>
     );
   }
-
-  // Main profile content
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
-      {/* Mobile-First Sidebar */}
+      {}
       <SideBar />
       
-      {/* Main Content */}
+      {}
       <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
-        {/* Content Container */}
+        {}
         <div className="px-3 lg:px-8 py-4 lg:py-12">
           <div className="max-w-4xl mx-auto">
             
-            {/* Profile Header - Mobile Optimized */}
+            {}
             <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-2xl rounded-2xl p-4 lg:p-8 mb-6 lg:mb-16 hover:scale-105 transition-all duration-300 border border-gray-700">
               <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 lg:space-x-8 mb-6 lg:mb-8">
                 <div className="w-24 h-24 lg:w-32 lg:h-32 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-gray-900 text-3xl lg:text-5xl font-black overflow-hidden">
@@ -189,7 +173,7 @@ export default function ProfilePage({ params }) {
                 </div>
               </div>
 
-              {/* Stats - Mobile Optimized Grid */}
+              {}
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 lg:gap-6 mb-6 lg:mb-8">
                 <div className="text-center">
                   <div className="text-2xl lg:text-4xl font-black text-amber-300">
@@ -229,7 +213,7 @@ export default function ProfilePage({ params }) {
                 </div>
               </div>
 
-              {/* Tags - Mobile Optimized */}
+              {}
               {user.tags && user.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 lg:gap-3">
                   {user.tags.map((tag, index) => (
@@ -241,7 +225,7 @@ export default function ProfilePage({ params }) {
               )}
             </div>
 
-            {/* Mobile Tab Navigation */}
+            {}
             <div className="lg:hidden mb-6">
               <div className="flex bg-gray-900/50 p-1 rounded-xl">
                 <button
@@ -267,10 +251,10 @@ export default function ProfilePage({ params }) {
               </div>
             </div>
 
-            {/* Content Grid - Mobile: Stacked, Desktop: Side by Side */}
+            {}
             <div className="lg:grid lg:grid-cols-2 lg:gap-16 space-y-8 lg:space-y-0">
               
-              {/* User's Posts Column */}
+              {}
               <div className={`${activeTab !== 'posts' ? 'hidden lg:block' : ''}`}>
                 <h2 className="text-2xl lg:text-3xl font-black text-gray-900 mb-6 lg:mb-8 drop-shadow-lg">
                   {currentUser?.id === user.id ? 'My Posts' : `${user.username}'s Posts`}
@@ -309,7 +293,7 @@ export default function ProfilePage({ params }) {
                 </div>
               </div>
 
-              {/* Liked Posts Column */}
+              {}
               <div className={`${activeTab !== 'liked' ? 'hidden lg:block' : ''}`}>
                 <h2 className="text-2xl lg:text-3xl font-black text-gray-900 mb-6 lg:mb-8 drop-shadow-lg">
                   {currentUser?.id === user.id ? 'Liked Posts' : `${user.username}'s Liked Posts`}
@@ -355,7 +339,7 @@ export default function ProfilePage({ params }) {
         </div>
       </div>
 
-      {/* Followers Modal */}
+      {}
       <FollowersModal
         userId={user?.id}
         username={user?.username}
@@ -364,7 +348,7 @@ export default function ProfilePage({ params }) {
         type="followers"
       />
 
-      {/* Following Modal */}
+      {}
       <FollowersModal
         userId={user?.id}
         username={user?.username}

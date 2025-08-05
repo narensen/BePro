@@ -6,11 +6,9 @@ import { useEffect } from 'react';
 
 export default function MessagesList({ messages, username, messagesEndRef, activeConversation, markMessagesAsRead }) {
   const messageGroups = groupMessagesByDate(messages);
-
-  // Mark messages as read when they come into view
   useEffect(() => {
     if (messages.length > 0 && activeConversation && username) {
-      // Mark messages as read after a short delay to ensure they're actually viewed
+
       const timer = setTimeout(() => {
         markMessagesAsRead(activeConversation.conversationId, activeConversation.otherUsername);
       }, 1000);

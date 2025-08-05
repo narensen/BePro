@@ -3,14 +3,14 @@ import { Play } from 'lucide-react';
 import RoadmapGrid from './RoadmapGrid';
 
 const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
-  // Convert missions object to array for easier processing
+
   const missionsArray = missions && typeof missions === 'object' 
     ? Object.entries(missions).map(([key, mission]) => ({ ...mission, id: key }))
     : [];
   
   return (
     <div className="space-y-6">
-      {/* Active Mission Highlight */}
+      {}
       <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 backdrop-blur-sm rounded-xl p-6 border border-amber-400/30 shadow-xl">
         <h3 className="text-lg lg:text-xl font-black text-amber-300 mb-4 flex items-center gap-2">
           <span className="text-2xl">🎯</span>
@@ -45,7 +45,7 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
               </div>
             );
           } else {
-            // Check if all missions are completed or if we need to set the first one as active
+
             const completedMissions = missionsArray.filter(mission => mission.status === "completed");
             if (completedMissions.length === missionsArray.length) {
               return (
@@ -55,7 +55,7 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
                 </div>
               );
             } else {
-              // Find the first mission without completed status to make it active
+
               const firstIncomplete = missionsArray.find(mission => mission.status !== "completed");
               if (firstIncomplete) {
                 const missionNumber = missionsArray.findIndex(mission => mission.id === firstIncomplete.id) + 1;
@@ -86,7 +86,7 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
         })()}
       </div>
 
-      {/* Original RoadmapGrid content */}
+      {}
       <RoadmapGrid missions={missions} username={username} />
     </div>
   );

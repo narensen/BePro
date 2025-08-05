@@ -13,13 +13,9 @@ const PostInteractions = ({
   const handleLikeDislike = async (type, postId, currentState) => {
     const oppositeType = type === 'like' ? 'dislike' : 'like';
     const oppositeState = userInteractions[postId]?.[oppositeType];
-    
-    // If trying to like/dislike and opposite is active, remove opposite first
     if (!currentState && oppositeState) {
-      await onInteraction(oppositeType, postId, true); // Remove opposite
+      await onInteraction(oppositeType, postId, true);
     }
-    
-    // Then apply the current action
     await onInteraction(type, postId, currentState);
   };
 

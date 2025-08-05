@@ -5,8 +5,6 @@ export default function StayConnected({ user_email, supabase }) {
   const [subscribed, setSubscribed] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-
-
   return (
     <>
       {subscribed ? (
