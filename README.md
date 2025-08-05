@@ -201,8 +201,6 @@ BePro is constantly evolving. Upcoming features include:
 
 **Ready to forge your elite tech career?**
 
-[🚀 Start Your Journey](https://bepro.dev) • [📖 Documentation](docs/) • [💬 Community](https://discord.gg/bepro)
-
-*Built with ❤️ by the BePro team*
+[🚀 Start Your Journey](https://bepro.live) • [📖 Documentation](docs/) • [💬 Community](https://discord.gg/bepro)
 
 </div>
