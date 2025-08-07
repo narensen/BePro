@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Brain, CheckCircle, XCircle, Clock, TrendingUp, Calendar, Target, Flame } from 'lucide-react'
+import {CheckCircle, XCircle, Clock, TrendingUp, Calendar, Target, Flame } from 'lucide-react'
 import { supabase } from '../../lib/supabase_client'
 
 export default function CodexReport({ username }) {
@@ -133,7 +133,6 @@ export default function CodexReport({ username }) {
         }
       case 'no_roadmap':
         return {
-          icon: Brain,
           title: 'Create Your Roadmap',
           message: 'Start your journey with the Codex',
           bgColor: 'from-blue-500/20 to-purple-500/20',
@@ -159,7 +158,6 @@ export default function CodexReport({ username }) {
       <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700 mb-6 lg:mb-8">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-amber-500/20 rounded-xl">
-            <Brain className="w-6 h-6 text-amber-400 animate-pulse" />
           </div>
           <h3 className="text-xl lg:text-2xl font-black text-amber-300">Codex Report</h3>
         </div>
@@ -178,7 +176,6 @@ export default function CodexReport({ username }) {
     <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700 mb-6 lg:mb-8">
       <div className="flex items-center gap-3 mb-6">
         <div className="p-2 bg-amber-500/20 rounded-xl">
-          <Brain className="w-6 h-6 text-amber-400" />
         </div>
         <h3 className="text-xl lg:text-2xl font-black text-amber-300">Codex Report</h3>
       </div>

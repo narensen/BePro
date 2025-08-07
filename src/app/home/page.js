@@ -8,7 +8,6 @@ import DashboardHeader from './components/DashboardHeader'
 import CodexReport from './components/CodexReport'
 import RecentNotifications from './components/RecentNotifications'
 import QuickActions from './components/QuickActions'
-import StatsOverview from './components/StatsOverview'
 import { useRouter } from 'next/navigation'
 
 export default function Home() {
@@ -96,7 +95,6 @@ export default function Home() {
               </div>
               <div className="space-y-6 lg:space-y-8">
                 <QuickActions />
-                <StatsOverview userProfile={userProfile} />
               </div>
             </div>
           </div>

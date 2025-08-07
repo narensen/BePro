@@ -1,6 +1,6 @@
 'use client'
 
-import { Plus, Search, Brain, MessageSquare, TrendingUp } from 'lucide-react'
+import { Plus, Search, AtomIcon, MessageSquare, TrendingUp } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export default function QuickActions() {
@@ -12,28 +12,28 @@ export default function QuickActions() {
       title: 'Create Post',
       description: 'Share your thoughts',
       href: '/home/post',
-      gradient: 'from-green-500 to-emerald-500'
+      gradient: 'from-amber-400 to-yellow-400'
     },
     {
       icon: Search,
       title: 'Explore',
       description: 'Discover content',
       href: '/home/explore',
-      gradient: 'from-blue-500 to-cyan-500'
+      gradient: 'from-amber-400 to-yellow-400'
     },
     {
-      icon: Brain,
+      icon: AtomIcon,
       title: 'Codex',
       description: 'Continue learning',
       href: '/codex',
-      gradient: 'from-purple-500 to-pink-500'
+      gradient: 'from-amber-400 to-yellow-400'
     },
     {
       icon: MessageSquare,
       title: 'Messages',
       description: 'Chat with others',
       href: '/message',
-      gradient: 'from-orange-500 to-red-500'
+      gradient: 'from-amber-400 to-yellow-400'
     }
   ]
 
@@ -55,8 +55,8 @@ export default function QuickActions() {
               onClick={() => router.push(action.href)}
               className="group bg-gray-800/50 hover:bg-gray-800/70 rounded-xl p-4 lg:p-6 border border-gray-700/50 hover:border-gray-600 transition-all duration-300 hover:scale-105"
             >
-              <div className={`w-12 h-12 lg:w-14 lg:h-14 bg-gradient-to-r ${action.gradient} rounded-xl flex items-center justify-center mb-3 lg:mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                <Icon className="w-6 h-6 lg:w-7 lg:h-7 text-white" />
+              <div className={`w-12 h-12 lg:w-14 lg:h-14 bg-gradient-to-r relative left-4 ${action.gradient} rounded-xl flex items-center justify-center mb-3 lg:mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                <Icon className="flex items-center justify-center text-white" />
               </div>
               <h4 className="text-amber-300 font-bold text-sm lg:text-base mb-1">
                 {action.title}
