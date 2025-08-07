@@ -211,11 +211,6 @@ export default function RecentNotifications({ username, userProfile }) {
             <Bell className="w-6 h-6 text-amber-400" />
           </div>
           <h3 className="text-xl lg:text-2xl font-black text-amber-300">Recent Activity</h3>
-          {unreadCount > 0 && (
-            <span className="bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
-              {unreadCount}
-            </span>
-          )}
         </div>
       </div>
 

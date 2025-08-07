@@ -1,6 +1,6 @@
 'use client'
 
-import { Plus, Search, Brain, MessageSquare, User, TrendingUp } from 'lucide-react'
+import { Plus, Search, Brain, MessageSquare, TrendingUp } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export default function QuickActions() {
@@ -38,7 +38,7 @@ export default function QuickActions() {
   ]
 
   return (
-    <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700 mb-6 lg:mb-8">
+    <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700">
       <div className="flex items-center gap-3 mb-6">
         <div className="p-2 bg-amber-500/20 rounded-xl">
           <TrendingUp className="w-6 h-6 text-amber-400" />
@@ -46,7 +46,7 @@ export default function QuickActions() {
         <h3 className="text-xl lg:text-2xl font-black text-amber-300">Quick Actions</h3>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         {actions.map((action) => {
           const Icon = action.icon
           return (

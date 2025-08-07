@@ -319,11 +319,6 @@ export default function SideBar() {
                     >
                       <Icon size={20} />
                       <span className="font-medium">{item.name}</span>
-                      {item.name === 'Messages' && unreadCount > 0 && (
-                        <span className="ml-auto flex items-center justify-center bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5">
-                          {unreadCount}
-                        </span>
-                      )}
                     </div>
                   </Link>
                 );
@@ -408,11 +403,6 @@ export default function SideBar() {
              >
                <div className="relative">
                  <Icon size={20} />
-                 {item.name === 'Messages' && unreadCount > 0 && (
-                   <span className="absolute -top-2 -right-2 flex items-center justify-center bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4">
-                     {unreadCount > 9 ? '9+' : unreadCount}
-                   </span>
-                 )}
                </div>
                <span className={`text-xs mt-1 font-medium transition-all duration-300 ${
                  isActive ? 'text-amber-600' : 'text-gray-500'
