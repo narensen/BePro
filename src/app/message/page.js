@@ -57,6 +57,7 @@ export default function MessagesPage() {
       if (error) {
         console.error('Error marking messages as read:', error);
       } else {
+        // Update local state to remove unread indicators
         setUnreadCounts(prev => ({
           ...prev,
           [conversationId]: 0

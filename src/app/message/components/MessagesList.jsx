@@ -38,11 +38,6 @@ export default function MessagesList({ messages, username, messagesEndRef, activ
                       message.senderUsername === username ? 'text-gray-700' : 'text-gray-500'
                     }`}>
                       {formatTime(message.timestamp)}
-                      {message.senderUsername === username && (
-                        <span className="ml-2">
-                          {message.is_read ? '✓✓' : '✓'}
-                        </span>
-                      )}
                     </div>
                   </div>
                 </div>

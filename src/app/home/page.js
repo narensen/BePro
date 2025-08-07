@@ -2,18 +2,19 @@
 
 import { useEffect, useState } from 'react'
 import useUserStore from '../store/useUserStore'
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
+import { supabase } from '../lib/supabase_client'
 import SideBar from '../components/SideBar'
+import DashboardHeader from './components/DashboardHeader'
+import CodexReport from './components/CodexReport'
+import RecentNotifications from './components/RecentNotifications'
+import QuickActions from './components/QuickActions'
+import StatsOverview from './components/StatsOverview'
 import { useRouter } from 'next/navigation'
 
 export default function Home() {
   const router = useRouter()
+  const [userProfile, setUserProfile] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   const {
     user,
@@ -23,75 +24,79 @@ export default function Home() {
     clearUserSession,
   } = useUserStore();
 
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!user?.email) {
+        setLoading(false)
+        return
+      }
+
+      try {
+        const { data: profile, error } = await supabase
+          .from('profile')
+          .select('*')
+          .eq('email', user.email)
+          .single()
+
+        if (error) {
+          console.error('Error fetching profile:', error)
+        } else {
+          setUserProfile(profile)
+          if (profile.username && !username) {
+            setUsername(profile.username)
+          }
+        }
+      } catch (error) {
+        console.error('Error in fetchUserProfile:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUserProfile()
+  }, [user, username, setUsername])
+
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut()
     if (error) console.error('Sign out error:', error)
     else location.reload()
   }
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+        <SideBar />
+        <div className="lg:ml-72 flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="text-2xl lg:text-4xl font-black mb-4 lg:mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent animate-pulse mt-16 lg:mt-0">
+              BePro Dashboard
+            </div>
+            <div className="w-8 h-8 lg:w-10 lg:h-10 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin mx-auto"></div>
+            <p className="text-gray-800 mt-4 text-sm lg:text-lg">Loading your dashboard...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-x-hidden relative">
-      {}
-      <div className="hidden lg:block fixed left-0 top-0 h-full z-40 w-72">
-        <SideBar user={user} username={username} onSignOut={handleSignOut} />
-      </div>
-
-      {}
-      <SideBar user={user} username={username} onSignOut={handleSignOut} />
+      <SideBar />
 
       <div className="transition-all duration-300 ease-in-out pb-20 lg:pb-0 lg:ml-72">
-        <header className="hidden lg:block sticky top-0 z-30 border-gray-200/50 p-4 lg:pt-4">
-          <div className="flex justify-end max-w-6xl">
-            <div className="flex items-end">
-              {user && (
-                <div className="relative top-4 left-4 sm:left-12 bg-gray-900 text-amber-300 px-3 sm:px-4 py-2 rounded-xl font-bold shadow-lg text-sm sm:text-base">
-                  Pro Member
-                </div>
-              )}
-            </div>
-          </div>
-        </header>
-
-        <main className="p-4 sm:p-6 pt-16 lg:pt-4 min-h-[calc(100vh-80px)] flex items-center justify-center">
-          <div className="text-center">
-            {}
-            <div className="lg:hidden mb-8">
-              <h1 className="text-3xl font-black text-gray-900 mb-2">Dashboard</h1>
-              <p className="text-gray-600">Welcome to your BePro dashboard</p>
-            </div>
+        <main className="p-4 sm:p-6 pt-16 lg:pt-4">
+          <div className="max-w-6xl mx-auto">
+            <DashboardHeader username={username || 'User'} />
             
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-12 shadow-xl border border-gray-200 max-w-md mx-auto mb-20">
-
-              {user ? (
-                <>
-                  <h2 className="text-xl sm:text-2xl font-black text-gray-900 mb-4">
-                    Welcome to Your Dashboard
-                  </h2>
-                  <p className="text-sm sm:text-base text-gray-600 mb-6">
-                    Your personalized experience is being prepared. Stay tuned for exciting features coming soon!
-                  </p>
-                </>
-              ) : (
-                <>
-                  <h2 className="text-xl sm:text-2xl font-black text-gray-900 mb-4">
-                    Welcome to BePro
-                  </h2>
-                  <p className="text-sm sm:text-base text-gray-600 mb-6">
-                    Please log in to access your dashboard.
-                  </p>
-                </>
-              )}
-
-              <div className="flex items-center justify-center gap-2 text-amber-500 mt-6">
-                <div className="w-2 h-2 bg-amber-500 rounded-full animate-bounce"></div>
-                <div
-                  className="w-2 h-2 bg-amber-500 rounded-full animate-bounce"
-                  style={{ animationDelay: '0.1s' }}
-                ></div>
-                <div
-                  className="w-2 h-2 bg-amber-500 rounded-full animate-bounce"
-                  style={{ animationDelay: '0.2s' }}
-                ></div>
+            <CodexReport username={username} />
+            
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
+              <div className="xl:col-span-2">
+                <RecentNotifications username={username} userProfile={userProfile} />
+              </div>
+              <div className="space-y-6 lg:space-y-8">
+                <QuickActions />
+                <StatsOverview userProfile={userProfile} />
               </div>
             </div>
           </div>
