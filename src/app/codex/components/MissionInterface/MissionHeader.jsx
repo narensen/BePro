@@ -20,8 +20,7 @@ const MissionHeader = ({
             <span>Back to Codex</span>
           </button>
           <div>
-            <h1 className="text-xl lg:text-2xl font-black text-amber-300">Mission {missionNumber}</h1>
-            <p className="text-amber-200 text-sm lg:text-base font-medium truncate max-w-md">{missionTitle}</p>
+            <h1 className="text-xl lg:text-2xl font-black text-amber-300">Mission {missionNumber.replace("Mission", "")}</h1>
           </div>
         </div>
         

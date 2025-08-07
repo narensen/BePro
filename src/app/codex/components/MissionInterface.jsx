@@ -47,7 +47,7 @@ const MissionInterface = ({
             const welcomeMessage = {
               id: Date.now(),
               type: 'system',
-              content: `Welcome to Mission ${missionNumber}: ${missionTitle.replace(/\\n/g, "")}I'm here to guide you through this mission. Feel free to ask questions, request explanations, or share your code for review. Let's start your learning journey!`,
+              content: `Welcome to Mission ${missionNumber}\nI'm here to guide you through this mission. Feel free to ask questions, request explanations, or share your code for review. Let's start your learning journey!`,
               timestamp: new Date().toISOString()
             };
             setMessages([welcomeMessage]);
