@@ -30,6 +30,11 @@ export default function LandingPage() {
 
   useEffect(() => {
     const checkUser = async () => {
+      if (!supabase) {
+        setLoading(false);
+        return;
+      }
+      
       const { data, error } = await supabase.auth.getSession();
       if (error) {
         console.error('Error fetching session:', error);

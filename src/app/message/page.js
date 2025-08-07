@@ -69,6 +69,10 @@ export default function MessagesPage() {
 
   useEffect(() => {
     const checkSession = async () => {
+      if (!supabase) {
+        return;
+      }
+      
       const { data, error } = await supabase.auth.getSession()
 
       if (error || !data?.session) {
@@ -339,7 +343,9 @@ export default function MessagesPage() {
     if (socket) {
       socket.disconnect()
     }
-    await supabase.auth.signOut()
+    if (supabase) {
+      await supabase.auth.signOut()
+    }
     clearUserSession()
     router.push('/')
   }
