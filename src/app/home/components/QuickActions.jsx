@@ -40,10 +40,6 @@ export default function QuickActions() {
   return (
     <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700">
       <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-amber-500/20 rounded-xl">
-          <TrendingUp className="w-6 h-6 text-amber-400" />
-        </div>
-        <h3 className="text-xl lg:text-2xl font-black text-amber-300">Quick Actions</h3>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
