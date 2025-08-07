@@ -302,7 +302,7 @@ export default function Codex() {
                     Generating your personalized roadmap...
                   </p>
                   <p className="text-gray-600 text-sm mt-2">
-                    This may take a few moments. Feel free to browse
+                    This may take a few moments. Feel free to browse. Do not Reload or close the Tab
                   </p>
                 </div>
               )}
