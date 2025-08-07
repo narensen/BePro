@@ -3,12 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Play } from 'lucide-react';
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { supabase } from '@/app/lib/supabase_client'
 
 import useUserStore from "../store/useUserStore";
 import useLoadingStore from "../store/useLoadingStore";

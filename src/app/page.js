@@ -4,12 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Code2, Brain, Target, Menu, X } from 'lucide-react';
 
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { supabase } from '@/app/lib/supabase_client'
 
 import useUserStore from '@/app/store/useUserStore';
 import { useMousePosition } from '@/app/hooks/useMousePosition';
@@ -35,6 +30,11 @@ export default function LandingPage() {
 
   useEffect(() => {
     const checkUser = async () => {
+      if (!supabase) {
+        setLoading(false);
+        return;
+      }
+      
       const { data, error } = await supabase.auth.getSession();
       if (error) {
         console.error('Error fetching session:', error);
