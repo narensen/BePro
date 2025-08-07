@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import {CheckCircle, XCircle, Clock, TrendingUp, Calendar, Target, Flame } from 'lucide-react'
+import { CheckCircle, XCircle, Clock, TrendingUp, Calendar, Target, Flame } from 'lucide-react'
 import { supabase } from '../../lib/supabase_client'
 
 export default function CodexReport({ username }) {
@@ -43,11 +43,10 @@ export default function CodexReport({ username }) {
         const roadmap = codexData.roadmap || {}
         const activeStatus = codexData.active_status || 0
         const totalMissionsCount = Object.keys(roadmap).length
-        
+
         setTotalMissions(totalMissionsCount)
         setCompletedMissions(activeStatus)
 
-        // Check study activity from session messages
         const session = codexData.session || {}
         const today = new Date()
         const last7Days = Array.from({ length: 7 }, (_, i) => {
@@ -64,7 +63,6 @@ export default function CodexReport({ username }) {
         let studiedToday = false
         let streak = 0
 
-        // Check each day for study activity
         last7Days.forEach(day => {
           Object.values(session).forEach(missionMessages => {
             if (Array.isArray(missionMessages)) {
@@ -83,7 +81,6 @@ export default function CodexReport({ username }) {
           })
         })
 
-        // Calculate current streak (from today backwards)
         const reversedDays = [...last7Days].reverse()
         for (const day of reversedDays) {
           if (day.studied) {
@@ -133,6 +130,7 @@ export default function CodexReport({ username }) {
         }
       case 'no_roadmap':
         return {
+          icon: Target, // FIX: Added icon here
           title: 'Create Your Roadmap',
           message: 'Start your journey with the Codex',
           bgColor: 'from-blue-500/20 to-purple-500/20',
@@ -157,8 +155,7 @@ export default function CodexReport({ username }) {
     return (
       <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700 mb-6 lg:mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-amber-500/20 rounded-xl">
-          </div>
+          <div className="p-2 bg-amber-500/20 rounded-xl"></div>
           <h3 className="text-xl lg:text-2xl font-black text-amber-300">Codex Report</h3>
         </div>
         <div className="animate-pulse">
@@ -170,13 +167,12 @@ export default function CodexReport({ username }) {
   }
 
   const config = getStatusConfig()
-  const StatusIcon = config.icon
+  const StatusIcon = config.icon || XCircle // fallback
 
   return (
     <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700 mb-6 lg:mb-8">
       <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-amber-500/20 rounded-xl">
-        </div>
+        <div className="p-2 bg-amber-500/20 rounded-xl"></div>
         <h3 className="text-xl lg:text-2xl font-black text-amber-300">Codex Report</h3>
       </div>
 
