@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "BePro : AI Career-pathing engine",
+  title: "BePro : The Career Engine for Builders, Not Bystanders",
   description: "BePro",
 };
 
