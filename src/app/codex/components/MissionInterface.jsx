@@ -28,6 +28,7 @@ const MissionInterface = ({
   const [showCodeEditor, setShowCodeEditor] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
   const [sessionLoaded, setSessionLoaded] = useState(false);
+
   useEffect(() => {
     const loadMissionSession = async () => {
       try {
@@ -62,6 +63,7 @@ const MissionInterface = ({
 
     loadMissionSession();
   }, [missionNumber, missionTitle, username]);
+
   const saveMissionSession = async (newMessages) => {
     try {
       const { data, error: fetchError } = await supabase
@@ -95,6 +97,7 @@ const MissionInterface = ({
       console.error('Error in saveMissionSession:', error);
     }
   };
+
   const handleAutoMissionComplete = async () => {
     try {
       const { data, error: fetchError } = await supabase
@@ -218,50 +221,69 @@ const MissionInterface = ({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono flex flex-col">
-      <MissionHeader
-        missionNumber={missionNumber}
-        missionTitle={missionTitle}
-        onBackToCodex={onBackToCodex}
-        showSidebar={showSidebar}
-        setShowSidebar={setShowSidebar}
-      />
+    <div className="min-h-screen font-mono">
+      {/* Fixed Header */}
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <MissionHeader
+          missionNumber={missionNumber}
+          missionTitle={missionTitle}
+          onBackToCodex={onBackToCodex}
+          showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
+        />
+      </div>
 
-      <div className="flex flex-1 overflow-hidden">
-        {showSidebar && (
-          <MissionSidebar
-            missionDescription={missionDescription}
-            setCurrentInput={setCurrentInput}
-            showSidebar={showSidebar}
-            setShowSidebar={setShowSidebar}
-          />
-        )}
-
-        <div className="flex-1 flex flex-col bg-white/95 backdrop-blur-sm">
-          <ChatArea
-            messages={messages}
-            isLoading={isLoading}
-          />
-
-          {showCodeEditor && (
-            <CodeEditor
-              showCodeEditor={showCodeEditor}
-              setShowCodeEditor={setShowCodeEditor}
-              codeInput={codeInput}
-              setCodeInput={setCodeInput}
+      {/* Main Content Area */}
+      <div className="flex min-h-screen pt-16 transition-all duration-500 ease-in-out">
+        {/* Sidebar - Fixed position, lower z-index to not interfere with footer */}
+        <div className={`fixed left-0 top-16 bottom-0 w-80 bg-white border-r border-gray-200 shadow-lg z-20 transform transition-transform duration-500 ease-in-out ${showSidebar ? 'translate-x-0' : '-translate-x-full'}`}>
+          <div className="h-full overflow-y-auto pb-24">
+            <MissionSidebar
+              missionDescription={missionDescription}
               setCurrentInput={setCurrentInput}
+              showSidebar={showSidebar}
+              setShowSidebar={setShowSidebar}
             />
-          )}
-
-          <ChatInput
-            currentInput={currentInput}
-            setCurrentInput={setCurrentInput}
-            handleSendMessage={handleSendMessage}
-            isLoading={isLoading}
-            showCodeEditor={showCodeEditor}
-            setShowCodeEditor={setShowCodeEditor}
-          />
+          </div>
         </div>
+
+        {/* Main Chat Area - Smoothly adjusts position when sidebar is open */}
+        <div className={`flex-1 flex flex-col bg-white/95 backdrop-blur-sm transition-all duration-500 ease-in-out ${showSidebar ? 'ml-80' : 'ml-0'} pb-32`}>
+          {/* Chat Messages Area - Full scroll capability */}
+          <div className="flex-1 transition-all duration-300 ease-in-out">
+            <div className={`h-full transition-all duration-500 ease-in-out ${showSidebar ? 'px-8' : 'px-4'}`}>
+              <ChatArea
+                messages={messages}
+                isLoading={isLoading}
+              />
+            </div>
+          </div>
+
+          {/* Code Editor - Conditional with smooth appearance */}
+          {showCodeEditor && (
+            <div className="border-t border-gray-200 bg-white transform transition-all duration-300 ease-in-out animate-in slide-in-from-bottom">
+              <CodeEditor
+                showCodeEditor={showCodeEditor}
+                setShowCodeEditor={setShowCodeEditor}
+                codeInput={codeInput}
+                setCodeInput={setCodeInput}
+                setCurrentInput={setCurrentInput}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Fixed Footer - Chat Input adjusts based on sidebar state */}
+      <div className={`fixed bottom-0 z-40 bg-white border-t border-gray-200 shadow-lg transition-all duration-500 ease-in-out ${showSidebar ? 'left-80 right-0' : 'left-0 right-0'}`}>
+        <ChatInput
+          currentInput={currentInput}
+          setCurrentInput={setCurrentInput}
+          handleSendMessage={handleSendMessage}
+          isLoading={isLoading}
+          showCodeEditor={showCodeEditor}
+          setShowCodeEditor={setShowCodeEditor}
+        />
       </div>
     </div>
   );

@@ -78,7 +78,7 @@ const MissionSidebar = ({
   if (!showSidebar) return null;
 
   return (
-    <div className="w-80 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-r border-amber-400/30 overflow-y-auto shadow-xl">
+    <div className="w-80 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-r border-amber-400/30 overflow-y-auto shadow-xl min-h-screen">
       <div className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg lg:text-xl font-black text-amber-300 flex items-center gap-2">

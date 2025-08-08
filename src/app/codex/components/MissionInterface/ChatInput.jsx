@@ -17,14 +17,14 @@ const ChatInput = ({
   };
 
   return (
-    <div className="border-t border-gray-200 bg-white/95 backdrop-blur-sm p-4 lg:p-6 shadow-lg">
-      <div className="flex space-x-4">
+    <div className="fixed bottom-0 left-0 right-0 p-4 lg:p-6 z-50">
+      <div className="flex space-x-4 max-w-4xl mx-auto">
         <div className="flex-1 relative">
           <textarea
             value={currentInput}
             onChange={(e) => setCurrentInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            className="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-gray-800 placeholder-gray-500 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 resize-none font-medium shadow-sm"
+            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-gray-800 placeholder-gray-500 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 resize-none font-medium shadow-sm bg-white"
             placeholder="Ask a question, request help, or share your code..."
             rows={3}
             disabled={isLoading}
@@ -52,7 +52,7 @@ const ChatInput = ({
           </button>
         </div>
       </div>
-      <p className="text-xs text-gray-600 mt-3 font-medium">
+      <p className="text-xs text-gray-600 mt-3 font-medium text-center max-w-4xl mx-auto">
         Press Enter to send • Shift+Enter for new line
       </p>
     </div>

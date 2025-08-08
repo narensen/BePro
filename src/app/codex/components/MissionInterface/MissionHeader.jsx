@@ -24,15 +24,6 @@ const MissionHeader = ({
           </div>
         </div>
         
-        <button
-          onClick={() => setShowSidebar(!showSidebar)}
-          className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-gray-900 rounded-xl transition-all duration-300 hover:scale-105 font-bold shadow-lg"
-        >
-          {showSidebar ? <X size={18} /> : <Menu size={18} />}
-          <span className="hidden lg:inline">
-            {showSidebar ? 'Close Brief' : 'Mission Brief'}
-          </span>
-        </button>
       </div>
     </div>
   );
