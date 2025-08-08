@@ -105,7 +105,7 @@ We don’t care about perfect pixels. We care about momentum and signal.
 
 ## License
 
-MIT — use it, remix it, just don’t pretend you built it from scratch.
+THE APGL — use it, remix it, just don’t pretend you built it from scratch.
 
 ---
 
