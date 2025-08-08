@@ -13,7 +13,6 @@ const ChatArea = ({ messages, isLoading }) => {
       {messages.length === 0 && !isLoading && (
         <div className="flex items-center justify-center h-full">
           <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/30">
-            <div className="text-6xl mb-4">🚀</div>
             <h3 className="text-xl font-black text-gray-900 mb-2">Ready to Start?</h3>
             <p className="text-gray-600 font-medium">Ask me anything about this mission or request help to get started!</p>
           </div>
