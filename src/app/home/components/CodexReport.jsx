@@ -27,7 +27,7 @@ export default function CodexReport({ username }) {
 
   const { loading } = useLoadingStore()
 
-  // Animate the visualization - moved to top level from inside useMemo
+  // Animate the visualization
   useEffect(() => {
     const animate = () => {
       setAnimationPhase(prev => (prev + 0.005) % (Math.PI * 2))
@@ -41,9 +41,9 @@ export default function CodexReport({ username }) {
         cancelAnimationFrame(animationRef.current)
       }
     }
-  }, []) // Empty dependency array to run only once on mount
+  }, [])
 
-  // Process activity data from session data
+  // Process activity data from session data with proper timezone handling
   const processActivityData = (session) => {
     const activityMap = {}
     
@@ -51,8 +51,14 @@ export default function CodexReport({ username }) {
       if (Array.isArray(missionMessages)) {
         missionMessages.forEach(message => {
           if (message.timestamp) {
-            const date = new Date(message.timestamp).toISOString().split('T')[0]
-            activityMap[date] = (activityMap[date] || 0) + 1
+            // Create date object and handle timezone properly
+            const messageDate = new Date(message.timestamp)
+            // Use local date string to avoid timezone issues
+            const localDateStr = messageDate.getFullYear() + '-' + 
+              String(messageDate.getMonth() + 1).padStart(2, '0') + '-' + 
+              String(messageDate.getDate()).padStart(2, '0')
+            
+            activityMap[localDateStr] = (activityMap[localDateStr] || 0) + 1
           }
         })
       }
@@ -61,13 +67,15 @@ export default function CodexReport({ username }) {
     // Get all years from the activity data
     const years = new Set()
     Object.keys(activityMap).forEach(date => {
-      const year = new Date(date).getFullYear()
-      years.add(year)
+      const year = parseInt(date.split('-')[0])
+      if (!isNaN(year)) {
+        years.add(year)
+      }
     })
     
     // Ensure current year is always included
     years.add(new Date().getFullYear())
-    setAvailableYears(Array.from(years).sort((a, b) => b - a)) // Sort years descending
+    setAvailableYears(Array.from(years).sort((a, b) => b - a))
 
     return Object.entries(activityMap).map(([date, count]) => ({ date, count }))
   }
@@ -112,48 +120,36 @@ export default function CodexReport({ username }) {
         const processedActivityData = processActivityData(session)
         setActivityData(processedActivityData)
 
-        // Calculate streak and today's status
+        // Calculate streak and today's status with proper timezone handling
         const today = new Date()
+        const todayStr = today.getFullYear() + '-' + 
+          String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+          String(today.getDate()).padStart(2, '0')
+        
         let studiedToday = false
         let streak = 0
 
-        // Check if studied today
-        Object.values(session).forEach(missionMessages => {
-          if (Array.isArray(missionMessages)) {
-            missionMessages.forEach(message => {
-              if (message.timestamp) {
-                const messageDate = new Date(message.timestamp)
-                if (messageDate.toDateString() === today.toDateString()) {
-                  studiedToday = true
-                }
-              }
-            })
+        // Check if studied today using the processed activity data
+        const todayActivity = processedActivityData.find(item => item.date === todayStr)
+        studiedToday = todayActivity && todayActivity.count > 0
+
+        // Calculate streak properly
+        const sortedDates = processedActivityData
+          .map(item => item.date)
+          .sort((a, b) => new Date(b) - new Date(a))
+
+        let currentDate = new Date(today)
+        while (true) {
+          const dateStr = currentDate.getFullYear() + '-' + 
+            String(currentDate.getMonth() + 1).padStart(2, '0') + '-' + 
+            String(currentDate.getDate()).padStart(2, '0')
+          
+          if (sortedDates.includes(dateStr)) {
+            streak++
+            currentDate.setDate(currentDate.getDate() - 1)
+          } else {
+            break
           }
-        })
-
-        // Calculate streak (simplified)
-        const dates = Array.from({length: 30}, (_, i) => {
-          const d = new Date()
-          d.setDate(d.getDate() - i)
-          return d.toDateString()
-        })
-
-        for (const dateStr of dates) {
-          let studiedOnDate = false
-          Object.values(session).forEach(missionMessages => {
-            if (Array.isArray(missionMessages)) {
-              missionMessages.forEach(message => {
-                if (message.timestamp) {
-                  const messageDate = new Date(message.timestamp)
-                  if (messageDate.toDateString() === dateStr) {
-                    studiedOnDate = true
-                  }
-                }
-              })
-            }
-          })
-          if (studiedOnDate) streak++
-          else break
         }
 
         setCurrentStreak(streak)
@@ -203,276 +199,292 @@ export default function CodexReport({ username }) {
     }
   }
 
-// Enhanced Activity Heatmap - GitHub style (replace the existing ActivityHeatmap useMemo)
-const ActivityHeatmap = useMemo(() => {
-  if (!activityData.length) return null
+  // Enhanced Activity Heatmap with fixed layout and date handling
+  const ActivityHeatmap = useMemo(() => {
+    if (!activityData.length) return null
 
-  const activityMap = {}
-  activityData.forEach(({ date, count }) => {
-    activityMap[date] = count
-  })
-
-  // Generate all weeks for the selected year
-  const startDate = new Date(selectedYear, 0, 1)
-  const endDate = new Date(selectedYear, 11, 31)
-  
-  // Find the first Sunday of the year (or before)
-  const firstSunday = new Date(startDate)
-  firstSunday.setDate(startDate.getDate() - startDate.getDay())
-  
-  // Find the last Saturday of the year (or after)
-  const lastSaturday = new Date(endDate)
-  lastSaturday.setDate(endDate.getDate() + (6 - endDate.getDay()))
-
-  const weeks = []
-  let currentDate = new Date(firstSunday)
-  
-  while (currentDate <= lastSaturday) {
-    const week = []
-    for (let i = 0; i < 7; i++) {
-      week.push(new Date(currentDate))
-      currentDate.setDate(currentDate.getDate() + 1)
-    }
-    weeks.push(week)
-  }
-
-  const getIntensityColor = (count) => {
-    if (!count || count <= 0) return "bg-gray-800"
-    if (count <= 4) return "bg-amber-100"
-    if (count <= 9) return "bg-amber-300"
-    if (count <= 14) return "bg-amber-400"
-    if (count <= 19) return "bg-amber-500"
-    return "bg-amber-600"
-  }
-
-  const getIntensityLevel = (count) => {
-    if (!count || count <= 0) return 0
-    if (count <= 4) return 1
-    if (count <= 9) return 2
-    if (count <= 14) return 3
-    if (count <= 19) return 4
-    return 5
-  }
-
-  const today = new Date()
-  const todayStr = today.toISOString().split('T')[0]
-
-  const handleCellHover = (date, count, event) => {
-    const rect = event.target.getBoundingClientRect()
-    setHoveredCell({
-      date,
-      count,
-      x: rect.left + rect.width / 2,
-      y: rect.top - 10
+    const activityMap = {}
+    activityData.forEach(({ date, count }) => {
+      activityMap[date] = count
     })
-  }
 
-  const handleCellLeave = () => {
-    setHoveredCell(null)
-  }
+    // Generate all weeks for the selected year
+    const startDate = new Date(selectedYear, 0, 1)
+    const endDate = new Date(selectedYear, 11, 31)
+    
+    // Find the first Sunday of the year (or before)
+    const firstSunday = new Date(startDate)
+    firstSunday.setDate(startDate.getDate() - startDate.getDay())
+    
+    // Find the last Saturday of the year (or after)
+    const lastSaturday = new Date(endDate)
+    lastSaturday.setDate(endDate.getDate() + (6 - endDate.getDay()))
 
-  // Navigation functions
-  const navigateYear = (direction) => {
-    const currentIndex = availableYears.indexOf(selectedYear)
-    if (direction === 'next' && currentIndex > 0) {
-      setSelectedYear(availableYears[currentIndex - 1])
-    } else if (direction === 'prev' && currentIndex < availableYears.length - 1) {
-      setSelectedYear(availableYears[currentIndex + 1])
+    const weeks = []
+    let currentDate = new Date(firstSunday)
+    
+    while (currentDate <= lastSaturday) {
+      const week = []
+      for (let i = 0; i < 7; i++) {
+        week.push(new Date(currentDate))
+        currentDate.setDate(currentDate.getDate() + 1)
+      }
+      weeks.push(week)
     }
-  }
 
-  // Month labels
-  const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-  
-  // Calculate which weeks correspond to each month
-  const getMonthPositions = () => {
-    const positions = []
-    for (let month = 0; month < 12; month++) {
-      const firstDay = new Date(selectedYear, month, 1)
-      const weekIndex = Math.floor((firstDay.getTime() - firstSunday.getTime()) / (7 * 24 * 60 * 60 * 1000))
-      positions.push({ month, weekIndex, label: monthLabels[month] })
+    const getIntensityColor = (count) => {
+      if (!count || count <= 0) return "bg-gray-800"
+      if (count <= 4) return "bg-amber-100"
+      if (count <= 9) return "bg-amber-300"
+      if (count <= 14) return "bg-amber-400"
+      if (count <= 19) return "bg-amber-500"
+      return "bg-amber-600"
     }
-    return positions
-  }
 
-  const monthPositions = getMonthPositions()
+    const getIntensityLevel = (count) => {
+      if (!count || count <= 0) return 0
+      if (count <= 4) return 1
+      if (count <= 9) return 2
+      if (count <= 14) return 3
+      if (count <= 19) return 4
+      return 5
+    }
 
-  return (
-    <div className="bg-gray-800/50 rounded-xl p-6 mb-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-amber-400" />
-          <h4 className="text-xl font-bold text-amber-300">Activity Timeline</h4>
-        </div>
-        
-        {/* Year Navigation */}
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={() => navigateYear('prev')}
-            disabled={availableYears.indexOf(selectedYear) >= availableYears.length - 1}
-            className="p-1 rounded-full bg-gray-700 hover:bg-amber-500/20 text-amber-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-          >
-            <ChevronLeft size={16} />
-          </button>
-          
-          <h3 className="text-lg font-bold text-amber-300 min-w-[4rem] text-center">
-            {selectedYear}
-          </h3>
-          
-          <button 
-            onClick={() => navigateYear('next')}
-            disabled={availableYears.indexOf(selectedYear) <= 0}
-            className="p-1 rounded-full bg-gray-700 hover:bg-amber-500/20 text-amber-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-          >
-            <ChevronRight size={16} />
-          </button>
-        </div>
-      </div>
+    // Get today's date in the same format used for activity data
+    const today = new Date()
+    const todayStr = today.getFullYear() + '-' + 
+      String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+      String(today.getDate()).padStart(2, '0')
 
-      {/* Heatmap Container */}
-      <div className="relative overflow-x-auto">
-        <div className="min-w-[700px]">
-          {/* Month Labels */}
-          <div className="flex mb-2 ml-8">
-            {monthPositions.map(({ month, weekIndex, label }, index) => {
-              // Only show label if there's enough space and it's not overlapping
-              const nextPosition = monthPositions[index + 1]
-              const hasSpace = !nextPosition || (nextPosition.weekIndex - weekIndex) >= 4
-              
-              return (
-                <div
-                  key={month}
-                  className="text-xs text-amber-200/70"
-                  style={{
-                    position: 'absolute',
-                    left: `${32 + weekIndex * 12}px`,
-                    display: hasSpace ? 'block' : 'none'
-                  }}
-                >
-                  {label}
-                </div>
-              )
-            })}
+    const handleCellHover = (date, count, event) => {
+      const rect = event.target.getBoundingClientRect()
+      setHoveredCell({
+        date,
+        count,
+        x: rect.left + rect.width / 2,
+        y: rect.top - 10
+      })
+    }
+
+    const handleCellLeave = () => {
+      setHoveredCell(null)
+    }
+
+    // Navigation functions
+    const navigateYear = (direction) => {
+      const currentIndex = availableYears.indexOf(selectedYear)
+      if (direction === 'next' && currentIndex > 0) {
+        setSelectedYear(availableYears[currentIndex - 1])
+      } else if (direction === 'prev' && currentIndex < availableYears.length - 1) {
+        setSelectedYear(availableYears[currentIndex + 1])
+      }
+    }
+
+    // Month labels
+    const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    
+    // Calculate which weeks correspond to each month - fixed positioning
+    const getMonthPositions = () => {
+      const positions = []
+      for (let month = 0; month < 12; month++) {
+        const firstDay = new Date(selectedYear, month, 1)
+        const daysSinceFirstSunday = Math.floor((firstDay.getTime() - firstSunday.getTime()) / (24 * 60 * 60 * 1000))
+        const weekIndex = Math.floor(daysSinceFirstSunday / 7)
+        positions.push({ month, weekIndex, label: monthLabels[month] })
+      }
+      return positions
+    }
+
+    const monthPositions = getMonthPositions()
+
+    return (
+      <div className="bg-gray-800/50 rounded-xl p-6 mb-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-amber-400" />
+            <h4 className="text-xl font-bold text-amber-300">Activity Timeline</h4>
           </div>
-
-          {/* Days of Week Labels + Heatmap Grid */}
-          <div className="flex">
-            {/* Day labels */}
-            <div className="flex flex-col gap-[2px] mr-2 mt-4">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
-                <div 
-                  key={day} 
-                  className="h-3 flex items-center text-xs text-amber-200/50"
-                  style={{ opacity: index % 2 === 1 ? 1 : 0 }} // Only show Mon, Wed, Fri
-                >
-                  {index % 2 === 1 ? day : ''}
-                </div>
-              ))}
-            </div>
-
-            {/* Heatmap Grid */}
-            <div className="flex gap-[2px]">
-              {weeks.map((week, weekIndex) => (
-                <div key={weekIndex} className="flex flex-col gap-[2px]">
-                  {week.map((date, dayIndex) => {
-                    const dateStr = date.toISOString().split('T')[0]
-                    const count = activityMap[dateStr] || 0
-                    const isCurrentYear = date.getFullYear() === selectedYear
-                    const isToday = dateStr === todayStr
-                    const intensityColor = getIntensityColor(count)
-                    const intensityLevel = getIntensityLevel(count)
-
-                    return (
-                      <div
-                        key={`${weekIndex}-${dayIndex}`}
-                        className={`w-3 h-3 rounded-sm transition-all duration-200 cursor-pointer ${intensityColor} ${
-                          !isCurrentYear ? 'opacity-30' : ''
-                        } ${
-                          isToday ? 'ring-2 ring-amber-400 ring-opacity-60' : ''
-                        } hover:ring-2 hover:ring-amber-300 hover:ring-opacity-40`}
-                        onMouseEnter={(e) => isCurrentYear && handleCellHover(date, count, e)}
-                        onMouseLeave={handleCellLeave}
-                        style={{
-                          opacity: isCurrentYear ? (0.4 + intensityLevel * 0.12) : 0.1
-                        }}
-                      />
-                    )
-                  })}
-                </div>
-              ))}
-            </div>
+          
+          {/* Year Navigation */}
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => navigateYear('prev')}
+              disabled={availableYears.indexOf(selectedYear) >= availableYears.length - 1}
+              className="p-1 rounded-full bg-gray-700 hover:bg-amber-500/20 text-amber-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            
+            <h3 className="text-lg font-bold text-amber-300 min-w-[4rem] text-center">
+              {selectedYear}
+            </h3>
+            
+            <button 
+              onClick={() => navigateYear('next')}
+              disabled={availableYears.indexOf(selectedYear) <= 0}
+              className="p-1 rounded-full bg-gray-700 hover:bg-amber-500/20 text-amber-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronRight size={16} />
+            </button>
           </div>
+        </div>
 
-          {/* Legend */}
-          <div className="flex items-center justify-between mt-4">
-            <div className="flex items-center gap-2 text-xs text-amber-200/50">
-              <span>Less</span>
-              <div className="flex gap-[2px]">
-                {[0, 1, 5, 10, 15, 20].map((level) => (
+        {/* Heatmap Container - Fixed Layout */}
+        <div className="overflow-x-auto">
+          <div className="min-w-[800px] relative">
+            {/* Month Labels - Fixed positioning */}
+            <div className="relative h-6 mb-2">
+              {monthPositions.map(({ month, weekIndex, label }, index) => {
+                // Better spacing logic to prevent overlap
+                const nextPosition = monthPositions[index + 1]
+                const prevPosition = index > 0 ? monthPositions[index - 1] : null
+                
+                let shouldShow = true
+                if (nextPosition && (nextPosition.weekIndex - weekIndex) < 3) {
+                  shouldShow = false
+                }
+                if (prevPosition && (weekIndex - prevPosition.weekIndex) < 3) {
+                  shouldShow = index % 2 === 0 // Show every other month if too close
+                }
+                
+                return (
                   <div
-                    key={level}
-                    className={`w-3 h-3 rounded-sm ${getIntensityColor(level)}`}
-                    style={{ opacity: 0.4 + getIntensityLevel(level) * 0.12 }}
-                  />
+                    key={month}
+                    className="absolute text-xs text-amber-200/70"
+                    style={{
+                      left: `${60 + weekIndex * 14}px`,
+                      top: '0px',
+                      display: shouldShow ? 'block' : 'none'
+                    }}
+                  >
+                    {label}
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Days of Week Labels + Heatmap Grid */}
+            <div className="flex items-start">
+              {/* Day labels - Fixed width */}
+              <div className="flex flex-col gap-[3px] w-12 mr-4 mt-1">
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
+                  <div 
+                    key={day} 
+                    className="h-3 flex items-center justify-end text-xs text-amber-200/50"
+                    style={{ opacity: index % 2 === 1 ? 1 : 0 }}
+                  >
+                    {index % 2 === 1 ? day : ''}
+                  </div>
                 ))}
               </div>
-              <span>More</span>
+
+              {/* Heatmap Grid */}
+              <div className="flex gap-[3px]">
+                {weeks.map((week, weekIndex) => (
+                  <div key={weekIndex} className="flex flex-col gap-[3px]">
+                    {week.map((date, dayIndex) => {
+                      // Format date consistently
+                      const dateStr = date.getFullYear() + '-' + 
+                        String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                        String(date.getDate()).padStart(2, '0')
+                      
+                      const count = activityMap[dateStr] || 0
+                      const isCurrentYear = date.getFullYear() === selectedYear
+                      const isToday = dateStr === todayStr
+                      const intensityColor = getIntensityColor(count)
+                      const intensityLevel = getIntensityLevel(count)
+
+                      return (
+                        <div
+                          key={`${weekIndex}-${dayIndex}`}
+                          className={`w-3 h-3 rounded-sm transition-all duration-200 cursor-pointer ${intensityColor} ${
+                            !isCurrentYear ? 'opacity-30' : ''
+                          } ${
+                            isToday ? 'ring-2 ring-amber-400 ring-opacity-60' : ''
+                          } hover:ring-2 hover:ring-amber-300 hover:ring-opacity-40`}
+                          onMouseEnter={(e) => isCurrentYear && handleCellHover(dateStr, count, e)}
+                          onMouseLeave={handleCellLeave}
+                          style={{
+                            opacity: isCurrentYear ? (0.4 + intensityLevel * 0.12) : 0.1
+                          }}
+                        />
+                      )
+                    })}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Legend */}
+            <div className="flex items-center justify-between mt-4 ml-16">
+              <div className="flex items-center gap-2 text-xs text-amber-200/50">
+                <span>Less</span>
+                <div className="flex gap-[2px]">
+                  {[0, 1, 5, 10, 15, 20].map((level) => (
+                    <div
+                      key={level}
+                      className={`w-3 h-3 rounded-sm ${getIntensityColor(level)}`}
+                      style={{ opacity: 0.4 + getIntensityLevel(level) * 0.12 }}
+                    />
+                  ))}
+                </div>
+                <span>More</span>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Hover Tooltip */}
+        {hoveredCell && (
+          <div 
+            className="fixed z-50 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm pointer-events-none shadow-xl"
+            style={{
+              left: hoveredCell.x,
+              top: hoveredCell.y,
+              transform: 'translateX(-50%) translateY(-100%)'
+            }}
+          >
+            <div className="text-amber-200 font-medium">
+              {hoveredCell.count} Interactions
+            </div>
+            <div className="text-amber-200/70 text-xs">
+              {new Date(hoveredCell.date + 'T00:00:00').toLocaleDateString('en-US', { 
+                weekday: 'long',
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Year Selection Tabs */}
+        {availableYears.length > 1 && (
+          <div className="flex flex-wrap justify-center gap-2 mt-6 pt-4 border-t border-gray-700/50">
+            {availableYears.map(year => (
+              <button
+                key={year}
+                onClick={() => setSelectedYear(year)}
+                className={`px-3 py-1 text-sm rounded-md transition-all ${
+                  selectedYear === year 
+                    ? 'bg-amber-500 text-gray-900 font-bold shadow-md' 
+                    : 'bg-gray-700/50 text-amber-200/70 hover:bg-gray-700 hover:text-amber-200'
+                }`}
+              >
+                {year}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
-
-      {/* Hover Tooltip */}
-      {hoveredCell && (
-        <div 
-          className="fixed z-50 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm pointer-events-none shadow-xl"
-          style={{
-            left: hoveredCell.x,
-            top: hoveredCell.y,
-            transform: 'translateX(-50%) translateY(-100%)'
-          }}
-        >
-          <div className="text-amber-200 font-medium">
-            {hoveredCell.count} contributions
-          </div>
-          <div className="text-amber-200/70 text-xs">
-            {new Date(hoveredCell.date).toLocaleDateString('en-US', { 
-              weekday: 'long',
-              month: 'short', 
-              day: 'numeric', 
-              year: 'numeric' 
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Year Selection Tabs */}
-      {availableYears.length > 1 && (
-        <div className="flex flex-wrap justify-center gap-2 mt-6 pt-4 border-t border-gray-700/50">
-          {availableYears.map(year => (
-            <button
-              key={year}
-              onClick={() => setSelectedYear(year)}
-              className={`px-3 py-1 text-sm rounded-md transition-all ${
-                selectedYear === year 
-                  ? 'bg-amber-500 text-gray-900 font-bold shadow-md' 
-                  : 'bg-gray-700/50 text-amber-200/70 hover:bg-gray-700 hover:text-amber-200'
-              }`}
-            >
-              {year}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}, [activityData, availableYears, selectedYear, hoveredCell])
+    )
+  }, [activityData, availableYears, selectedYear, hoveredCell])
 
   if (loadingPage) {
     return (
-      <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700 mb-6 lg:mb-8">
+      <div className="bg-gray-900 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700 mb-6 lg:mb-8">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-amber-500/20 rounded-xl animate-pulse"></div>
           <h3 className="text-xl lg:text-2xl font-black text-amber-300">Codex Report</h3>
@@ -490,7 +502,7 @@ const ActivityHeatmap = useMemo(() => {
   const StatusIcon = config.icon
 
   return (
-    <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700 mb-6 lg:mb-8">
+    <div className="bg-gray-900 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700 mb-6 lg:mb-8">
       <div className="flex items-center gap-3 mb-6">
         <div className="p-2 bg-amber-500/20 rounded-xl">
         </div>
@@ -548,8 +560,7 @@ const ActivityHeatmap = useMemo(() => {
             </div>
           </div>
 
-
-          {/* Enhanced 3D Year-by-Year Activity Heatmap */}
+          {/* Enhanced Activity Heatmap */}
           {ActivityHeatmap}
         </div>
       ) : (
