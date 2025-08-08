@@ -28,6 +28,7 @@
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^15.6.1",
+    "remark-gfm": "^4.0.1",
     "shadcn": "^2.9.2",
     "socket": "^1.0.65",
     "socket.io": "^4.8.1",
