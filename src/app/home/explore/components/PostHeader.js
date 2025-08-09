@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -35,15 +35,14 @@ const PostHeader = ({ post }) => {
   }, [username, post]);
 
   return (
-    <div className="flex items-center gap-3 mb-2">
-      <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+    <div className="flex items-center gap-3 mb-4">
+      <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-amber-200 flex-shrink-0">
         {avatarUrl ? (
           <img
             src={avatarUrl}
             alt={`${username}'s avatar`}
             className="w-full h-full object-cover"
             onError={(e) => {
-
               e.target.style.display = 'none';
               e.target.nextSibling.style.display = 'flex';
             }}
@@ -62,14 +61,15 @@ const PostHeader = ({ post }) => {
           </span>
         )}
       </div>
+      
       <div className="flex items-center gap-2">
         <button
-          className="font-bold text-black/80 cursor-pointer hover:underline"
+          className="font-semibold text-gray-900 hover:text-amber-600 transition-colors duration-200"
           onClick={() => window.open(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/${username}`, "_blank")}
         >
-          {`@${username}`}
+          @{username}
         </button>
-        <span className="text-gray-500 text-sm">·</span>
+        <span className="text-gray-400">·</span>
         <span className="text-gray-500 text-sm">
           {formatDate(post.created_at)}
         </span>
