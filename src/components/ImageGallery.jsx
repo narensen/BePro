@@ -9,9 +9,21 @@ const ImageGallery = ({ images = [], className = '' }) => {
 
   if (!images || images.length === 0) return null
 
+  // Handle both string URLs and image objects
+  const normalizeImages = (imageArray) => {
+    return imageArray.map(img => {
+      if (typeof img === 'string') {
+        return img; // Already a URL string
+      }
+      return img.url || img; // Extract URL from object or fallback
+    });
+  };
+
+  const normalizedImages = normalizeImages(images);
+
   const openLightbox = (index) => {
     setCurrentIndex(index)
-    setSelectedImage(images[index])
+    setSelectedImage(normalizedImages[index])
   }
 
   const closeLightbox = () => {
@@ -19,19 +31,19 @@ const ImageGallery = ({ images = [], className = '' }) => {
   }
 
   const nextImage = () => {
-    const nextIndex = (currentIndex + 1) % images.length
+    const nextIndex = (currentIndex + 1) % normalizedImages.length
     setCurrentIndex(nextIndex)
-    setSelectedImage(images[nextIndex])
+    setSelectedImage(normalizedImages[nextIndex])
   }
 
   const prevImage = () => {
-    const prevIndex = (currentIndex - 1 + images.length) % images.length
+    const prevIndex = (currentIndex - 1 + normalizedImages.length) % normalizedImages.length
     setCurrentIndex(prevIndex)
-    setSelectedImage(images[prevIndex])
+    setSelectedImage(normalizedImages[prevIndex])
   }
 
   const getGridClass = () => {
-    switch (images.length) {
+    switch (normalizedImages.length) {
       case 1:
         return 'grid-cols-1'
       case 2:
@@ -46,11 +58,11 @@ const ImageGallery = ({ images = [], className = '' }) => {
   return (
     <>
       <div className={`grid ${getGridClass()} gap-2 ${className}`}>
-        {images.slice(0, 4).map((image, index) => (
+        {normalizedImages.slice(0, 4).map((image, index) => (
           <div
             key={index}
             className={`relative group cursor-pointer rounded-lg overflow-hidden ${
-              images.length === 3 && index === 0 ? 'row-span-2' : ''
+              normalizedImages.length === 3 && index === 0 ? 'row-span-2' : ''
             }`}
           >
             <img
@@ -61,12 +73,12 @@ const ImageGallery = ({ images = [], className = '' }) => {
             />
             
             {/* Overlay for more images */}
-            {index === 3 && images.length > 4 && (
+            {index === 3 && normalizedImages.length > 4 && (
               <div
                 className="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-bold text-xl"
                 onClick={() => openLightbox(index)}
               >
-                +{images.length - 4}
+                +{normalizedImages.length - 4}
               </div>
             )}
             
@@ -90,7 +102,7 @@ const ImageGallery = ({ images = [], className = '' }) => {
           </button>
 
           {/* Previous button */}
-          {images.length > 1 && (
+          {normalizedImages.length > 1 && (
             <button
               onClick={prevImage}
               className="absolute left-4 text-white hover:text-gray-300 z-10"
@@ -108,7 +120,7 @@ const ImageGallery = ({ images = [], className = '' }) => {
           />
 
           {/* Next button */}
-          {images.length > 1 && (
+          {normalizedImages.length > 1 && (
             <button
               onClick={nextImage}
               className="absolute right-4 text-white hover:text-gray-300 z-10"
@@ -118,9 +130,9 @@ const ImageGallery = ({ images = [], className = '' }) => {
           )}
 
           {/* Image counter */}
-          {images.length > 1 && (
+          {normalizedImages.length > 1 && (
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white bg-black/50 px-3 py-1 rounded-full text-sm">
-              {currentIndex + 1} / {images.length}
+              {currentIndex + 1} / {normalizedImages.length}
             </div>
           )}
         </div>

@@ -113,7 +113,13 @@ export const submitComment = async (postId, userId, content, parentCommentId = n
   if (!postId || !userId || !content?.trim()) return false;
 
   try {
-    const imageUrls = images.map(img => img.url);
+    // Store complete image objects for JSONB format
+    const imageObjects = images.map(img => ({
+      id: img.id || img.name || `img-${Date.now()}-${Math.random()}`,
+      url: img.url,
+      name: img.name || 'image',
+      size: img.size || 0
+    }));
     
     const { data, error } = await supabase
       .from('comments')
@@ -121,7 +127,7 @@ export const submitComment = async (postId, userId, content, parentCommentId = n
         post_id: postId,
         user_id: userId,
         content: content.trim(),
-        images: imageUrls, // Store array of image URLs
+        images: imageObjects, // Store array of image objects for JSONB
         parent_comment_id: parentCommentId,
         created_at: new Date().toISOString()
       }])
@@ -294,7 +300,13 @@ export const createPost = async (userId, content, tags = [], images = []) => {
   if (!userId || !content?.trim()) return false;
 
   try {
-    const imageUrls = images.map(img => img.url);
+    // Store complete image objects for JSON format
+    const imageObjects = images.map(img => ({
+      id: img.id || img.name || `img-${Date.now()}-${Math.random()}`,
+      url: img.url,
+      name: img.name || 'image',
+      size: img.size || 0
+    }));
     
     const { data, error } = await supabase
       .from('posts')
@@ -302,7 +314,7 @@ export const createPost = async (userId, content, tags = [], images = []) => {
         user_id: userId,
         content: content.trim(),
         tags: tags,
-        images: imageUrls, // Store array of image URLs
+        images: imageObjects, // Store array of image objects for JSON
         like_count: 0,
         dislike_count: 0,
         comment_count: 0,

@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js'
+import { Plus, X } from 'lucide-react';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -24,18 +25,26 @@ import {
   toggleDislike,
   toggleBookmark,
   submitComment,
+  createPost,
 } from '../../utils/postActions.js';
 import { 
   getRecommendedPosts, 
   getRecommendedPostsByCategory,
   calculateUserCringeTolerance 
 } from './utils/recommendationSystem';
+import MentionTextarea from '../../../components/MentionTextarea';
+import ImageUpload from '../../../components/ImageUpload';
 import './styles.css';
 
 export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortMode, setSortMode] = useState('recommended');
   const [postInteractions, setPostInteractions] = useState([]);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [modalContent, setModalContent] = useState('');
+  const [modalImages, setModalImages] = useState([]);
+  const [modalSubmitting, setModalSubmitting] = useState(false);
+  
   const router = useRouter();
   const { user } = useUserStore();
   const { loading, posts, setPosts, userInteractions, setUserInteractions, userProfile } = usePostData(user);
@@ -179,6 +188,29 @@ export default function Explore() {
     }
   }, [userProfile?.id, setPosts]);
 
+  const handleCreatePost = useCallback(async () => {
+    if (!modalContent.trim() || !userProfile?.id) return;
+
+    setModalSubmitting(true);
+    try {
+      const result = await createPost(userProfile.id, modalContent.trim(), [], modalImages);
+      
+      if (result) {
+        // Add the new post to the current posts list
+        setPosts(prevPosts => [result, ...prevPosts]);
+        
+        // Reset modal state
+        setModalContent('');
+        setModalImages([]);
+        setShowCreateModal(false);
+      }
+    } catch (error) {
+      console.error('Error creating post:', error);
+    } finally {
+      setModalSubmitting(false);
+    }
+  }, [modalContent, modalImages, userProfile?.id, setPosts]);
+
   const handleViewPostCallback = useCallback(async (postId) => {
     try {
       const success = await handleViewPost(postId, userProfile?.id);
@@ -214,6 +246,17 @@ export default function Explore() {
           <div className="w-full max-w-4xl lg:mx-auto">
             <ExploreHeader />
             
+            {/* Create Post Button */}
+            <div className="mb-6">
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white p-4 rounded-xl font-bold text-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+              >
+                <Plus className="w-6 h-6" />
+                Create Post
+              </button>
+            </div>
+
             <SearchAndSort 
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
@@ -242,6 +285,73 @@ export default function Explore() {
       <div className="hidden xl:block">
         <ProfileBar currentUser={userProfile} />
       </div>
+      
+      {/* Create Post Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-bold text-gray-900">Create Post</h2>
+              <button
+                onClick={() => setShowCreateModal(false)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            {/* Modal Content */}
+            <div className="p-6 space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  What&apos;s on your mind?
+                </label>
+                <MentionTextarea
+                  value={modalContent}
+                  onChange={setModalContent}
+                  rows={6}
+                  placeholder="Share your insights, ask questions, or start a discussion... Type @ to mention someone!"
+                  className="w-full p-4 border-2 border-gray-300 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:border-amber-500 resize-none font-medium"
+                />
+                <div className="text-right mt-2 text-sm text-gray-500">
+                  {modalContent.length}/1000
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Add Images (optional)
+                </label>
+                <ImageUpload
+                  currentImages={modalImages}
+                  onImagesChange={setModalImages}
+                  maxImages={4}
+                  placeholder="Add images to your post"
+                />
+              </div>
+              
+              {/* Modal Actions */}
+              <div className="flex justify-end gap-3 pt-4">
+                <button
+                  onClick={() => setShowCreateModal(false)}
+                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  disabled={modalSubmitting}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleCreatePost}
+                  disabled={!modalContent.trim() || modalSubmitting}
+                  className="px-6 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-lg hover:from-amber-600 hover:to-yellow-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {modalSubmitting ? 'Posting...' : 'Post'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

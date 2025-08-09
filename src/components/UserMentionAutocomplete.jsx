@@ -194,7 +194,9 @@ const UserMentionAutocomplete = ({
       {/* Header */}
       <div className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 border-b border-gray-100">
         <Search className="w-4 h-4" />
-        <span>Mention someone</span>
+        <span>
+          {searchQuery ? `@${searchQuery}` : 'Mention someone'}
+        </span>
         {loading && (
           <div className="w-4 h-4 border-2 border-amber-300/30 border-t-amber-500 rounded-full animate-spin ml-auto"></div>
         )}
