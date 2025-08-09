@@ -4,7 +4,9 @@
  */
 
 /**
- * Format timestamp to required format: HH:MM:SS YYYY-MM-DD
+ * Format timestamp with smart relative/absolute display
+ * Shows relative time (e.g., "2 hours ago") for < 24 hours
+ * Shows absolute time (e.g., "9:30 PM July 30 2025") for >= 24 hours
  * @param {string|Date} timestamp - The timestamp to format
  * @returns {string} - Formatted timestamp
  */
@@ -14,16 +16,33 @@ export const formatTimestamp = (timestamp) => {
   const date = new Date(timestamp);
   if (isNaN(date.getTime())) return '';
   
-  // Format time: HH:MM:SS
-  const timeString = date.toLocaleTimeString('en-GB', {
-    hour: '2-digit',
+  const now = new Date();
+  const diffMs = now - date;
+  const diffHours = diffMs / (1000 * 60 * 60);
+  
+  // If less than 24 hours ago, show relative time
+  if (diffHours < 24) {
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    
+    if (diffMinutes < 1) return 'Just now';
+    if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes === 1 ? '' : 's'} ago`;
+    
+    const hours = Math.floor(diffMinutes / 60);
+    return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+  }
+  
+  // For 24+ hours ago, show absolute format: "9:30 PM July 30 2025"
+  const timeString = date.toLocaleTimeString('en-US', {
+    hour: 'numeric',
     minute: '2-digit',
-    second: '2-digit',
-    hour12: false
+    hour12: true
   });
   
-  // Format date: YYYY-MM-DD
-  const dateString = date.toLocaleDateString('en-CA'); // en-CA gives YYYY-MM-DD format
+  const dateString = date.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
   
   return `${timeString} ${dateString}`;
 };

@@ -8,7 +8,8 @@ export const useMentionInput = (initialValue = '', onTextChange) => {
     isVisible: false,
     query: '',
     startIndex: -1,
-    endIndex: -1
+    endIndex: -1,
+    cursorPosition: -1
   })
   const inputRef = useRef(null)
 
@@ -53,7 +54,8 @@ export const useMentionInput = (initialValue = '', onTextChange) => {
       isVisible: true,
       query: textAfterAt,
       startIndex: lastAtIndex,
-      endIndex: cursorPosition
+      endIndex: cursorPosition,
+      cursorPosition: cursorPosition
     })
   }, [onTextChange])
 
@@ -83,7 +85,7 @@ export const useMentionInput = (initialValue = '', onTextChange) => {
   }, [text, mentionState, onTextChange])
 
   const hideMentions = useCallback(() => {
-    setMentionState(prev => ({ ...prev, isVisible: false }))
+    setMentionState(prev => ({ ...prev, isVisible: false, cursorPosition: -1 }))
   }, [])
 
   return {
