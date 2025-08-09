@@ -2,14 +2,10 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@supabase/supabase-js'
 import useUserStore from '../store/useUserStore'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { supabase } from '../lib/supabase_client'
 
 export default function AuthPage() {
   const [isSignIn, setIsSignIn] = useState(true)

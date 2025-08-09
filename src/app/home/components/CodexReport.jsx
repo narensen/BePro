@@ -92,7 +92,7 @@ export default function CodexReport({ username }) {
           .single()
 
         if (error && error.code !== 'PGRST116') {
-          console.error('Error fetching Codex data:', error)
+          console.error('Error fetching Codex data:', error?.message || JSON.stringify(error) || 'Unknown error')
           setStudyStatus('no_roadmap')
           setHasRoadmap(false)
           setLoadingPage(false)
@@ -155,7 +155,7 @@ export default function CodexReport({ username }) {
         setCurrentStreak(streak)
         setStudyStatus(studiedToday ? 'studied' : 'not_studied')
       } catch (error) {
-        console.error('Error checking study status:', error)
+  console.error('Error checking study status:', error?.message || JSON.stringify(error) || 'Unknown error')
         setStudyStatus('error')
         setHasRoadmap(false)
       } finally {

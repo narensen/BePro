@@ -1,4 +1,5 @@
-'use client';
+
+"use client";
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -19,6 +20,7 @@ import {
 import { useEffect, useState, useCallback } from 'react';
 import useUserStore from '../store/useUserStore';
 import { supabase } from '../lib/supabase_client';
+import { FortressIcon } from './icons/FortressIcon';
 
 export default function SideBar() {
   const pathname = usePathname();
@@ -62,7 +64,14 @@ export default function SideBar() {
         .single();
 
       if (error) {
-        console.error('Error fetching profile:', error.message);
+        // If JWT expired, sign out and clear session
+        if (error.message && error.message.includes('JWT expired')) {
+          await supabase.auth.signOut();
+          clearUserSession();
+          router.push('/auth');
+        } else {
+          console.error('Error fetching profile:', error?.message || JSON.stringify(error) || 'Unknown error');
+        }
       } else if (data) {
         setUsername(data.username || '');
         setAvatarUrl(data.avatar_url || '');
@@ -83,7 +92,15 @@ export default function SideBar() {
         .eq('is_read', false);
 
       if (error) {
-        console.error('Error fetching unread message count:', error);
+        // If JWT expired, sign out and clear session
+        if (error.message && error.message.includes('JWT expired')) {
+          await supabase.auth.signOut();
+          clearUserSession();
+          router.push('/auth');
+        } else {
+          const fallbackMsg = error?.message && error.message.trim() !== '' ? error.message : 'Unknown error or empty error message';
+          console.error('Error fetching unread message count:', fallbackMsg, error);
+        }
       } else {
         setUnreadCount(count ?? 0);
       }
@@ -116,6 +133,11 @@ export default function SideBar() {
     { name: 'Dashboard', icon: Home, href: '/home' },
     { name: 'Explore', icon: Search, href: '/home/explore' },
     { name: 'Codex', icon: AtomIcon, href: '/codex' },
+    {
+      name: 'Fortress',
+      icon: (props) => <FortressIcon className={(props.className ? props.className + ' ' : '') + 'h-5 w-5 min-w-[20px] min-h-[20px]'} />, // force 20px size
+      href: '/fortress',
+    },
     { name: 'Messages', icon: MessageSquare, href: '/message' },
     { name: 'Post', icon: PlusCircle, href: '/home/post' },
   ];
@@ -228,160 +250,152 @@ export default function SideBar() {
       </div>
 
       {}
-      <div className="hidden lg:flex h-screen font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex-col fixed z-[70] w-72 left-0 top-0">
 
-      <div className="p-6 border-b border-gray-200/30">
-        <Link href="/home">
-          <h1 className="font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent cursor-pointer transition-all duration-300 text-3xl">
-            BePro
-          </h1>
-        </Link>
-        <p className="text-sm text-gray-600 font-medium mt-1">
-          Learn smart. Build loud. Get hired.
-        </p>
-      </div>
-
-      {loading ? (
-        <div className="flex-1 flex items-center justify-center">
-          <div className="w-10 h-10 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin"></div>
-        </div>
-      ) : !user ? (
-        <div className="flex-1 flex items-center justify-center p-6">
-          <button
-            onClick={() => router.push('/')}
-            className="text-center bg-gradient-to-r from-gray-900 to-gray-800 text-amber-300 font-bold px-5 py-3 rounded-2xl shadow-md hover:scale-105 transition-all w-full"
-          >
-            Login
-          </button>
-        </div>
-      ) : (
-        <>
-          <div className="p-4 border-b border-gray-200/30">
-            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-400/20 to-yellow-400/20 rounded-xl">
-              <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
-                {avatarUrl ? (
-                  <img
-                    src={avatarUrl}
-                    alt={`${username}'s avatar`}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
-                    }}
-                  />
-                ) : (
-                  <span className="text-white font-bold text-sm">
-                    {username?.charAt(0).toUpperCase() || 'U'}
-                  </span>
-                )}
-                {avatarUrl && (
-                  <span
-                    className="text-white font-bold text-sm hidden items-center justify-center w-full h-full"
-                    style={{ display: 'none' }}
-                  >
-                    {username?.charAt(0).toUpperCase() || 'U'}
-                  </span>
-                )}
-              </div>
-              <div className="flex-1">
-                <p className="font-bold text-gray-900 text-sm">
-                  {username || 'User'}
-                </p>
-                <p className="text-gray-600 text-xs">{user.email}</p>
-              </div>
+      {/* Show the fixed sidebar if user is logged in and NOT on /fortress/welcome */}
+      {user &&
+        // Hide sidebar on fortress welcome page
+        pathname !== '/fortress/welcome' && (
+        <div className="hidden lg:flex h-screen font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex-col fixed z-[70] w-72 left-0 top-0">
+          <div className="p-6 border-b border-gray-200/30">
+            <Link href="/home">
+              <h1 className="font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent cursor-pointer transition-all duration-300 text-3xl">
+                BePro
+              </h1>
+            </Link>
+            <p className="text-sm text-gray-600 font-medium mt-1">
+              Learn smart. Build loud. Get hired.
+            </p>
+          </div>
+          {loading ? (
+            <div className="flex-1 flex items-center justify-center">
+              <div className="w-10 h-10 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin"></div>
             </div>
-          </div>
-
-          <div className="flex-1 relative p-4 overflow-y-auto">
-            <nav className="space-y-1 relative">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href;
-                const Icon = item.icon;
-                return (
-                  <Link
-                    href={item.href}
-                    key={item.name}
-                    className="block relative"
-                  >
-                    {isActive && (
-                      <motion.div
-                        layoutId="active-pill"
-                        className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md"
-                        transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+          ) : (
+            <>
+              <div className="p-4 border-b border-gray-200/30">
+                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-400/20 to-yellow-400/20 rounded-xl">
+                  <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+                    {avatarUrl ? (
+                      <img
+                        src={avatarUrl}
+                        alt={`${username}'s avatar`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
                       />
+                    ) : (
+                      <span className="text-white font-bold text-sm">
+                        {username?.charAt(0).toUpperCase() || 'U'}
+                      </span>
                     )}
-                    <div
-                      className={`flex items-center gap-3 p-3 rounded-3xl font-semibold relative z-10 transition-all duration-200 ${
-                        isActive
-                          ? 'text-gray-900'
-                          : 'text-gray-600 hover:text-gray-800 hover:scale-105'
-                      }`}
-                    >
-                      <Icon size={20} />
-                      <span className="font-medium">{item.name}</span>
-                    </div>
-                  </Link>
-                );
-              })}
-            </nav>
-          </div>
-
-          {}
-          <div className="p-4 border-t border-gray-200/30">
-            <div className="space-y-1 cursor-pointer">
-              {[...bottomItems,
-                {
-                  name: 'Logout',
-                  icon: LogOut,
-                  action: handleSignOut
-                }].map((item) => {
-                const isActive = pathname === item.href;
-                const Icon = item.icon;
-                const content = (
-                  <div
-                    className={`flex items-center gap-3 p-3 rounded-3xl font-semibold relative z-10 transition-colors duration-300 ${
-                      isActive
-                        ? 'text-gray-900'
-                        : 'text-gray-600 hover:text-gray-800'
-                    }`}
-                  >
-                    <Icon size={20} />
-                    <span className="font-medium">{item.name}</span>
+                    {avatarUrl && (
+                      <span
+                        className="text-white font-bold text-sm hidden items-center justify-center w-full h-full"
+                        style={{ display: 'none' }}
+                      >
+                        {username?.charAt(0).toUpperCase() || 'U'}
+                      </span>
+                    )}
                   </div>
-                );
-
-                return item.href ? (
-                  <Link 
-                    key={item.name} 
-                    href={item.href} 
-                    className="block relative"
-                  >
-                    {isActive && (
-                      <motion.div
-                        layoutId="active-pill"
-                        className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md"
-                        transition={{ type: 'spring', stiffness: 400, damping: 35 }}
-                      />
-                    )}
-                    {content}
-                  </Link>
-                ) : (
-                  <button 
-                    key={item.name} 
-                    onClick={() => {
-                      item.action();
-                    }} 
-                    className="block relative w-full text-left"
-                  >
-                    {content}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </>
+                  <div className="flex-1">
+                    <p className="font-bold text-gray-900 text-sm">
+                      {username || 'User'}
+                    </p>
+                    <p className="text-gray-600 text-xs">{user.email}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex-1 relative p-4 overflow-y-auto">
+                <nav className="space-y-1 relative">
+                  {navItems.map((item) => {
+                    // Highlight if pathname matches or is a subpath of item.href
+                    const isActive = pathname === item.href || (pathname.startsWith(item.href) && (pathname[item.href.length] === '/' || pathname.length === item.href.length));
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        href={item.href}
+                        key={item.name}
+                        className="block relative"
+                      >
+                        {isActive && (
+                          <motion.div
+                            layoutId="active-pill"
+                            className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md"
+                            transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+                          />
+                        )}
+                        <div
+                          className={`flex items-center gap-3 p-3 rounded-3xl font-semibold relative z-10 transition-all duration-200 ${
+                            isActive
+                              ? 'text-gray-900'
+                              : 'text-gray-600 hover:text-gray-800 hover:scale-105'
+                          }`}
+                        >
+                          <Icon size={20} />
+                          <span className="font-medium">{item.name}</span>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </div>
+              <div className="p-4 border-t border-gray-200/30">
+                <div className="space-y-1 cursor-pointer">
+                  {[...bottomItems,
+                    {
+                      name: 'Logout',
+                      icon: LogOut,
+                      action: handleSignOut
+                    }].map((item) => {
+                    const isActive = pathname === item.href || (pathname.startsWith(item.href) && (pathname[item.href.length] === '/' || pathname.length === item.href.length));
+                    const Icon = item.icon;
+                    const content = (
+                      <div
+                        className={`flex items-center gap-3 p-3 rounded-3xl font-semibold relative z-10 transition-colors duration-300 ${
+                          isActive
+                            ? 'text-gray-900'
+                            : 'text-gray-600 hover:text-gray-800'
+                        }`}
+                      >
+                        <Icon size={20} />
+                        <span className="font-medium">{item.name}</span>
+                      </div>
+                    );
+                    return item.href ? (
+                      <Link 
+                        key={item.name} 
+                        href={item.href} 
+                        className="block relative"
+                      >
+                        {isActive && (
+                          <motion.div
+                            layoutId="active-pill"
+                            className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md"
+                            transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+                          />
+                        )}
+                        {content}
+                      </Link>
+                    ) : (
+                      <button 
+                        key={item.name} 
+                        onClick={() => {
+                          item.action();
+                        }} 
+                        className="block relative w-full text-left"
+                      >
+                        {content}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       )}
-    </div>
 
      {}
 
@@ -389,7 +403,7 @@ export default function SideBar() {
      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-white/95 backdrop-blur-sm border-t border-gray-200/50 shadow-2xl pb-safe">
        <div className="flex items-center justify-around py-2 px-4">
          {[...navItems.slice(0, 4), { name: 'Profile', icon: User, href: `/${username}` }].map((item) => {
-           const isActive = pathname === item.href;
+           const isActive = pathname === item.href || (pathname.startsWith(item.href) && (pathname[item.href.length] === '/' || pathname.length === item.href.length));
            const Icon = item.icon;
            return (
              <button

@@ -38,7 +38,7 @@ export default function Home() {
           .single()
 
         if (error) {
-          console.error('Error fetching profile:', error)
+          console.error('Error fetching profile:', error?.message || JSON.stringify(error) || 'Unknown error')
         } else {
           setUserProfile(profile)
           if (profile.username && !username) {
@@ -46,7 +46,7 @@ export default function Home() {
           }
         }
       } catch (error) {
-        console.error('Error in fetchUserProfile:', error)
+  console.error('Error in fetchUserProfile:', error?.message || JSON.stringify(error) || 'Unknown error')
       } finally {
         setLoading(false)
       }
@@ -57,7 +57,7 @@ export default function Home() {
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut()
-    if (error) console.error('Sign out error:', error)
+  if (error) console.error('Sign out error:', error?.message || JSON.stringify(error) || 'Unknown error')
     else location.reload()
   }
 
