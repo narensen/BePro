@@ -14,12 +14,12 @@ export default function PostsList({
   sortMode 
 }) {
   return (
-    <div className="space-y-6 lg:space-y-8">
+    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
       {posts.map((post, index) => (
         <motion.div 
           key={post.id} 
-          className="animate-fadeInUp lg:max-w-3xl lg:mx-auto" 
-          style={{ animationDelay: `${index * 0.1}s` }}
+          className="animate-fadeInUp" 
+          style={{ animationDelay: `${index * 0.05}s` }}
         >
           <PostCard
             post={post}

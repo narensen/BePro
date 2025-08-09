@@ -1,12 +1,18 @@
 import React from 'react';
 import { highlightQuery } from '../utils/highlightQuery';
+import { parseMentions } from '../utils/mentionUtils';
 
-const PostContent = ({ post, searchQuery }) => (
-  <div>
-    {}
-    <p className="text-gray-800 mb-4 leading-relaxed transition-colors duration-300 hover:text-gray-900">
-      {highlightQuery(post.content, searchQuery)}
-    </p>
+const PostContent = ({ post, searchQuery }) => {
+  // First parse mentions, then highlight search query
+  const contentWithMentions = parseMentions(post.content);
+  const finalContent = searchQuery ? highlightQuery(contentWithMentions, searchQuery) : contentWithMentions;
+
+  return (
+    <div>
+      {}
+      <div className="text-gray-800 mb-4 leading-relaxed transition-colors duration-300 hover:text-gray-900 whitespace-pre-wrap">
+        {finalContent}
+      </div>
 
     {}
     {post.tags && post.tags.length > 0 && (

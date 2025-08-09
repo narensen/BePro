@@ -6,7 +6,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-import { formatDate } from '../utils/dateUtils';
+import { formatDate, formatFullDateTime } from '../utils/dateUtils';
 
 const PostHeader = ({ post }) => {
   const username = post.username;
@@ -70,7 +70,10 @@ const PostHeader = ({ post }) => {
           {`@${username}`}
         </button>
         <span className="text-gray-500 text-sm">·</span>
-        <span className="text-gray-500 text-sm">
+        <span 
+          className="text-gray-500 text-sm cursor-pointer hover:text-gray-700" 
+          title={formatFullDateTime(post.created_at)}
+        >
           {formatDate(post.created_at)}
         </span>
       </div>
