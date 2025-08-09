@@ -59,8 +59,7 @@ export default function CreatePost() {
     getSessionAndUsername()
   }, [router, setUserSession])
 
-  const handleContentChange = (e) => {
-    const newContent = e.target.value
+  const handleContentChange = (newContent) => {
     if (newContent.length <= MAX_CHARS) {
       setContent(newContent)
       setCharCount(newContent.length)

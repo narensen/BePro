@@ -2,6 +2,7 @@
 
 import { Type, Image as ImageIcon } from 'lucide-react'
 import ImageUpload from '../../../../components/ImageUpload'
+import MentionTextarea from '../../../../components/MentionTextarea'
 
 export default function PostForm({ 
   content, 
@@ -19,11 +20,11 @@ export default function PostForm({
       </div>
 
       <div className="relative">
-        <textarea
+        <MentionTextarea
           value={content}
-          onChange={handleContentChange}
+          onChange={(e) => handleContentChange(e)}
           rows={6}
-          placeholder="Share your insights, ask questions, or start a discussion..."
+          placeholder="Share your insights, ask questions, or start a discussion... Type @ to mention someone!"
           className="w-full p-4 lg:p-6 border-2 border-gray-300 rounded-xl lg:rounded-2xl text-gray-800 placeholder-gray-500 focus:outline-none focus:border-gray-900 resize-none font-medium text-sm lg:text-base"
         />
         <div className="absolute bottom-3 lg:bottom-4 right-3 lg:right-4 text-xs lg:text-sm">

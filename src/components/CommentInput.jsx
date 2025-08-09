@@ -4,12 +4,13 @@ import { useState } from 'react'
 import { MessageSquarePlus, Image as ImageIcon } from 'lucide-react'
 import { motion } from 'framer-motion'
 import ImageUpload from './ImageUpload'
+import MentionTextarea from './MentionTextarea'
 
 const CommentInput = ({ 
   commentText, 
   setCommentText, 
   onSubmit, 
-  placeholder = "Share your thoughts...",
+  placeholder = "Share your thoughts... Type @ to mention someone!",
   buttonText = "Post Comment"
 }) => {
   const [images, setImages] = useState([])
@@ -34,12 +35,12 @@ const CommentInput = ({
           <span className="font-semibold text-gray-700">Join the conversation</span>
         </div>
 
-        <textarea
-          className="w-full border-2 border-gray-200 rounded-xl p-4 text-sm resize-none transition-all duration-300 hover:shadow-sm focus:shadow-md bg-white/90 backdrop-blur-sm"
+        <MentionTextarea
+          value={commentText}
+          onChange={setCommentText}
           rows={3}
           placeholder={placeholder}
-          value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
+          className="w-full border-2 border-gray-200 rounded-xl p-4 text-sm resize-none transition-all duration-300 hover:shadow-sm focus:shadow-md bg-white/90 backdrop-blur-sm"
         />
 
         {/* Image Upload */}
