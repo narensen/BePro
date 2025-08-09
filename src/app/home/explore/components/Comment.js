@@ -51,6 +51,31 @@ const Comment = ({
     <div className={`${indentClass} ${level > 0 ? 'border-l-2 border-gray-200 pl-4' : ''}`}>
       <div className={`${getBackgroundColor(level)} rounded-xl p-4 border ${getBorderColor(level)} hover:shadow-md transition-all duration-300 transform hover:scale-[1.01]`}>
         <div className="flex items-start mb-3">
+          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center overflow-hidden shadow-sm mr-3 flex-shrink-0">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt={`${comment.profile?.username || 'user'}'s avatar`}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+            ) : (
+              <span className="text-white font-bold text-xs">
+                {comment.profile?.username?.charAt(0).toUpperCase() || 'U'}
+              </span>
+            )}
+            {avatarUrl && (
+              <span
+                className="text-white font-bold text-xs hidden items-center justify-center w-full h-full"
+                style={{ display: 'none' }}
+              >
+                {comment.profile?.username?.charAt(0).toUpperCase() || 'U'}
+              </span>
+            )}
+          </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <Link href={`/${comment.profile?.username}`}>

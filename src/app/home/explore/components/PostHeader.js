@@ -6,7 +6,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-import { formatDate } from '../utils/dateUtils';
+import { formatDate, formatFullDate } from '../utils/dateUtils';
 
 const PostHeader = ({ post }) => {
   const username = post.username;
@@ -36,14 +36,13 @@ const PostHeader = ({ post }) => {
 
   return (
     <div className="flex items-center gap-3 mb-2">
-      <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center overflow-hidden shadow-sm">
         {avatarUrl ? (
           <img
             src={avatarUrl}
             alt={`${username}'s avatar`}
             className="w-full h-full object-cover"
             onError={(e) => {
-
               e.target.style.display = 'none';
               e.target.nextSibling.style.display = 'flex';
             }}
@@ -64,18 +63,23 @@ const PostHeader = ({ post }) => {
       </div>
       <div className="flex items-center gap-2">
         <button
-          className="font-bold text-black/80 cursor-pointer hover:underline"
+          className="font-semibold text-gray-900 cursor-pointer hover:underline text-[15px]"
           onClick={() => window.open(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/${username}`, "_blank")}
         >
           {`@${username}`}
         </button>
-        <span className="text-gray-500 text-sm">·</span>
-        <span className="text-gray-500 text-sm">
+        <span className="text-gray-400 text-sm">·</span>
+        <span 
+          className="text-gray-500 text-sm hover:underline cursor-help"
+          title={formatFullDate(post.created_at)}
+        >
           {formatDate(post.created_at)}
         </span>
       </div>
     </div>
   );
 };
+
+export default PostHeader;
 
 export default PostHeader;

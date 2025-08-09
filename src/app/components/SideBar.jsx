@@ -21,6 +21,7 @@ import { useEffect, useState, useCallback } from 'react';
 import useUserStore from '../store/useUserStore';
 import { supabase } from '../lib/supabase_client';
 import { checkAdminAccess } from '../utils/adminUtils';
+import NotificationBell from '../home/explore/components/NotificationBell';
 
 export default function SideBar() {
   const pathname = usePathname();
@@ -40,6 +41,7 @@ export default function SideBar() {
   const [avatarUrl, setAvatarUrl] = useState('');
   const [unreadCount, setUnreadCount] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -76,7 +78,7 @@ export default function SideBar() {
 
       const { data, error } = await supabase
         .from('profile')
-        .select('username, avatar_url')
+        .select('*')
         .eq('email', user.email)
         .single();
 
@@ -85,6 +87,7 @@ export default function SideBar() {
       } else if (data) {
         setUsername(data.username || '');
         setAvatarUrl(data.avatar_url || '');
+        setUserProfile(data);
       }
     };
 
@@ -170,11 +173,13 @@ export default function SideBar() {
           </div>
           
           {user ? (
-            <div className="relative">
-              <button
-                onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30 hover:bg-white/30 transition-all duration-200"
-              >
+            <div className="flex items-center gap-3">
+              <NotificationBell userProfile={userProfile} />
+              <div className="relative">
+                <button
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30 hover:bg-white/30 transition-all duration-200"
+                >
                 <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
                   {avatarUrl ? (
                     <img
@@ -235,6 +240,7 @@ export default function SideBar() {
                   </button>
                 </div>
               )}
+              </div>
             </div>
           ) : (
             <button
@@ -277,8 +283,8 @@ export default function SideBar() {
       ) : (
         <>
           <div className="p-4 border-b border-gray-200/30">
-            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-400/20 to-yellow-400/20 rounded-xl">
-              <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-xl">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center overflow-hidden shadow-sm">
                 {avatarUrl ? (
                   <img
                     src={avatarUrl}
@@ -309,6 +315,7 @@ export default function SideBar() {
                 </p>
                 <p className="text-gray-600 text-xs">{user.email}</p>
               </div>
+              <NotificationBell userProfile={userProfile} />
             </div>
           </div>
 
