@@ -40,3 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env
+
+# Temporary demo files
+/src/app/ui-demo/
+/src/app/home/explore/mockData.js
+/src/app/home/explore/demo.js

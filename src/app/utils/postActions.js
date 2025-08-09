@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase_client';
+import { extractMentions, createMentionNotifications } from '../home/explore/utils/mentionUtils';
 
 export const toggleLike = async (postId, userId, currentState) => {
   if (!postId || !userId) return false;
@@ -124,7 +125,15 @@ export const submitComment = async (postId, userId, content, parentCommentId = n
       .select('*')
       .single();
 
-    return error ? false : data;
+    if (error) return false;
+
+    // Check for mentions and create notifications
+    const mentions = extractMentions(content);
+    if (mentions.length > 0) {
+      await createMentionNotifications(mentions, userId, content, postId, data.id);
+    }
+
+    return data;
   } catch (error) {
     console.error('Error submitting comment:', error);
     return false;
@@ -298,7 +307,15 @@ export const createPost = async (userId, content, tags = []) => {
       .select('*')
       .single();
 
-    return error ? false : data;
+    if (error) return false;
+
+    // Check for mentions and create notifications
+    const mentions = extractMentions(content);
+    if (mentions.length > 0) {
+      await createMentionNotifications(mentions, userId, content, data.id, null);
+    }
+
+    return data;
   } catch (error) {
     console.error('Error creating post:', error);
     return false;

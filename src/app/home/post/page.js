@@ -13,6 +13,7 @@ import useUserStore from '../../store/useUserStore'
 import PostHeader from './components/PostHeader'
 import PostForm from './components/PostForm'
 import TagSelector from './components/TagSelector'
+import { createPost } from '../../utils/postActions'
 
 export default function CreatePost() {
   const [content, setContent] = useState('')
@@ -95,25 +96,15 @@ export default function CreatePost() {
     setError('')
 
     try {
-      const postData = {
-        content: content.trim(),
-        tags,
-        profile_id: profileId,
-        username: username
-      }
-
-      const { data, error: postError } = await supabase
-        .from('posts')
-        .insert([postData])
-        .select()
-
-      if (postError) {
-        setError(`Post failed: ${postError.message}`)
-      } else {
+      const result = await createPost(profileId, content.trim(), tags);
+      
+      if (result) {
         setContent('')
         setTags([])
         setCharCount(0)
         router.push('/home/explore')
+      } else {
+        setError('Post failed: Unable to create post.')
       }
     } catch (error) {
       setError('An unexpected error occurred. Please try again.')

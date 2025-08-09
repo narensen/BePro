@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Bell, UserPlus, MessageSquare, Heart, Bookmark, Eye, Calendar } from 'lucide-react'
+import { Bell, UserPlus, MessageSquare, Heart, Bookmark, Eye, Calendar, AtSign } from 'lucide-react'
 import { supabase } from '../../lib/supabase_client'
 import Link from 'next/link'
 
@@ -62,6 +62,32 @@ export default function RecentNotifications({ username, userProfile }) {
           .order('created_at', { ascending: false })
           .limit(15)
 
+        // Get mention notifications from ping table
+        const { data: mentionData } = await supabase
+          .from('ping')
+          .select(`
+            id,
+            type,
+            content,
+            is_read,
+            created_at,
+            mentioned_by_profile:mentioned_by (
+              username,
+              avatar_url
+            ),
+            post:posts (
+              id,
+              content
+            ),
+            comment:comments (
+              id,
+              content
+            )
+          `)
+          .eq('user_id', userProfile.id)
+          .order('created_at', { ascending: false })
+          .limit(15)
+
         // Combine and format notifications
         const allNotifications = []
 
@@ -108,6 +134,22 @@ export default function RecentNotifications({ username, userProfile }) {
           })
         })
 
+        // Add mention notifications
+        mentionData?.forEach(mention => {
+          const contextText = mention.comment ? 'mentioned you in a comment' : 'mentioned you in a post'
+          const contentPreview = mention.content?.substring(0, 50) + (mention.content?.length > 50 ? '...' : '')
+
+          allNotifications.push({
+            id: `mention_${mention.id}`,
+            type: 'mention',
+            user: mention.mentioned_by_profile,
+            timestamp: mention.created_at,
+            message: contextText,
+            postContent: contentPreview,
+            isRead: mention.is_read
+          })
+        })
+
         // Sort by timestamp and take most recent
         const sortedNotifications = allNotifications
           .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
@@ -115,7 +157,7 @@ export default function RecentNotifications({ username, userProfile }) {
 
         setNotifications(sortedNotifications)
         
-        // Count unread notifications (only messages can be unread)
+        // Count unread notifications (messages and mentions can be unread)
         const unread = sortedNotifications.filter(n => !n.isRead).length
         setUnreadCount(unread)
 
@@ -170,10 +212,25 @@ export default function RecentNotifications({ username, userProfile }) {
       )
       .subscribe()
 
+    const mentionChannel = supabase
+      .channel('mentions_notifications')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'ping',
+          filter: `user_id=eq.${userProfile?.id}`
+        },
+        () => fetchNotifications()
+      )
+      .subscribe()
+
     return () => {
       supabase.removeChannel(followersChannel)
       supabase.removeChannel(messagesChannel)
       supabase.removeChannel(interactionsChannel)
+      supabase.removeChannel(mentionChannel)
     }
   }, [username, userProfile?.id])
 
@@ -187,6 +244,8 @@ export default function RecentNotifications({ username, userProfile }) {
         return <Heart size={16} className="text-red-400" />
       case 'bookmark':
         return <Bookmark size={16} className="text-yellow-400" />
+      case 'mention':
+        return <AtSign size={16} className="text-purple-400" />
       default:
         return <Bell size={16} className="text-gray-400" />
     }
