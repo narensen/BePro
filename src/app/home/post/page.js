@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
+import { createMentionNotifications } from '../../utils/notificationUtils'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -17,6 +18,7 @@ import TagSelector from './components/TagSelector'
 export default function CreatePost() {
   const [content, setContent] = useState('')
   const [tags, setTags] = useState([])
+  const [images, setImages] = useState([])
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [username, setUsername] = useState('User')
@@ -95,11 +97,38 @@ export default function CreatePost() {
     setError('')
 
     try {
+      let imageUrls = []
+
+      // Upload images to Supabase storage if any
+      if (images.length > 0) {
+        for (const image of images) {
+          const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${image.file.name.split('.').pop()}`
+          
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('post-images')
+            .upload(fileName, image.file)
+
+          if (uploadError) {
+            console.error('Image upload error:', uploadError)
+            setError(`Image upload failed: ${uploadError.message}`)
+            return
+          }
+
+          // Get public URL for the uploaded image
+          const { data: urlData } = supabase.storage
+            .from('post-images')
+            .getPublicUrl(fileName)
+
+          imageUrls.push(urlData.publicUrl)
+        }
+      }
+
       const postData = {
         content: content.trim(),
         tags,
         profile_id: profileId,
-        username: username
+        username: username,
+        image_urls: imageUrls.length > 0 ? imageUrls : null
       }
 
       const { data, error: postError } = await supabase
@@ -110,8 +139,15 @@ export default function CreatePost() {
       if (postError) {
         setError(`Post failed: ${postError.message}`)
       } else {
+        // Create mention notifications
+        if (data && data.length > 0) {
+          const newPost = data[0];
+          await createMentionNotifications(newPost.id, content, profileId, username);
+        }
+        
         setContent('')
         setTags([])
+        setImages([])
         setCharCount(0)
         router.push('/home/explore')
       }
@@ -143,6 +179,8 @@ export default function CreatePost() {
                 handleContentChange={handleContentChange}
                 charCount={charCount}
                 maxChars={MAX_CHARS}
+                images={images}
+                onImagesChange={setImages}
               />
 
               <TagSelector
