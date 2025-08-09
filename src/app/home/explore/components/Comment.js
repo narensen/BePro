@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Reply, ChevronDown, ChevronUp} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { formatDate } from '../utils/dateUtils';
+import { formatTimestamp } from '../../../../lib/dateUtils';
 import { highlightMentions } from '../utils/mentionUtils';
 import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link';
@@ -139,7 +139,7 @@ const Comment = ({
               </Link>
               <div className="flex items-center gap-2 text-gray-500">
                 <div className="w-1.5 h-1.5 bg-gradient-to-r from-amber-400 to-yellow-400 rounded-full"></div>
-                <span className="text-xs font-medium">{formatDate(comment.created_at)}</span>
+                <span className="text-xs font-medium">{formatTimestamp(comment.created_at)}</span>
               </div>
             </div>
             

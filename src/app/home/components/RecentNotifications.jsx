@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Bell, UserPlus, MessageSquare, Heart, Bookmark, Eye, Calendar, AtSign } from 'lucide-react'
 import { supabase } from '../../lib/supabase_client'
 import Link from 'next/link'
+import { formatNotificationTime } from '../../../lib/dateUtils'
 
 export default function RecentNotifications({ username, userProfile }) {
   const [notifications, setNotifications] = useState([])
@@ -251,15 +252,8 @@ export default function RecentNotifications({ username, userProfile }) {
     }
   }
 
-  const formatNotificationTime = (timestamp) => {
-    const date = new Date(timestamp)
-    const now = new Date()
-    const diffHours = Math.floor((now - date) / (1000 * 60 * 60))
-    
-    if (diffHours < 1) return 'Just now'
-    if (diffHours < 24) return `${diffHours}h ago`
-    if (diffHours < 48) return 'Yesterday'
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  const formatNotificationTimeLocal = (timestamp) => {
+    return formatNotificationTime(timestamp);
   }
 
   return (
@@ -344,7 +338,7 @@ export default function RecentNotifications({ username, userProfile }) {
                 
                 <div className="flex items-center gap-2 text-xs text-amber-200/60">
                   <Calendar size={12} />
-                  <span>{formatNotificationTime(notification.timestamp)}</span>
+                  <span>{formatNotificationTimeLocal(notification.timestamp)}</span>
                 </div>
               </div>
 

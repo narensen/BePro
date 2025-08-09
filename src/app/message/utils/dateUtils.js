@@ -1,27 +1,6 @@
+// Legacy functions for message grouping (can be customized as needed)
 export const formatMessageDate = (timestamp) => {
-  const date = new Date(timestamp);
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
-  const messageDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  
-  if (messageDate.getTime() === today.getTime()) {
-    return 'Today';
-  } else if (messageDate.getTime() === yesterday.getTime()) {
-    return 'Yesterday';
-  } else {
-
-    const daysDiff = Math.floor((today - messageDate) / (24 * 60 * 60 * 1000));
-    if (daysDiff < 7) {
-      return date.toLocaleDateString('en-US', { weekday: 'long' });
-    } else {
-      return date.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric',
-        year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
-      });
-    }
-  }
+  return formatTimestamp(timestamp);
 };
 
 export const groupMessagesByDate = (messages) => {
@@ -35,7 +14,7 @@ export const groupMessagesByDate = (messages) => {
     if (!currentGroup || currentGroup.dateKey !== dateKey) {
       currentGroup = {
         dateKey,
-        dateLabel: formatMessageDate(message.timestamp),
+        dateLabel: formatTimestamp(message.timestamp),
         messages: []
       };
       groups.push(currentGroup);
@@ -48,8 +27,5 @@ export const groupMessagesByDate = (messages) => {
 };
 
 export const formatTime = (timestamp) => {
-  return new Date(timestamp).toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit'
-  });
+  return formatTimeOnly(timestamp);
 };
