@@ -57,9 +57,9 @@ const PostCard = ({
     }
   };
 
-  const handleComment = async () => {
-    if (commentText.trim()) {
-      const success = await onComment(post.id, commentText);
+  const handleComment = async (text, images = []) => {
+    if (text.trim() || images.length > 0) {
+      const success = await onComment(post.id, text, images);
       if (success !== false) {
         setCommentText('');
         setTimeout(() => fetchComments(), 500);

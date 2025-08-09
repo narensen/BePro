@@ -1,11 +1,47 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { isUserAdmin } from '../../utils/adminUtils';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// Only create client if environment variables are available
+const supabase = supabaseUrl && supabaseServiceKey 
+  ? createClient(supabaseUrl, supabaseServiceKey) 
+  : null;
+
+// Lazy import admin utils to avoid build-time issues
+const isUserAdmin = async (email) => {
+  if (!supabase || !email) return false;
+  
+  try {
+    const { data, error } = await supabase
+      .from('profile')
+      .select('role, email, username')
+      .eq('email', email)
+      .single();
+    
+    if (error) {
+      console.error('Error checking admin status:', error);
+      return false;
+    }
+    
+    // Check if user has admin role, or fallback to specific admin emails if role field doesn't exist
+    if (data?.role === 'admin') {
+      return true;
+    }
+    
+    // Fallback: Check for specific admin emails (modify as needed)
+    const adminEmails = [
+      'bepro.sunday@gmail.com',
+      'admin@bepro.com'
+    ];
+    
+    return adminEmails.includes(email.toLowerCase());
+  } catch (error) {
+    console.error('Error in isUserAdmin:', error);
+    return false;
+  }
+};
 
 // Cache for statistics (5 minute cache)
 let statisticsCache = null;
@@ -248,6 +284,14 @@ async function getPostStats(dates) {
 
 export async function GET(request) {
   try {
+    // Check if Supabase is configured
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Supabase not configured' },
+        { status: 500 }
+      );
+    }
+
     // Get user session from headers
     const authHeader = request.headers.get('authorization');
     const userEmail = request.headers.get('x-user-email');

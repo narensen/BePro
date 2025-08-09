@@ -1,4 +1,12 @@
-import { supabase } from '../lib/supabase_client';
+import { createClient } from '@supabase/supabase-js';
+
+// Create client only if environment variables are available
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+export const supabase = supabaseUrl && supabaseAnonKey 
+  ? createClient(supabaseUrl, supabaseAnonKey) 
+  : null;
 
 /**
  * Check if a user has admin role
@@ -6,7 +14,7 @@ import { supabase } from '../lib/supabase_client';
  * @returns {Promise<boolean>} - True if user is admin
  */
 export const isUserAdmin = async (email) => {
-  if (!email) return false;
+  if (!email || !supabase) return false;
   
   try {
     const { data, error } = await supabase
@@ -44,6 +52,6 @@ export const isUserAdmin = async (email) => {
  * @returns {Promise<boolean>} - True if user has admin access
  */
 export const checkAdminAccess = async (user) => {
-  if (!user?.email) return false;
+  if (!user?.email || !supabase) return false;
   return await isUserAdmin(user.email);
 };
