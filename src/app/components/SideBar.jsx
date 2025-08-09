@@ -21,11 +21,8 @@ import {
 import { useEffect, useState, useCallback } from 'react';
 import useUserStore from '../store/useUserStore';
 import { supabase } from '../lib/supabase_client';
-<<<<<<< HEAD
 import { FortressIcon } from './icons/FortressIcon';
-=======
 import { checkAdminAccess } from '../utils/adminUtils';
->>>>>>> 445c4e1d4d70a64fe4897f4ad7b9a3ac5b41f5d7
 
 export default function SideBar() {
   const pathname = usePathname();
@@ -274,10 +271,8 @@ export default function SideBar() {
 
       {}
 
-      {/* Show the fixed sidebar if user is logged in and NOT on /fortress/welcome */}
-      {user &&
-        // Hide sidebar on fortress welcome page
-        pathname !== '/fortress/welcome' && (
+  {/* Show the fixed sidebar if user is logged in and NOT on /fortress/welcome */}
+  {user && pathname !== '/fortress/welcome' && (
         <div className="hidden lg:flex h-screen font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex-col fixed z-[70] w-72 left-0 top-0">
           <div className="p-6 border-b border-gray-200/30">
             <Link href="/home">
