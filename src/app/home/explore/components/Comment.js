@@ -3,7 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { Reply, ChevronDown, ChevronUp, Clock } from 'lucide-react';
 import { formatDate } from '../utils/dateUtils';
+import { highlightMentions } from '../utils/mentionUtils';
+import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 const Comment = ({ 
   comment, 
@@ -17,6 +24,31 @@ const Comment = ({
   const [replyText, setReplyText] = useState('');
   const [showReplies, setShowReplies] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState('');
+
+  // Fetch avatar URL for the comment author
+  useEffect(() => {
+    const fetchUserAvatar = async () => {
+      if (!comment.profile?.username) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('profile')
+          .select('avatar_url')
+          .eq('username', comment.profile.username)
+          .single();
+
+        if (error) {
+          console.error('Error fetching avatar:', error.message);
+        } else if (data?.avatar_url) {
+          setAvatarUrl(data.avatar_url);
+        }
+      } catch (error) {
+        console.error('Error fetching avatar:', error);
+      }
+    };
+
+    fetchUserAvatar();
+  }, [comment.profile?.username]);
 
   const handleReply = async () => {
     if (replyText.trim()) {
@@ -51,6 +83,33 @@ const Comment = ({
     <div className={`${indentClass} ${level > 0 ? 'border-l-2 border-gray-200 pl-4' : ''}`}>
       <div className={`${getBackgroundColor(level)} rounded-xl p-4 border ${getBorderColor(level)} hover:shadow-md transition-all duration-300 transform hover:scale-[1.01]`}>
         <div className="flex items-start mb-3">
+          {/* Avatar */}
+          <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-sm mr-3 flex-shrink-0">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt={`${comment.profile?.username}'s avatar`}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+            ) : (
+              <span className="text-white font-bold text-xs">
+                {comment.profile?.username?.charAt(0).toUpperCase() || 'U'}
+              </span>
+            )}
+            {avatarUrl && (
+              <span 
+                className="text-white font-bold text-xs hidden items-center justify-center w-full h-full"
+                style={{ display: 'none' }}
+              >
+                {comment.profile?.username?.charAt(0).toUpperCase() || 'U'}
+              </span>
+            )}
+          </div>
+          
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <Link href={`/${comment.profile?.username}`}>
@@ -76,7 +135,7 @@ const Comment = ({
         
         <div>
           <p className="text-gray-800 text-sm leading-relaxed mb-4 whitespace-pre-wrap">
-            {comment.content}
+            {highlightMentions(comment.content)}
           </p>
           
           <div className="flex items-center gap-4">

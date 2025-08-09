@@ -83,8 +83,8 @@ const PostCard = ({
   const handleLoadReplies = async (commentId) => true;
 
   return (
-    <div className="bg-white/95 rounded-xl shadow-lg border border-white/30 overflow-hidden hover:shadow-xl transition-all duration-500 transform">
-      <div className="p-6">
+    <div className="bg-white/95 border-b border-gray-200/50 hover:bg-white/100 transition-all duration-300 px-6 py-4">
+      <div className="max-w-none">
         <PostHeader post={post} />
         <PostContent post={post} searchQuery={searchQuery} /> 
       </div>
