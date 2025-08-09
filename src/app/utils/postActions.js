@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase_client';
+import { createMentionNotifications, createCommentMentionNotifications } from './notificationUtils';
 
 export const toggleLike = async (postId, userId, currentState) => {
   if (!postId || !userId) return false;
@@ -124,7 +125,27 @@ export const submitComment = async (postId, userId, content, parentCommentId = n
       .select('*')
       .single();
 
-    return error ? false : data;
+    if (error) return false;
+
+    // Get user info for notifications
+    const { data: userProfile, error: profileError } = await supabase
+      .from('profile')
+      .select('username')
+      .eq('id', userId)
+      .single();
+
+    if (!profileError && userProfile) {
+      // Create mention notifications for comments
+      await createCommentMentionNotifications(
+        postId, 
+        data.id, 
+        content, 
+        userId, 
+        userProfile.username
+      );
+    }
+
+    return data;
   } catch (error) {
     console.error('Error submitting comment:', error);
     return false;

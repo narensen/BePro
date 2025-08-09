@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { Reply, ChevronDown, ChevronUp, Clock } from 'lucide-react';
 import { formatDate } from '../utils/dateUtils';
+import { parseMentions } from '../utils/mentionUtils';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
+import { createCommentMentionNotifications } from '../../../utils/notificationUtils';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -123,9 +125,9 @@ const Comment = ({
         </div>
         
         <div>
-          <p className="text-gray-800 text-sm leading-relaxed mb-4 whitespace-pre-wrap">
-            {comment.content}
-          </p>
+          <div className="text-gray-800 text-sm leading-relaxed mb-4 whitespace-pre-wrap">
+            {parseMentions(comment.content)}
+          </div>
           
           <div className="flex items-center gap-4">
             {level < maxDepth && (

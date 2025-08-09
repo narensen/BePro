@@ -1,8 +1,9 @@
 'use client'
 
 import { Type, AtSign, Image as ImageIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import ImageUpload from './ImageUpload'
+import MentionAutocomplete from './MentionAutocomplete'
 
 export default function PostForm({ 
   content, 
@@ -13,13 +14,7 @@ export default function PostForm({
   onImagesChange
 }) {
   const [showImageUpload, setShowImageUpload] = useState(false);
-
-  const handleTextareaKeyDown = (e) => {
-    // Handle @mention suggestions (placeholder for future autocomplete)
-    if (e.key === '@') {
-      // TODO: Implement @mention autocomplete
-    }
-  };
+  const textareaRef = useRef(null);
 
   return (
     <div className="mb-6 lg:mb-8">
@@ -30,13 +25,20 @@ export default function PostForm({
 
       <div className="relative">
         <textarea
+          ref={textareaRef}
           value={content}
           onChange={handleContentChange}
-          onKeyDown={handleTextareaKeyDown}
           rows={6}
           placeholder="Share your insights, ask questions, or start a discussion... Use @username to mention someone!"
           className="w-full p-4 lg:p-6 border-2 border-gray-300 rounded-xl lg:rounded-2xl text-gray-800 placeholder-gray-500 focus:outline-none focus:border-gray-900 resize-none font-medium text-sm lg:text-base"
         />
+        
+        <MentionAutocomplete
+          textareaRef={textareaRef}
+          content={content}
+          onContentChange={handleContentChange}
+        />
+        
         <div className="absolute bottom-3 lg:bottom-4 right-3 lg:right-4 text-xs lg:text-sm">
           <span className={`font-semibold ${charCount > maxChars * 0.8 ? 'text-orange-600' : 'text-gray-600'}`}>
             {charCount}

@@ -21,6 +21,7 @@ import { useEffect, useState, useCallback } from 'react';
 import useUserStore from '../store/useUserStore';
 import { supabase } from '../lib/supabase_client';
 import { checkAdminAccess } from '../utils/adminUtils';
+import NotificationBell from '../../components/ui/NotificationBell';
 
 export default function SideBar() {
   const pathname = usePathname();
@@ -40,6 +41,7 @@ export default function SideBar() {
   const [avatarUrl, setAvatarUrl] = useState('');
   const [unreadCount, setUnreadCount] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [profileId, setProfileId] = useState(null);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -76,7 +78,7 @@ export default function SideBar() {
 
       const { data, error } = await supabase
         .from('profile')
-        .select('username, avatar_url')
+        .select('id, username, avatar_url')
         .eq('email', user.email)
         .single();
 
@@ -85,6 +87,7 @@ export default function SideBar() {
       } else if (data) {
         setUsername(data.username || '');
         setAvatarUrl(data.avatar_url || '');
+        setProfileId(data.id);
       }
     };
 
@@ -170,11 +173,13 @@ export default function SideBar() {
           </div>
           
           {user ? (
-            <div className="relative">
-              <button
-                onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30 hover:bg-white/30 transition-all duration-200"
-              >
+            <div className="flex items-center space-x-3">
+              <NotificationBell userId={profileId} username={username} />
+              <div className="relative">
+                <button
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30 hover:bg-white/30 transition-all duration-200"
+                >
                 <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
                   {avatarUrl ? (
                     <img
@@ -236,6 +241,7 @@ export default function SideBar() {
                 </div>
               )}
             </div>
+          </div>
           ) : (
             <button
               onClick={() => router.push('/auth')}
@@ -309,6 +315,7 @@ export default function SideBar() {
                 </p>
                 <p className="text-gray-600 text-xs">{user.email}</p>
               </div>
+              <NotificationBell userId={profileId} username={username} />
             </div>
           </div>
 
