@@ -55,6 +55,61 @@ const UserMentionAutocomplete = ({
     return () => clearTimeout(debounceTimer)
   }, [searchQuery, isVisible, searchUsers])
 
+  // Calculate precise cursor position within textarea
+  const getTextareaCaretPosition = useCallback((textarea) => {
+    if (!textarea) return { top: 0, left: 0 }
+
+    // Create a dummy div to measure text dimensions
+    const div = document.createElement('div')
+    const style = window.getComputedStyle(textarea)
+    
+    // Copy textarea styles to div
+    const properties = [
+      'direction', 'boxSizing', 'width', 'height', 'overflowX', 'overflowY',
+      'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth',
+      'borderStyle', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+      'fontStyle', 'fontVariant', 'fontWeight', 'fontStretch', 'fontSize',
+      'fontSizeAdjust', 'lineHeight', 'fontFamily', 'textAlign', 'textTransform',
+      'textIndent', 'textDecoration', 'letterSpacing', 'wordSpacing', 'tabSize',
+      'MozTabSize', 'whiteSpace', 'wordBreak', 'wordWrap'
+    ]
+
+    properties.forEach(prop => {
+      div.style[prop] = style[prop]
+    })
+
+    // Position off-screen
+    div.style.position = 'absolute'
+    div.style.visibility = 'hidden'
+    div.style.whiteSpace = 'pre-wrap'
+    div.style.wordWrap = 'break-word'
+
+    document.body.appendChild(div)
+
+    try {
+      const cursorPos = textarea.selectionStart
+      const textUpToCursor = textarea.value.substring(0, cursorPos)
+      
+      // Set div content up to cursor position
+      div.textContent = textUpToCursor
+      
+      // Add a span to measure cursor position
+      const span = document.createElement('span')
+      span.textContent = '|' // Use a character to measure position
+      div.appendChild(span)
+
+      const spanRect = span.getBoundingClientRect()
+      const textareaRect = textarea.getBoundingClientRect()
+
+      return {
+        top: spanRect.top - textareaRect.top,
+        left: spanRect.left - textareaRect.left
+      }
+    } finally {
+      document.body.removeChild(div)
+    }
+  }, [])
+
   // Position the dropdown
   useEffect(() => {
     if (!isVisible || !inputRef?.current) return
@@ -62,15 +117,15 @@ const UserMentionAutocomplete = ({
     const input = inputRef.current
     const inputRect = input.getBoundingClientRect()
     
-    // Get cursor position (approximate)
-    const style = window.getComputedStyle(input)
-    const lineHeight = parseInt(style.lineHeight) || 20
+    // Get precise cursor position within textarea
+    const caretPosition = getTextareaCaretPosition(input)
     
+    // Position dropdown at cursor location
     setPosition({
-      top: inputRect.bottom + 4,
-      left: inputRect.left
+      top: inputRect.top + caretPosition.top + 20, // Add small offset below text line
+      left: inputRect.left + caretPosition.left
     })
-  }, [isVisible, inputRef, searchQuery])
+  }, [isVisible, inputRef, searchQuery, getTextareaCaretPosition])
 
   // Keyboard navigation
   useEffect(() => {
