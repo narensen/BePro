@@ -1,8 +1,8 @@
 'use client'
 
 import { Type } from 'lucide-react'
-import ImageUpload from '../explore/components/ImageUpload'
-import MentionAutocomplete from '../explore/components/MentionAutocomplete'
+import ImageUpload from '../../explore/components/ImageUpload'
+import MentionAutocomplete from '../../explore/components/MentionAutocomplete'
 
 export default function PostForm({ 
   content, 

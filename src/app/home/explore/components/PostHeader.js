@@ -81,5 +81,3 @@ const PostHeader = ({ post }) => {
 };
 
 export default PostHeader;
-
-export default PostHeader;
