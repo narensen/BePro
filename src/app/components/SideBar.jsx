@@ -15,10 +15,12 @@ import {
   Menu,
   X,
   ChevronDown,
+  BarChart3,
 } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react';
 import useUserStore from '../store/useUserStore';
 import { supabase } from '../lib/supabase_client';
+import { checkAdminAccess } from '../utils/adminUtils';
 
 export default function SideBar() {
   const pathname = usePathname();
@@ -37,6 +39,7 @@ export default function SideBar() {
   const [loading, setLoading] = useState(!user);
   const [avatarUrl, setAvatarUrl] = useState('');
   const [unreadCount, setUnreadCount] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -50,6 +53,22 @@ export default function SideBar() {
     };
     checkSession();
   }, [user, setUserSession]);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      if (user) {
+        try {
+          const adminStatus = await checkAdminAccess(user);
+          setIsAdmin(adminStatus);
+        } catch (error) {
+          console.error('Error checking admin status:', error);
+          setIsAdmin(false);
+        }
+      }
+    };
+
+    checkAdmin();
+  }, [user]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -118,6 +137,7 @@ export default function SideBar() {
     { name: 'Codex', icon: AtomIcon, href: '/codex' },
     { name: 'Messages', icon: MessageSquare, href: '/message' },
     { name: 'Post', icon: PlusCircle, href: '/home/post' },
+    ...(isAdmin ? [{ name: 'Stats', icon: BarChart3, href: '/stats' }] : []),
   ];
 
   const bottomItems = [
