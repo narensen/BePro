@@ -33,6 +33,31 @@ export default function AdminStatsPage() {
 
   // Check admin access on component mount
   useEffect(() => {
+    const fetchStatistics = async () => {
+      try {
+        setError('');
+        const response = await fetch('/api/stats', {
+          headers: {
+            'x-user-email': user?.email || '',
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status === 403) {
+            throw new Error('Access denied. Admin privileges required.');
+          }
+          throw new Error('Failed to fetch statistics');
+        }
+
+        const data = await response.json();
+        setStatistics(data);
+        setLastUpdated(new Date().toLocaleString());
+      } catch (error) {
+        console.error('Error fetching statistics:', error);
+        setError(error.message);
+      }
+    };
+
     const checkAccess = async () => {
       if (!user) {
         router.push('/auth');
@@ -60,7 +85,8 @@ export default function AdminStatsPage() {
     checkAccess();
   }, [user, router]);
 
-  const fetchStatistics = async () => {
+  const handleRefresh = async () => {
+    setLoading(true);
     try {
       setError('');
       const response = await fetch('/api/stats', {
@@ -82,13 +108,9 @@ export default function AdminStatsPage() {
     } catch (error) {
       console.error('Error fetching statistics:', error);
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const handleRefresh = async () => {
-    setLoading(true);
-    await fetchStatistics();
-    setLoading(false);
   };
 
   if (loading) {
