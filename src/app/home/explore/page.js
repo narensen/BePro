@@ -163,9 +163,9 @@ export default function Explore() {
     }
   }, [userProfile?.id, setPosts, setUserInteractions, posts]);
 
-  const handleComment = useCallback(async (postId, content) => {
+  const handleComment = useCallback(async (postId, content, images = []) => {
     try {
-      const success = await submitComment(postId, userProfile?.id, content);
+      const success = await submitComment(postId, userProfile?.id, content, null, images);
       if (success !== false) {
         setPosts(prevPosts => 
           prevPosts.map(post => 

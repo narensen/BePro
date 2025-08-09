@@ -6,7 +6,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-import { formatDate } from '../utils/dateUtils';
+import { formatTimestamp } from '../../../../lib/dateUtils';
 
 const PostHeader = ({ post }) => {
   const username = post.username;
@@ -71,7 +71,7 @@ const PostHeader = ({ post }) => {
         </button>
         <span className="text-gray-400">·</span>
         <span className="text-gray-500 text-sm">
-          {formatDate(post.created_at)}
+          {formatTimestamp(post.created_at)}
         </span>
       </div>
     </div>

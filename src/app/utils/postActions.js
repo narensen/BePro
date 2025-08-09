@@ -109,16 +109,19 @@ export const toggleBookmark = async (postId, userId, currentState) => {
   }
 };
 
-export const submitComment = async (postId, userId, content, parentCommentId = null) => {
+export const submitComment = async (postId, userId, content, parentCommentId = null, images = []) => {
   if (!postId || !userId || !content?.trim()) return false;
 
   try {
+    const imageUrls = images.map(img => img.url);
+    
     const { data, error } = await supabase
       .from('comments')
       .insert([{
         post_id: postId,
         user_id: userId,
         content: content.trim(),
+        images: imageUrls, // Store array of image URLs
         parent_comment_id: parentCommentId,
         created_at: new Date().toISOString()
       }])
@@ -140,8 +143,8 @@ export const submitComment = async (postId, userId, content, parentCommentId = n
   }
 };
 
-export const submitReply = async (postId, userId, content, parentCommentId) => {
-  return await submitComment(postId, userId, content, parentCommentId);
+export const submitReply = async (postId, userId, content, parentCommentId, images = []) => {
+  return await submitComment(postId, userId, content, parentCommentId, images);
 };
 
 export const incrementViewCount = async (postId) => {
@@ -287,16 +290,19 @@ export const editPost = async (postId, userId, content, tags = []) => {
   }
 };
 
-export const createPost = async (userId, content, tags = []) => {
+export const createPost = async (userId, content, tags = [], images = []) => {
   if (!userId || !content?.trim()) return false;
 
   try {
+    const imageUrls = images.map(img => img.url);
+    
     const { data, error } = await supabase
       .from('posts')
       .insert([{
         user_id: userId,
         content: content.trim(),
         tags: tags,
+        images: imageUrls, // Store array of image URLs
         like_count: 0,
         dislike_count: 0,
         comment_count: 0,

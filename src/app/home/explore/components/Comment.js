@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { Reply, ChevronDown, ChevronUp} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { formatDate } from '../utils/dateUtils';
+import { formatTimestamp } from '../../../../lib/dateUtils';
 import { highlightMentions } from '../utils/mentionUtils';
+import ImageGallery from '../../../../components/ImageGallery';
 import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link';
 
@@ -139,7 +140,7 @@ const Comment = ({
               </Link>
               <div className="flex items-center gap-2 text-gray-500">
                 <div className="w-1.5 h-1.5 bg-gradient-to-r from-amber-400 to-yellow-400 rounded-full"></div>
-                <span className="text-xs font-medium">{formatDate(comment.created_at)}</span>
+                <span className="text-xs font-medium">{formatTimestamp(comment.created_at)}</span>
               </div>
             </div>
             
@@ -159,10 +160,15 @@ const Comment = ({
         </div>
         
         <div>
-          <div className="bg-white/50 backdrop-blur-sm rounded-lg p-3 mb-4 border border-white/30">
+          <div className="bg-white/50 backdrop-blur-sm rounded-lg p-3 mb-4 border border-white/30 space-y-3">
             <p className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap font-medium">
               {highlightMentions(comment.content)}
             </p>
+            
+            {/* Comment Images */}
+            {comment.images && comment.images.length > 0 && (
+              <ImageGallery images={comment.images} className="mt-3" />
+            )}
           </div>
           
           <div className="flex items-center gap-3">

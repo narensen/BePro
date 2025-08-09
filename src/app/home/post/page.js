@@ -18,6 +18,7 @@ import { createPost } from '../../utils/postActions'
 export default function CreatePost() {
   const [content, setContent] = useState('')
   const [tags, setTags] = useState([])
+  const [images, setImages] = useState([])
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [username, setUsername] = useState('User')
@@ -58,8 +59,7 @@ export default function CreatePost() {
     getSessionAndUsername()
   }, [router, setUserSession])
 
-  const handleContentChange = (e) => {
-    const newContent = e.target.value
+  const handleContentChange = (newContent) => {
     if (newContent.length <= MAX_CHARS) {
       setContent(newContent)
       setCharCount(newContent.length)
@@ -96,11 +96,12 @@ export default function CreatePost() {
     setError('')
 
     try {
-      const result = await createPost(profileId, content.trim(), tags);
+      const result = await createPost(profileId, content.trim(), tags, images);
       
       if (result) {
         setContent('')
         setTags([])
+        setImages([])
         setCharCount(0)
         router.push('/home/explore')
       } else {
@@ -134,6 +135,8 @@ export default function CreatePost() {
                 handleContentChange={handleContentChange}
                 charCount={charCount}
                 maxChars={MAX_CHARS}
+                images={images}
+                onImagesChange={setImages}
               />
 
               <TagSelector
