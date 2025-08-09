@@ -21,11 +21,8 @@ import {
 import { useEffect, useState, useCallback } from 'react';
 import useUserStore from '../store/useUserStore';
 import { supabase } from '../lib/supabase_client';
-<<<<<<< HEAD
 import { FortressIcon } from './icons/FortressIcon';
-=======
 import { checkAdminAccess } from '../utils/adminUtils';
->>>>>>> 445c4e1d4d70a64fe4897f4ad7b9a3ac5b41f5d7
 
 export default function SideBar() {
   const pathname = usePathname();
