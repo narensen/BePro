@@ -44,16 +44,6 @@ export default function MessagesPage() {
     activeConversationRef.current = activeConversation
   }, [activeConversation])
 
-  const markMessagesAsRead = async (conversationId, otherUsername) => {
-    if (!username || !otherUsername || !socket || !isConnected) return
-    
-    try {
-      socket.emit('markMessagesAsRead', { otherUsername })
-    } catch (error) {
-      console.error('Error in markMessagesAsRead:', error)
-    }
-  }
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
@@ -71,6 +61,7 @@ export default function MessagesPage() {
     checkSession()
   }, [router, clearUserSession])
 
+  // SIMPLIFIED SOCKET SETUP
   useEffect(() => {
     if (username && user?.id) {
       const socketUrl = process.env.NODE_ENV === 'production' 
@@ -99,6 +90,7 @@ export default function MessagesPage() {
         setIsConnected(false)
       })
 
+      // SIMPLE: Just set the conversations list with unread counts
       socketInstance.on('conversationsList', (conversationsList) => {
         console.log('Received conversations list:', conversationsList)
         setConversations(conversationsList || [])
@@ -112,6 +104,7 @@ export default function MessagesPage() {
         setUnreadCounts(unreadMap)
       })
 
+      // SIMPLE: Just set the messages
       socketInstance.on('conversationMessages', (data) => {
         const { conversationId, messages: conversationMessages } = data
         console.log('Received conversation messages:', data)
@@ -121,6 +114,7 @@ export default function MessagesPage() {
         }
       })
 
+      // SIMPLE: Just add new messages
       socketInstance.on('newDirectMessage', (message) => {
         console.log('Received new direct message:', message)
         
@@ -129,10 +123,6 @@ export default function MessagesPage() {
             const exists = prev.some(msg => msg.id === message.id)
             return exists ? prev : [...prev, message]
           })
-          
-          if (message.senderUsername !== username) {
-            markMessagesAsRead(message.conversationId, message.senderUsername)
-          }
         }
       })
 
@@ -151,26 +141,6 @@ export default function MessagesPage() {
           setTimeout(() => {
             setNotifications(prev => prev.filter(n => n.id !== Date.now()))
           }, 5000)
-        }
-      })
-
-      socketInstance.on('messagesMarkedAsRead', (data) => {
-        console.log('Messages marked as read:', data)
-        
-        const { conversationId, readByUsername, messageIds } = data
-        
-        if (activeConversationRef.current?.conversationId === conversationId) {
-          setMessages(prev => prev.map(msg => ({
-            ...msg,
-            isRead: messageIds.includes(msg.id) ? true : msg.isRead
-          })))
-        }
-        
-        if (readByUsername !== username) {
-          setUnreadCounts(prev => ({
-            ...prev,
-            [conversationId]: 0
-          }))
         }
       })
 
@@ -346,6 +316,7 @@ export default function MessagesPage() {
     setSearchResults([])
     setShowConversationsList(false)
     
+    // Clear unread count immediately
     setUnreadCounts(prev => ({
       ...prev,
       [conversation.conversationId]: 0
@@ -356,8 +327,11 @@ export default function MessagesPage() {
     }
   }
 
+  // SIMPLIFIED: Just join conversation - server handles marking as read
   const selectConversation = (conversation) => {
     if (activeConversation?.conversationId === conversation.conversationId) return
+
+    console.log('Selecting conversation:', conversation.otherUsername)
 
     if (activeConversation && socket) {
       socket.emit('leaveConversation', { conversationId: activeConversation.conversationId })
@@ -368,11 +342,13 @@ export default function MessagesPage() {
     setOtherUserTyping(false)
     setShowConversationsList(false)
     
+    // Clear unread count immediately for instant UI feedback
     setUnreadCounts(prev => ({
       ...prev,
       [conversation.conversationId]: 0
     }))
     
+    // Join conversation - server will handle marking as read
     if (socket && isConnected) {
       socket.emit('joinConversation', { otherUsername: conversation.otherUsername })
     }
@@ -470,6 +446,8 @@ export default function MessagesPage() {
     setOtherUserTyping(false)
   }
 
+  // REMOVED markMessagesAsRead function - not needed anymore
+
   const sharedProps = {
     conversations,
     activeConversation,
@@ -485,7 +463,6 @@ export default function MessagesPage() {
     username,
     formatLastMessageTime,
     messagesEndRef,
-    markMessagesAsRead,
     setShowAddUser,
     setSearchQuery,
     startConversation,
@@ -500,14 +477,13 @@ export default function MessagesPage() {
       <SideBar />
 
       <div className="hidden lg:flex h-screen lg:ml-72">
-        <ConversationsList {...sharedProps} markMessagesAsRead={markMessagesAsRead} />
-        <ChatArea {...sharedProps} markMessagesAsRead={markMessagesAsRead} />
+        <ConversationsList {...sharedProps} />
+        <ChatArea {...sharedProps} />
       </div>
 
       <MobileLayout 
         {...sharedProps}
         showConversationsList={showConversationsList}
-        markMessagesAsRead={markMessagesAsRead}
       />
     </div>
   )
