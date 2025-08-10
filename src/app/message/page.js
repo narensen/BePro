@@ -61,7 +61,7 @@ export default function MessagesPage() {
     checkSession()
   }, [router, clearUserSession])
 
-  // FRONTEND ONLY - Simple function to mark messages as read
+  // FRONTEND ONLY - Add this function to mark messages as read
   const markConversationAsRead = async (otherUsername) => {
     if (!username || !otherUsername) return
     
@@ -156,7 +156,7 @@ export default function MessagesPage() {
     }
   }
 
-  // SOCKET SETUP
+  // SOCKET SETUP - SIMPLIFIED
   useEffect(() => {
     if (username && user?.id) {
       const socketUrl = process.env.NODE_ENV === 'production' 
@@ -185,6 +185,7 @@ export default function MessagesPage() {
         setIsConnected(false)
       })
 
+      // Set conversations list with unread counts
       socketInstance.on('conversationsList', (conversationsList) => {
         console.log('Received conversations list:', conversationsList)
         setConversations(conversationsList || [])
@@ -198,6 +199,7 @@ export default function MessagesPage() {
         setUnreadCounts(unreadMap)
       })
 
+      // Set the messages
       socketInstance.on('conversationMessages', (data) => {
         const { conversationId, messages: conversationMessages } = data
         console.log('Received conversation messages:', data)
@@ -207,6 +209,7 @@ export default function MessagesPage() {
         }
       })
 
+      // Add new messages
       socketInstance.on('newDirectMessage', (message) => {
         console.log('Received new direct message:', message)
         
@@ -388,7 +391,7 @@ export default function MessagesPage() {
     router.push('/')
   }
 
-  // UPDATED startConversation function
+  // FIXED startConversation function
   const startConversation = async (otherUser) => {
     const conversationId = [username, otherUser.username].sort().join('_')
     const conversation = {
@@ -423,7 +426,7 @@ export default function MessagesPage() {
     }
   }
 
-  // UPDATED selectConversation function
+  // FIXED selectConversation function
   const selectConversation = async (conversation) => {
     if (activeConversation?.conversationId === conversation.conversationId) return
 
