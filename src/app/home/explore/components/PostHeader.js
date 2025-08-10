@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
+import { supabase } from '../../../lib/supabase_client';
 import { formatDate } from '../utils/dateUtils';
 
 const PostHeader = ({ post }) => {
@@ -35,44 +29,46 @@ const PostHeader = ({ post }) => {
   }, [username, post]);
 
   return (
-    <div className="flex items-center gap-3 mb-2">
-      <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+    <div className="flex items-start gap-4 mb-6">
+      <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-2 border-gray-100">
         {avatarUrl ? (
           <img
             src={avatarUrl}
             alt={`${username}'s avatar`}
             className="w-full h-full object-cover"
             onError={(e) => {
-
               e.target.style.display = 'none';
               e.target.nextSibling.style.display = 'flex';
             }}
           />
         ) : (
-          <span className="text-white font-bold text-sm">
+          <div className="w-full h-full bg-gradient-to-br from-gray-800 to-black text-white flex items-center justify-center font-bold text-base">
             {username?.charAt(0).toUpperCase() || 'U'}
-          </span>
+          </div>
         )}
         {avatarUrl && (
-          <span 
-            className="text-white font-bold text-sm hidden items-center justify-center w-full h-full"
+          <div 
+            className="w-full h-full bg-gradient-to-br from-gray-800 to-black text-white hidden items-center justify-center font-bold text-lg"
             style={{ display: 'none' }}
           >
             {username?.charAt(0).toUpperCase() || 'U'}
-          </span>
+          </div>
         )}
       </div>
-      <div className="flex items-center gap-2">
-        <button
-          className="font-bold text-black/80 cursor-pointer hover:underline"
-          onClick={() => window.open(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/${username}`, "_blank")}
-        >
-          {`@${username}`}
-        </button>
-        <span className="text-gray-500 text-sm">·</span>
-        <span className="text-gray-500 text-sm">
-          {formatDate(post.created_at)}
-        </span>
+
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-3 mb-1">
+          <button
+            className="font-bold text-base text-gray-900 hover:text-gray-700 transition-colors"
+            onClick={() => window.open(`${process.env.NEXT_PUBLIC_APP_BASE_URL}/${username}`, "_blank")}
+          >
+            @{username}
+          </button>
+          <span className="text-gray-400 font-medium">·</span>
+          <span className="text-gray-500 font-medium">
+            Just now
+          </span>
+        </div>
       </div>
     </div>
   );

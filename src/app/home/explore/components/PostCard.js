@@ -83,30 +83,33 @@ const PostCard = ({
   const handleLoadReplies = async (commentId) => true;
 
   return (
-    <div className="bg-white/95 rounded-xl shadow-lg border border-white/30 overflow-hidden hover:shadow-xl transition-all duration-500 transform">
+    <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
       <div className="p-6">
         <PostHeader post={post} />
-        <PostContent post={post} searchQuery={searchQuery} /> 
+        <PostContent post={post} searchQuery={searchQuery} />
+        <PostInteractions
+          post={post}
+          userInteractions={userInteractions}
+          onInteraction={onInteraction}
+          showComments={showComments}
+          toggleComments={toggleComments}
+          comments={comments}
+          userProfile={userProfile}
+        />
       </div>
-      <PostInteractions
-        post={post}
-        userInteractions={userInteractions}
-        onInteraction={onInteraction}
-        showComments={showComments}
-        toggleComments={toggleComments}
-        comments={comments}
-        userProfile={userProfile}
-      />
-      <CommentSection
-        showComments={showComments}
-        comments={comments}
-        loadingComments={loadingComments}
-        commentText={commentText}
-        setCommentText={setCommentText}
-        handleComment={handleComment}
-        onReply={handleReply}
-        onLoadReplies={handleLoadReplies}
-      />
+      
+      {showComments && (
+        <CommentSection
+          showComments={showComments}
+          comments={comments}
+          loadingComments={loadingComments}
+          commentText={commentText}
+          setCommentText={setCommentText}
+          handleComment={handleComment}
+          onReply={handleReply}
+          onLoadReplies={handleLoadReplies}
+        />
+      )}
     </div>
   );
 };

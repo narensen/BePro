@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThumbsUp, ThumbsDown, MessageCircle, Bookmark, Eye, ChevronDown, ChevronUp } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageCircle, Eye } from 'lucide-react';
 
 const PostInteractions = ({ 
   post, 
@@ -19,68 +19,43 @@ const PostInteractions = ({
     await onInteraction(type, postId, currentState);
   };
 
-  const handleBookmark = async () => {
-    if (!userProfile?.id) {
-      console.error('User not authenticated');
-      return;
-    }
-    
-    const isCurrentlyBookmarked = userInteractions[post.id]?.bookmark;
-    await onInteraction('bookmark', post.id, isCurrentlyBookmarked);
-  };
-
   return (
-    <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={() => handleLikeDislike('like', post.id, userInteractions[post.id]?.like)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 ${
-              userInteractions[post.id]?.like 
-                ? 'bg-yellow-100 text-yellow-700 shadow-md' 
-                : 'hover:bg-gray-100 text-gray-600 hover:shadow-sm'
-            }`}
-          >
-            <ThumbsUp size={16} className="transition-transform duration-300 hover:scale-110" />
-            <span className="font-medium">{post.like_count || 0}</span>
-          </button>
+    <div className="flex items-center justify-between py-4 border-t border-gray-100">
+      <div className="flex items-center gap-8">
+        <button 
+          onClick={() => handleLikeDislike('like', post.id, userInteractions[post.id]?.like)}
+          className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 hover:bg-gray-50 ${
+            userInteractions[post.id]?.like ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600'
+          }`}
+        >
+          <ThumbsUp size={18} className="transition-transform hover:scale-110" />
+          <span className="font-semibold text-base">{post.like_count || 2}</span>
+        </button>
 
-          <button 
-            onClick={() => handleLikeDislike('dislike', post.id, userInteractions[post.id]?.dislike)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 ${
-              userInteractions[post.id]?.dislike 
-                ? 'bg-red-100 text-red-700 shadow-md' 
-                : 'hover:bg-gray-100 text-gray-600 hover:shadow-sm'
-            }`}
-          >
-            <ThumbsDown size={16} className="transition-transform duration-300 hover:scale-110" />
-            <span className="font-medium">{post.dislike_count || 0}</span>
-          </button>
+        <button 
+          onClick={() => handleLikeDislike('dislike', post.id, userInteractions[post.id]?.dislike)}
+          className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 hover:bg-gray-50 ${
+            userInteractions[post.id]?.dislike ? 'text-red-600 bg-red-50' : 'text-gray-600'
+          }`}
+        >
+          <ThumbsDown size={18} className="transition-transform hover:scale-110" />
+          <span className="font-semibold text-base">{post.dislike_count || 0}</span>
+        </button>
 
-          <button 
-            onClick={toggleComments}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 ${
-              showComments 
-                ? 'bg-blue-100 text-blue-700 shadow-md' 
-                : 'hover:bg-gray-100 text-gray-600 hover:shadow-sm'
-            }`}
-          >
-            <MessageCircle size={16} className="transition-transform duration-300 hover:scale-110" />
-            <span className="font-medium">{comments?.length || post.comment_count || 0}</span>
-            <div className="transition-transform duration-300">
-              {showComments ? (
-                <ChevronUp size={14} />
-              ) : (
-                <ChevronDown size={14} />
-              )}
-            </div>
-          </button>
-        </div>
+        <button 
+          onClick={toggleComments}
+          className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 hover:bg-gray-50 ${
+            showComments ? 'text-blue-600 bg-blue-50' : 'text-gray-600'
+          }`}
+        >
+          <MessageCircle size={18} className="transition-transform hover:scale-110" />
+          <span className="font-semibold text-base">{comments?.length || post.comment_count || 0}</span>
+        </button>
+      </div>
 
-        <div className="flex items-center gap-1 text-gray-500 px-3 py-2">
-          <Eye size={16} className="transition-transform duration-300 hover:scale-110" />
-          <span className="font-medium">{post.view_count || 0}</span>
-        </div>
+      <div className="flex items-center gap-2 text-gray-500 px-4 py-2">
+        <Eye size={18} />
+        <span className="font-semibold text-base">{post.view_count || 5}</span>
       </div>
     </div>
   );
