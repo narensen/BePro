@@ -33,40 +33,26 @@ export default function MessagesPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [isSearching, setIsSearching] = useState(false)
-  const [unreadCounts, setUnreadCounts] = useState({});
+  const [unreadCounts, setUnreadCounts] = useState({})
   const [showConversationsList, setShowConversationsList] = useState(true)
+  const [notifications, setNotifications] = useState([])
   const messagesEndRef = useRef(null)
   const typingTimeoutRef = useRef(null)
 
-  const activeConversationRef = useRef(null);
+  const activeConversationRef = useRef(null)
   useEffect(() => {
-    activeConversationRef.current = activeConversation;
-  }, [activeConversation]);
+    activeConversationRef.current = activeConversation
+  }, [activeConversation])
 
   const markMessagesAsRead = async (conversationId, otherUsername) => {
-    if (!username || !otherUsername) return;
+    if (!username || !otherUsername || !socket || !isConnected) return
     
     try {
-      const { error } = await supabase
-        .from('messages')
-        .update({ is_read: true })
-        .eq('receiver_username', username)
-        .eq('sender_username', otherUsername)
-        .eq('is_read', false);
-
-      if (error) {
-        console.error('Error marking messages as read:', error);
-      } else {
-        // Update local state to remove unread indicators
-        setUnreadCounts(prev => ({
-          ...prev,
-          [conversationId]: 0
-        }));
-      }
+      socket.emit('markMessagesAsRead', { otherUsername })
     } catch (error) {
-      console.error('Error in markMessagesAsRead:', error);
+      console.error('Error in markMessagesAsRead:', error)
     }
-  };
+  }
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -116,6 +102,14 @@ export default function MessagesPage() {
       socketInstance.on('conversationsList', (conversationsList) => {
         console.log('Received conversations list:', conversationsList)
         setConversations(conversationsList || [])
+        
+        const unreadMap = {}
+        conversationsList?.forEach(conv => {
+          if (conv.unreadCount > 0) {
+            unreadMap[conv.conversationId] = conv.unreadCount
+          }
+        })
+        setUnreadCounts(unreadMap)
       })
 
       socketInstance.on('conversationMessages', (data) => {
@@ -137,7 +131,7 @@ export default function MessagesPage() {
           })
           
           if (message.senderUsername !== username) {
-            markMessagesAsRead(message.conversationId, message.senderUsername);
+            markMessagesAsRead(message.conversationId, message.senderUsername)
           }
         }
       })
@@ -157,6 +151,26 @@ export default function MessagesPage() {
           setTimeout(() => {
             setNotifications(prev => prev.filter(n => n.id !== Date.now()))
           }, 5000)
+        }
+      })
+
+      socketInstance.on('messagesMarkedAsRead', (data) => {
+        console.log('Messages marked as read:', data)
+        
+        const { conversationId, readByUsername, messageIds } = data
+        
+        if (activeConversationRef.current?.conversationId === conversationId) {
+          setMessages(prev => prev.map(msg => ({
+            ...msg,
+            isRead: messageIds.includes(msg.id) ? true : msg.isRead
+          })))
+        }
+        
+        if (readByUsername !== username) {
+          setUnreadCounts(prev => ({
+            ...prev,
+            [conversationId]: 0
+          }))
         }
       })
 
@@ -195,52 +209,53 @@ export default function MessagesPage() {
     if (activeConversation?.conversationId && conversations.length > 0) {
       const updatedConversation = conversations.find(
         (conv) => conv.conversationId === activeConversation.conversationId
-      );
+      )
 
       if (updatedConversation) {
-        const hasChanged = JSON.stringify(updatedConversation.lastMessage) !== JSON.stringify(activeConversation.lastMessage);
+        const hasChanged = JSON.stringify(updatedConversation.lastMessage) !== JSON.stringify(activeConversation.lastMessage)
         
         if (hasChanged) {
             setActiveConversation(prev => ({
                 ...prev,
                 ...updatedConversation
-            }));
+            }))
         }
       }
     }
-  }, [conversations, activeConversation]);
+  }, [conversations, activeConversation])
+
   useEffect(() => {
     const fetchAvatarsForConversations = async () => {
       const convosWithoutAvatars = conversations.filter(
         (convo) => !convo.otherUser?.avatar_url
-      );
+      )
 
       if (convosWithoutAvatars.length === 0) {
-        return;
+        return
       }
 
       const usernamesToFetch = convosWithoutAvatars.map(
         (convo) => convo.otherUsername
-      );
+      )
 
       const { data: profiles, error } = await supabase
         .from('profile')
         .select('username, avatar_url')
-        .in('username', usernamesToFetch);
+        .in('username', usernamesToFetch)
 
       if (error) {
-        console.error('Error batch fetching profile avatars:', error);
-        return;
+        console.error('Error batch fetching profile avatars:', error)
+        return
       }
 
       const profileMap = profiles.reduce((acc, profile) => {
-        acc[profile.username] = profile.avatar_url;
-        return acc;
-      }, {});
+        acc[profile.username] = profile.avatar_url
+        return acc
+      }, {})
 
       setConversations((prevConvos) =>
         prevConvos.map((convo) => {
-          const newAvatarUrl = profileMap[convo.otherUsername];
+          const newAvatarUrl = profileMap[convo.otherUsername]
           if (newAvatarUrl) {
             return {
               ...convo,
@@ -248,61 +263,22 @@ export default function MessagesPage() {
                 ...(convo.otherUser || { username: convo.otherUsername }),
                 avatar_url: newAvatarUrl,
               },
-            };
+            }
           }
-          return convo;
+          return convo
         })
-      );
-    };
+      )
+    }
 
     if (conversations.length > 0) {
-      fetchAvatarsForConversations();
+      fetchAvatarsForConversations()
     }
-  }, [conversations]);
-  useEffect(() => {
-    if (!username) return;
+  }, [conversations])
 
-    const fetchUnreadCounts = async () => {
-      const { data, error } = await supabase.rpc('get_unread_message_counts', {
-        p_username: username,
-      });
-
-      if (error) {
-        console.error('Error fetching unread counts:', error);
-      } else {
-        const counts = (data || []).reduce((acc, item) => {
-          acc[item.conversation_id] = item.unread_count;
-          return acc;
-        }, {});
-        setUnreadCounts(counts);
-      }
-    };
-
-    fetchUnreadCounts();
-
-    const channel = supabase
-      .channel('public:messages:unread')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'messages',
-          filter: `receiver_username=eq.${username}`,
-        },
-        () => {
-          fetchUnreadCounts();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [username]);
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
   const searchUsers = async (query) => {
     if (!query.trim()) {
       setSearchResults([])
@@ -332,6 +308,7 @@ export default function MessagesPage() {
       setIsSearching(false)
     }
   }
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       searchUsers(searchQuery)
@@ -368,7 +345,11 @@ export default function MessagesPage() {
     setSearchQuery('')
     setSearchResults([])
     setShowConversationsList(false)
-    markMessagesAsRead(conversation.conversationId, otherUser.username);
+    
+    setUnreadCounts(prev => ({
+      ...prev,
+      [conversation.conversationId]: 0
+    }))
     
     if (socket && isConnected) {
       socket.emit('joinConversation', { otherUsername: otherUser.username })
@@ -376,7 +357,7 @@ export default function MessagesPage() {
   }
 
   const selectConversation = (conversation) => {
-    if (activeConversation?.conversationId === conversation.conversationId) return;
+    if (activeConversation?.conversationId === conversation.conversationId) return
 
     if (activeConversation && socket) {
       socket.emit('leaveConversation', { conversationId: activeConversation.conversationId })
@@ -386,7 +367,11 @@ export default function MessagesPage() {
     setMessages([])
     setOtherUserTyping(false)
     setShowConversationsList(false)
-    markMessagesAsRead(conversation.conversationId, conversation.otherUsername);
+    
+    setUnreadCounts(prev => ({
+      ...prev,
+      [conversation.conversationId]: 0
+    }))
     
     if (socket && isConnected) {
       socket.emit('joinConversation', { otherUsername: conversation.otherUsername })
@@ -514,13 +499,11 @@ export default function MessagesPage() {
     <div className="h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-hidden relative">
       <SideBar />
 
-      {}
       <div className="hidden lg:flex h-screen lg:ml-72">
         <ConversationsList {...sharedProps} markMessagesAsRead={markMessagesAsRead} />
         <ChatArea {...sharedProps} markMessagesAsRead={markMessagesAsRead} />
       </div>
 
-      {}
       <MobileLayout 
         {...sharedProps}
         showConversationsList={showConversationsList}
