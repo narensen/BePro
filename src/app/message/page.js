@@ -61,7 +61,102 @@ export default function MessagesPage() {
     checkSession()
   }, [router, clearUserSession])
 
-  // SIMPLIFIED SOCKET SETUP
+  // FRONTEND ONLY - Simple function to mark messages as read
+  const markConversationAsRead = async (otherUsername) => {
+    if (!username || !otherUsername) return
+    
+    try {
+      console.log(`Marking messages as read from ${otherUsername}`)
+      
+      const { data, error } = await supabase
+        .from('messages')
+        .update({ is_read: true })
+        .eq('sender_username', otherUsername)
+        .eq('receiver_username', username)
+        .eq('is_read', false)
+      
+      if (error) {
+        console.error('Error marking messages as read:', error)
+      } else {
+        console.log('Successfully marked messages as read')
+        
+        // Update conversations list to reflect new unread counts
+        const updatedConversations = await getUserConversations()
+        setConversations(updatedConversations || [])
+        
+        // Clear unread count for this conversation
+        const conversationId = [username, otherUsername].sort().join('_')
+        setUnreadCounts(prev => ({
+          ...prev,
+          [conversationId]: 0
+        }))
+      }
+    } catch (error) {
+      console.error('Error in markConversationAsRead:', error)
+    }
+  }
+
+  // Function to get user conversations (frontend version)
+  const getUserConversations = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .or(`sender_username.eq.${username},receiver_username.eq.${username}`)
+        .order('created_at', { ascending: false })
+      
+      if (error) {
+        console.error('Error fetching conversations:', error)
+        return []
+      }
+      
+      const conversationsMap = new Map()
+      
+      data?.forEach(msg => {
+        const otherUser = msg.sender_username === username ? msg.receiver_username : msg.sender_username
+        const conversationId = [username, otherUser].sort().join('_')
+        
+        if (!conversationsMap.has(conversationId) || 
+            new Date(msg.created_at) > new Date(conversationsMap.get(conversationId).created_at)) {
+          
+          conversationsMap.set(conversationId, {
+            conversationId,
+            otherUsername: otherUser,
+            lastMessage: {
+              content: msg.content.content,
+              senderUsername: msg.content.senderUsername,
+              timestamp: msg.content.timestamp
+            },
+            created_at: msg.created_at,
+            unreadCount: 0 // Will be calculated below
+          })
+        }
+      })
+      
+      const conversations = Array.from(conversationsMap.values()).sort((a, b) => 
+        new Date(b.created_at) - new Date(a.created_at)
+      )
+      
+      // Calculate unread counts
+      for (const conversation of conversations) {
+        const { data: unreadData } = await supabase
+          .from('messages')
+          .select('id')
+          .eq('sender_username', conversation.otherUsername)
+          .eq('receiver_username', username)
+          .eq('is_read', false)
+        
+        conversation.unreadCount = unreadData?.length || 0
+      }
+      
+      return conversations
+    } catch (err) {
+      console.error('Error in getUserConversations:', err)
+      return []
+    }
+  }
+
+  // SOCKET SETUP
   useEffect(() => {
     if (username && user?.id) {
       const socketUrl = process.env.NODE_ENV === 'production' 
@@ -90,7 +185,6 @@ export default function MessagesPage() {
         setIsConnected(false)
       })
 
-      // SIMPLE: Just set the conversations list with unread counts
       socketInstance.on('conversationsList', (conversationsList) => {
         console.log('Received conversations list:', conversationsList)
         setConversations(conversationsList || [])
@@ -104,7 +198,6 @@ export default function MessagesPage() {
         setUnreadCounts(unreadMap)
       })
 
-      // SIMPLE: Just set the messages
       socketInstance.on('conversationMessages', (data) => {
         const { conversationId, messages: conversationMessages } = data
         console.log('Received conversation messages:', data)
@@ -114,7 +207,6 @@ export default function MessagesPage() {
         }
       })
 
-      // SIMPLE: Just add new messages
       socketInstance.on('newDirectMessage', (message) => {
         console.log('Received new direct message:', message)
         
@@ -296,7 +388,8 @@ export default function MessagesPage() {
     router.push('/')
   }
 
-  const startConversation = (otherUser) => {
+  // UPDATED startConversation function
+  const startConversation = async (otherUser) => {
     const conversationId = [username, otherUser.username].sort().join('_')
     const conversation = {
       conversationId,
@@ -322,13 +415,16 @@ export default function MessagesPage() {
       [conversation.conversationId]: 0
     }))
     
+    // FRONTEND: Directly mark messages as read in Supabase
+    await markConversationAsRead(otherUser.username)
+    
     if (socket && isConnected) {
       socket.emit('joinConversation', { otherUsername: otherUser.username })
     }
   }
 
-  // SIMPLIFIED: Just join conversation - server handles marking as read
-  const selectConversation = (conversation) => {
+  // UPDATED selectConversation function
+  const selectConversation = async (conversation) => {
     if (activeConversation?.conversationId === conversation.conversationId) return
 
     console.log('Selecting conversation:', conversation.otherUsername)
@@ -348,7 +444,10 @@ export default function MessagesPage() {
       [conversation.conversationId]: 0
     }))
     
-    // Join conversation - server will handle marking as read
+    // FRONTEND: Directly mark messages as read in Supabase
+    await markConversationAsRead(conversation.otherUsername)
+    
+    // Join conversation for real-time messaging
     if (socket && isConnected) {
       socket.emit('joinConversation', { otherUsername: conversation.otherUsername })
     }
@@ -445,8 +544,6 @@ export default function MessagesPage() {
     setMessages([])
     setOtherUserTyping(false)
   }
-
-  // REMOVED markMessagesAsRead function - not needed anymore
 
   const sharedProps = {
     conversations,
