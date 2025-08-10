@@ -18,7 +18,7 @@ export default function MessagesHeader({ isConnected, showAddUser, setShowAddUse
       <div className="flex items-center space-x-2 text-sm">
         <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-red-400'}`}></div>
         <span className={isConnected ? 'text-green-600' : 'text-red-600'}>
-          {isConnected ? 'Connected' : 'Offline'}
+          {isConnected ? 'Online' : 'Offline'}
         </span>
         {!isConnected && (
           <span className="text-xs text-gray-500">(Messages may not send)</span>
