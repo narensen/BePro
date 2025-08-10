@@ -13,6 +13,7 @@ import useUserStore from '../../store/useUserStore'
 import PostHeader from './components/PostHeader'
 import PostForm from './components/PostForm'
 import TagSelector from './components/TagSelector'
+import { createPost } from '../../utils/postActions'
 
 export default function CreatePost() {
   const [content, setContent] = useState('')
@@ -20,7 +21,7 @@ export default function CreatePost() {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [username, setUsername] = useState('User')
-  const [profileId, setProfileId] = useState(null)
+  const [userId, setUserId] = useState(null)
   const [charCount, setCharCount] = useState(0)
   const [expandedCategories, setExpandedCategories] = useState([])
 
@@ -51,7 +52,7 @@ export default function CreatePost() {
       }
 
       setUsername(profile.username)
-      setProfileId(profile.id)
+      setUserId(profile.id)
     }
 
     getSessionAndUsername()
@@ -95,27 +96,18 @@ export default function CreatePost() {
     setError('')
 
     try {
-      const postData = {
-        content: content.trim(),
-        tags,
-        profile_id: profileId,
-        username: username
-      }
-
-      const { data, error: postError } = await supabase
-        .from('posts')
-        .insert([postData])
-        .select()
-
-      if (postError) {
-        setError(`Post failed: ${postError.message}`)
-      } else {
+      const result = await createPost(userId, content, tags)
+      
+      if (result) {
         setContent('')
         setTags([])
         setCharCount(0)
         router.push('/home/explore')
+      } else {
+        setError('Failed to create post. Please try again.')
       }
     } catch (error) {
+      console.error('Error creating post:', error)
       setError('An unexpected error occurred. Please try again.')
     } finally {
       setSubmitting(false)
@@ -155,9 +147,9 @@ export default function CreatePost() {
 
               <button
                 onClick={submitPost}
-                disabled={submitting || !content.trim() || tags.length === 0}
+                disabled={submitting || !content.trim() || tags.length === 0 || !userId}
                 className={`w-full py-3 lg:py-4 rounded-xl lg:rounded-2xl font-black text-base lg:text-lg flex items-center justify-center gap-2 lg:gap-3 transition-all ${
-                  submitting || !content.trim() || tags.length === 0
+                  submitting || !content.trim() || tags.length === 0 || !userId
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     : 'bg-black text-amber-300 hover:scale-105 shadow-lg'
                 }`}

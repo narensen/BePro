@@ -39,17 +39,17 @@ const Comment = ({
   const maxDepth = 3;
   const indentClass = level > 0 ? `ml-${Math.min(level * 4, 12)}` : '';
   const getBackgroundColor = (level) => {
-    const colors = ['bg-white', 'bg-gray-50', 'bg-blue-50', 'bg-yellow-50'];
+    const colors = ['bg-white/90', 'bg-white/80', 'bg-white/70', 'bg-white/60'];
     return colors[level] || colors[colors.length - 1];
   };
   const getBorderColor = (level) => {
-    const colors = ['border-gray-200', 'border-gray-300', 'border-blue-200', 'border-yellow-200'];
+    const colors = ['border-white/40', 'border-white/30', 'border-amber-200/50', 'border-yellow-200/50'];
     return colors[level] || colors[colors.length - 1];
   };
   
   return (
-    <div className={`${indentClass} ${level > 0 ? 'border-l-2 border-gray-200 pl-4' : ''}`}>
-      <div className={`${getBackgroundColor(level)} rounded-xl p-4 border ${getBorderColor(level)} hover:shadow-md transition-all duration-300 transform hover:scale-[1.01]`}>
+    <div className={`${indentClass} ${level > 0 ? 'border-l-2 border-white/30 pl-4' : ''}`}>
+      <div className={`${getBackgroundColor(level)} backdrop-blur-sm rounded-xl p-4 border ${getBorderColor(level)} hover:shadow-lg transition-all duration-300 transform hover:scale-[1.01] shadow-sm`}>
         <div className="flex items-start mb-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
@@ -111,11 +111,11 @@ const Comment = ({
       {}
       {showReplyForm && (
         <div className="mt-3 ml-4 transform transition-all duration-300 animate-in slide-in-from-top-2">
-          <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+          <div className="bg-white/90 backdrop-blur-sm border border-white/40 rounded-xl p-4 shadow-lg">
             <div className="flex gap-3">
               <div className="flex-1">
                 <textarea
-                  className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition-all duration-200 hover:shadow-sm focus:shadow-md"
+                  className="w-full border border-gray-200/50 rounded-xl p-3 text-sm resize-none focus:ring-2 focus:ring-amber-400/50 focus:border-amber-400/50 transition-all duration-200 hover:shadow-md focus:shadow-lg bg-white/80 backdrop-blur-sm"
                   rows={3}
                   placeholder={`Reply to @${comment.profile?.username || 'user'}...`}
                   value={replyText}
@@ -124,14 +124,14 @@ const Comment = ({
                 <div className="flex gap-2 mt-3">
                   <button
                     onClick={handleReply}
-                    className="bg-amber-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-amber-600 transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none font-medium"
+                    className="bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-4 py-2 rounded-xl text-sm hover:from-amber-600 hover:to-yellow-600 transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none font-medium shadow-md"
                     disabled={!replyText.trim()}
                   >
                     Reply
                   </button>
                   <button
                     onClick={() => setShowReplyForm(false)}
-                    className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-200 transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium"
+                    className="bg-white/50 text-gray-700 px-4 py-2 rounded-xl text-sm hover:bg-white/70 transition-all duration-200 transform hover:scale-105 active:scale-95 font-medium backdrop-blur-sm border border-gray-200/50"
                   >
                     Cancel
                   </button>

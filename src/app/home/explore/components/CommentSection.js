@@ -35,11 +35,11 @@ const CommentSection = ({
     <div className={`overflow-hidden transition-all duration-500 ease-in-out ${
       showComments ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
     }`}>
-      <div className="px-6 py-4 bg-white border-t border-gray-200 space-y-4">
-        {}
+      <div className="px-6 py-4 bg-white/95 backdrop-blur-sm border-t border-white/30 space-y-4">
+        {/* Comment input */}
         <div className="flex gap-3">
           <textarea
-            className="flex-1 border border-gray-300 rounded-lg p-3 text-sm resize-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300 hover:shadow-sm focus:shadow-md"
+            className="flex-1 border border-gray-200/50 rounded-xl p-3 text-sm resize-none focus:ring-2 focus:ring-amber-400/50 focus:border-amber-400/50 transition-all duration-300 hover:shadow-md focus:shadow-lg bg-white/80 backdrop-blur-sm"
             rows={2}
             placeholder="Write a comment..."
             value={commentText}
@@ -47,7 +47,7 @@ const CommentSection = ({
           />
           <button
             onClick={handleComment}
-            className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            className="bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-4 py-2 rounded-xl hover:from-amber-600 hover:to-yellow-600 transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg font-medium"
             disabled={!commentText.trim()}
           >
             Post
