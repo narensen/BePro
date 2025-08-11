@@ -66,7 +66,7 @@ const PostHeader = ({ post }) => {
           </button>
           <span className="text-gray-400 font-medium">·</span>
           <span className="text-gray-500 font-medium">
-            Just now
+            {formatDate(post.created_at)}
           </span>
         </div>
       </div>
