@@ -1,9 +1,6 @@
 export default function SortOptions({ sortMode, setSortMode }) {
   const sortOptions = [
-    { key: 'recommended', label: 'For You', desc: 'Personalized recommendations' },
-    { key: 'trending', label: 'Trending', desc: 'Most engaged posts' },
-    { key: 'recent', label: 'Recent', desc: 'Latest posts' },
-    { key: 'lowCringe', label: 'Premium', desc: 'Low cringe, high quality' }
+    { key: 'recommended', label: 'For You', desc: 'Personalized recommendations' }
   ];
 
   return (
