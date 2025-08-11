@@ -95,6 +95,29 @@ export default function CreatePost() {
     setError('')
 
     try {
+      // Check if user is admin
+      const { data: adminCheck, error: adminError } = await supabase
+        .from('profile')
+        .select('role, email')
+        .eq('email', user.email)
+        .single()
+
+      if (adminError) {
+        setError('Failed to verify user permissions. Please try again.')
+        setSubmitting(false)
+        return
+      }
+
+      // Check admin access
+      const isAdmin = adminCheck?.role === 'admin' || 
+                     ['bepro.sunday@gmail.com', 'admin@bepro.com'].includes(user.email?.toLowerCase())
+
+      if (!isAdmin) {
+        setError('Access denied. Only administrators can create posts.')
+        setSubmitting(false)
+        return
+      }
+
       const postData = {
         content: content.trim(),
         tags,
@@ -110,6 +133,29 @@ export default function CreatePost() {
       if (postError) {
         setError(`Post failed: ${postError.message}`)
       } else {
+        // Send email notifications to all users
+        try {
+          const emailResponse = await fetch('/api/email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-user-email': user.email
+            },
+            body: JSON.stringify({
+              postContent: content.trim(),
+              authorUsername: username,
+              userEmail: user.email
+            })
+          })
+
+          if (!emailResponse.ok) {
+            console.warn('Email notification failed, but post was created successfully')
+          }
+        } catch (emailError) {
+          console.warn('Email notification failed:', emailError)
+          // Continue anyway since post was created successfully
+        }
+
         setContent('')
         setTags([])
         setCharCount(0)

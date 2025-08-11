@@ -6,7 +6,12 @@ import { isUserAdmin } from '../../utils/adminUtils';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+let supabase = null;
+
+// Initialize supabase only if environment variables are available
+if (supabaseUrl && supabaseServiceKey) {
+  supabase = createClient(supabaseUrl, supabaseServiceKey);
+}
 
 // Gmail SMTP configuration
 const transporter = nodemailer.createTransporter({
@@ -176,6 +181,11 @@ const createEmailTemplate = (postContent, authorUsername) => {
 // Send email to all users
 const sendNewPostNotification = async (postContent, authorUsername) => {
   try {
+    // Check if supabase is available
+    if (!supabase) {
+      return { success: false, error: 'Database connection not available' };
+    }
+
     // Get all user emails from profile table
     const { data: users, error } = await supabase
       .from('profile')
@@ -269,6 +279,14 @@ const verifyEmailConnection = async () => {
 // POST endpoint to send emails when new post is created
 export async function POST(request) {
   try {
+    // Check if supabase is available
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Service temporarily unavailable - database connection not configured' },
+        { status: 503 }
+      );
+    }
+
     const { postContent, authorUsername, userEmail } = await request.json();
 
     // Verify admin access
@@ -324,6 +342,17 @@ export async function POST(request) {
 // GET endpoint for testing email service
 export async function GET(request) {
   try {
+    // Check if supabase is available
+    if (!supabase) {
+      return NextResponse.json({
+        error: 'Service temporarily unavailable - database connection not configured',
+        emailServiceStatus: 'Database Unavailable',
+        smtpHost: 'smtp.gmail.com',
+        smtpPort: 587,
+        fromAddress: 'bepro.sunday@gmail.com'
+      }, { status: 503 });
+    }
+
     const userEmail = request.headers.get('x-user-email');
     
     // Check admin access for testing
