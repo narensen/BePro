@@ -9,11 +9,11 @@ export default function EmptyState({ searchQuery, sortMode }) {
         </svg>
       </div>
       <h3 className="text-xl lg:text-2xl font-bold text-gray-800 mb-2 lg:mb-4">
-        {searchQuery ? 'No posts found matching your search' : 'No posts available for this category'}
+        {searchQuery ? 'No announcements found matching your search' : 'No announcements available for this category'}
       </h3>
       {sortMode === 'recommended' && (
         <p className="text-gray-600 text-base lg:text-lg mt-2">
-          Interact with more posts to improve your recommendations!
+          Interact with more announcements to improve your recommendations!
         </p>
       )}
     </div>
