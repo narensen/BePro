@@ -10,8 +10,12 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
   const renderCurrentMission = () => {
     if (missionsArray.length === 0) {
       return (
-        <div className="text-center py-8">
-          <p className="text-amber-200/80 text-lg">No missions available yet.</p>
+        <div className="text-center py-12">
+          <div className="mb-6 opacity-60">
+            <span className="text-6xl">🎯</span>
+          </div>
+          <p className="text-muted-foreground text-xl font-medium">No missions available yet.</p>
+          <p className="text-muted-foreground/60 text-lg mt-2">Check back soon for new challenges!</p>
         </div>
       );
     }
@@ -21,13 +25,18 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
     if (activeMission) {
       const missionNumber = missionsArray.findIndex(mission => mission.id === activeMission.id) + 1;
       return (
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-          <div className="flex-1 space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
-              <h4 className="font-black text-amber-300 text-xl">Mission {missionNumber}</h4>
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
+          <div className="flex-1 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <div className="w-3 h-3 bg-chart-1 rounded-full animate-pulse shadow-lg shadow-chart-1/50"></div>
+                <div className="absolute inset-0 w-3 h-3 bg-chart-1 rounded-full animate-ping opacity-30"></div>
+              </div>
+              <h4 className="font-black bg-gradient-to-r from-chart-1 to-chart-2 bg-clip-text text-transparent text-2xl">
+                Mission {missionNumber}
+              </h4>
             </div>
-            <p className="text-amber-100/90 text-base leading-relaxed max-w-2xl">
+            <p className="text-muted-foreground/80 text-lg leading-relaxed max-w-2xl font-medium">
               {activeMission.description 
                 ? activeMission.description.length > 150 
                   ? activeMission.description.substring(0, 150) + '...'
@@ -43,10 +52,11 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
           <div className="flex-shrink-0">
             <button
               onClick={onStartMission}
-              className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl text-gray-900 font-bold text-lg shadow-lg border border-yellow-300/50"
+              className="group relative flex items-center gap-4 px-10 py-5 bg-gradient-to-r from-chart-1 via-chart-2 to-chart-3 hover:from-chart-2 hover:via-chart-3 hover:to-chart-4 rounded-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 text-primary-foreground font-black text-xl shadow-2xl hover:shadow-chart-1/25 border border-chart-1/30"
             >
-              <Play size={20} className="drop-shadow-sm" />
-              <span>Start Mission</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300" />
+              <Play size={24} className="relative z-10 drop-shadow-lg group-hover:scale-110 transition-transform duration-300" />
+              <span className="relative z-10 drop-shadow-sm">Start Mission</span>
             </button>
           </div>
         </div>
@@ -57,12 +67,17 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
     
     if (completedMissions.length === missionsArray.length) {
       return (
-        <div className="text-center py-8">
-          <div className="mb-4">
-            <span className="text-6xl block animate-bounce">🎉</span>
+        <div className="text-center py-12">
+          <div className="relative mb-8">
+            <span className="text-8xl block animate-bounce drop-shadow-2xl">🎉</span>
+            <div className="absolute inset-0 animate-pulse">
+              <span className="text-8xl block opacity-20">✨</span>
+            </div>
           </div>
-          <h4 className="text-amber-300 font-black text-2xl mb-2">Mission Complete!</h4>
-          <p className="text-amber-100/80 text-lg">All missions completed. Outstanding work!</p>
+          <h4 className="bg-gradient-to-r from-chart-1 via-chart-2 to-chart-3 bg-clip-text text-transparent font-black text-4xl mb-4 animate-pulse">
+            Mission Complete!
+          </h4>
+          <p className="text-muted-foreground text-xl font-medium">All missions completed. Outstanding work!</p>
         </div>
       );
     }
@@ -72,15 +87,15 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
     if (firstIncomplete) {
       const missionNumber = missionsArray.findIndex(mission => mission.id === firstIncomplete.id) + 1;
       return (
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-          <div className="flex-1 space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-amber-400/60 rounded-full"></div>
-              <h4 className="font-black text-amber-300 text-xl">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
+          <div className="flex-1 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-3 h-3 bg-muted-foreground/40 rounded-full"></div>
+              <h4 className="font-black text-foreground text-2xl">
                 Mission {missionNumber}: {firstIncomplete.title}
               </h4>
             </div>
-            <p className="text-amber-100/90 text-base leading-relaxed max-w-2xl">
+            <p className="text-muted-foreground/70 text-lg leading-relaxed max-w-2xl font-medium">
               {firstIncomplete.description 
                 ? firstIncomplete.description.length > 150 
                   ? firstIncomplete.description.substring(0, 150) + '...'
@@ -96,10 +111,11 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
           <div className="flex-shrink-0">
             <button
               onClick={onStartMission}
-              className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl text-gray-900 font-bold text-lg shadow-lg border border-yellow-300/50"
+              className="group relative flex items-center gap-4 px-10 py-5 bg-gradient-to-r from-chart-1 via-chart-2 to-chart-3 hover:from-chart-2 hover:via-chart-3 hover:to-chart-4 rounded-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 text-primary-foreground font-black text-xl shadow-2xl hover:shadow-chart-1/25 border border-chart-1/30"
             >
-              <Play size={20} className="drop-shadow-sm" />
-              <span>Start Mission</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300" />
+              <Play size={24} className="relative z-10 drop-shadow-lg group-hover:scale-110 transition-transform duration-300" />
+              <span className="relative z-10 drop-shadow-sm">Start Mission</span>
             </button>
           </div>
         </div>
@@ -107,27 +123,37 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
     }
 
     return (
-      <div className="text-center py-8">
-        <p className="text-amber-200/80 text-lg">No active missions available.</p>
+      <div className="text-center py-12">
+        <div className="mb-6 opacity-50">
+          <span className="text-6xl">⏳</span>
+        </div>
+        <p className="text-muted-foreground text-xl font-medium">No active missions available.</p>
+        <p className="text-muted-foreground/60 text-lg mt-2">Complete current missions to unlock new ones!</p>
       </div>
     );
   };
   
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Current Mission Section */}
-      <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 backdrop-blur-sm rounded-xl p-8 border border-amber-400/30 shadow-xl">
-        <div className="mb-6">
-          <h3 className="text-2xl font-black text-amber-300 flex items-center gap-3">
-            <div className="w-1 h-8 bg-gradient-to-b from-amber-400 to-orange-400 rounded-full"></div>
+      <div className="relative group bg-gradient-to-br from-primary/10 via-accent/5 to-secondary/10 backdrop-blur-lg rounded-2xl p-8 border border-primary/20 shadow-2xl hover:shadow-primary/10 transition-all duration-500 hover:border-primary/30">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
+        <div className="relative mb-8">
+          <h3 className="text-3xl font-black bg-gradient-to-r from-primary to-chart-1 bg-clip-text text-transparent flex items-center gap-4">
+            <div className="w-2 h-10 bg-gradient-to-b from-primary via-chart-1 to-chart-2 rounded-full animate-pulse shadow-lg shadow-primary/30"></div>
             Current Mission
           </h3>
         </div>
-        {renderCurrentMission()}
+        <div className="relative">
+          {renderCurrentMission()}
+        </div>
       </div>
 
       {/* Roadmap Grid */}
-      <RoadmapGrid missions={missions} username={username} />
+      <div className="relative">
+        <RoadmapGrid missions={missions} username={username} />
+      </div>
     </div>
   );
 };

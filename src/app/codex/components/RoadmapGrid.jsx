@@ -91,48 +91,82 @@ export default function RoadmapGrid({ missions, username }) {
 
   if (!missions || Object.keys(missions).length === 0) {
     return (
-      <div className="text-center py-8">
-        <p className="text-gray-500 text-sm lg:text-base font-medium">No roadmap found.</p>
+      <div className="text-center py-16">
+        <div className="mb-6 opacity-50">
+          <span className="text-8xl">🗺️</span>
+        </div>
+        <p className="text-muted-foreground text-xl lg:text-2xl font-semibold mb-2">No roadmap found.</p>
+        <p className="text-muted-foreground/70 text-lg">Create your first roadmap to get started!</p>
       </div>
     );
   }
 
   return (
     <div>
-      <div className="flex justify-end pr-4">
+      <div className="flex justify-end pr-4 mb-8">
         <button
-          className="flex items-center gap-2 border bg-gradient-to-r from-red-600 to-red-700 border-red-300 text-white rounded-lg px-4 py-2 hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer font-semibold"
+          className="group flex items-center gap-3 bg-gradient-to-r from-destructive/90 to-destructive border border-destructive/50 text-destructive-foreground rounded-xl px-6 py-3 hover:scale-105 hover:shadow-xl hover:shadow-destructive/25 transition-all duration-300 cursor-pointer font-bold text-lg backdrop-blur-lg"
           onClick={handleDeleteRoadmap}
         >
-          <Trash2 size={20} />
+          <Trash2 size={20} className="group-hover:scale-110 transition-transform duration-200" />
           Delete Roadmap
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mt-10">
-        {Object.entries(missions).map(([id, item]) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mt-12">
+        {Object.entries(missions).map(([id, item], index) => (
           <motion.div
             key={id}
-            whileHover={{ scale: 1.02, y: -5 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1, duration: 0.5 }}
+            whileHover={{ scale: 1.03, y: -8 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => {
               setSelectedItem(item);
               setIsModalOpen(true);
             }}
-            className="group p-6 lg:p-7 rounded-xl bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-lg border border-white/30 shadow-xl hover:shadow-2xl transition-all duration-500 ease-out cursor-pointer overflow-hidden min-h-[140px] lg:min-h-[170px] relative"
+            className="group relative p-8 rounded-2xl bg-gradient-to-br from-card/80 via-card/60 to-accent/10 backdrop-blur-lg border border-border/50 shadow-xl hover:shadow-2xl hover:shadow-primary/10 transition-all duration-700 ease-out cursor-pointer overflow-hidden min-h-[180px] lg:min-h-[200px]"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-400/10 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <h3 className="text-base lg:text-xl font-bold text-white drop-shadow-lg leading-[1.6] relative z-10">
-              <ReactMarkdown>{item.title.replace(/\\n/g, '')}</ReactMarkdown>
-            </h3>
+            {/* Animated background gradient on hover */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-chart-1/5 to-chart-2/10 opacity-0 group-hover:opacity-100 transition-all duration-500 rounded-2xl" />
+            
+            {/* Subtle border glow animation */}
+            <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-500 bg-gradient-to-r from-transparent via-primary/20 to-transparent" 
+                 style={{background: 'linear-gradient(45deg, transparent 30%, var(--primary) 50%, transparent 70%)', 
+                        backgroundSize: '200% 200%', 
+                        animation: 'shimmer 3s ease-in-out infinite'}} />
+            
+            {/* Content */}
+            <div className="relative z-10 h-full flex flex-col">
+              <h3 className="text-lg lg:text-xl font-bold text-foreground group-hover:text-primary leading-[1.6] transition-colors duration-300 flex-1">
+                <ReactMarkdown>{item.title.replace(/\\n/g, '')}</ReactMarkdown>
+              </h3>
+              
+              {/* Hover indicator */}
+              <div className="mt-4 flex items-center justify-between">
+                <div className="text-muted-foreground/60 text-sm font-medium group-hover:text-primary/80 transition-colors duration-300">
+                  Click to view details
+                </div>
+                <div className="w-8 h-8 rounded-full bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+                  <span className="text-primary text-sm">→</span>
+                </div>
+              </div>
+            </div>
           </motion.div>
         ))}
       </div>
 
       <style jsx global>{`
+        @keyframes shimmer {
+          0% { background-position: 200% 200%; }
+          50% { background-position: 0% 50%; }
+          100% { background-position: 200% 200%; }
+        }
+        
         .custom-scrollbar {
           scrollbar-width: thin;
-          scrollbar-color: #f59e0b #f3f4f6;
+          scrollbar-color: hsl(var(--primary)) hsl(var(--muted));
         }
         
         .custom-scrollbar::-webkit-scrollbar {
@@ -140,63 +174,62 @@ export default function RoadmapGrid({ missions, username }) {
         }
         
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: #f3f4f6;
+          background: hsl(var(--muted));
           border-radius: 6px;
         }
         
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: linear-gradient(to bottom, #f59e0b, #d97706);
+          background: linear-gradient(to bottom, hsl(var(--primary)), hsl(var(--chart-1)));
           border-radius: 6px;
-          border: 2px solid #f3f4f6;
+          border: 2px solid hsl(var(--muted));
         }
         
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(to bottom, #d97706, #b45309);
+          background: linear-gradient(to bottom, hsl(var(--chart-1)), hsl(var(--chart-2)));
         }
       `}</style>
 
       <AnimatePresence>
         {isModalOpen && selectedItem && (
-          <motion.div
-            key="modal"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 pl-72 bg-black/70 backdrop-blur-lg flex items-center justify-center overflow-hidden px-4"
-            onClick={handleBackdropClick}
-          >
             <motion.div
-              initial={{ scale: 0.85, opacity: 0, y: 50 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 30 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-              className="bg-gradient-to-br from-slate-50 to-white dark:from-gray-800 dark:to-gray-900 text-slate-800 dark:text-slate-100 rounded-2xl shadow-2xl p-10 w-full max-w-4xl relative max-h-[90vh] overflow-hidden border border-white/20"
-              onClick={handleModalClick}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 pl-72 bg-black/80 backdrop-blur-xl flex items-center justify-center overflow-hidden px-4"
+              onClick={handleBackdropClick}
             >
-              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 rounded-t-2xl" />
-              
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="absolute top-5 right-5 w-8 h-8 bg-red-500/10 hover:bg-red-500/20 text-red-600 hover:text-red-700 rounded-full flex items-center justify-center transition-all duration-200 text-lg font-bold"
+              <motion.div
+                initial={{ scale: 0.85, opacity: 0, y: 50 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 30 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                className="bg-gradient-to-br from-card via-card/95 to-accent/5 text-foreground rounded-3xl shadow-2xl p-12 w-full max-w-4xl relative max-h-[90vh] overflow-hidden border border-border/50 backdrop-blur-xl"
+                onClick={handleModalClick}
               >
-                ✕
-              </button>
-              
-              <h2 className="text-2xl lg:text-3xl font-black mb-8 pr-12 leading-[1.5] text-slate-900 dark:text-white">
-                <ReactMarkdown>{selectedItem.title.replace(/\\n/g, '')}</ReactMarkdown>
-              </h2>
-              
-              <div className="max-h-[60vh] text-lg lg:text-xl px-1 mb-6 overflow-y-auto custom-scrollbar">
-                <div className="rounded-2xl bg-gradient-to-br from-slate-100/80 to-white/80 dark:from-gray-700/50 dark:to-gray-800/50 backdrop-blur-sm shadow-lg p-8 mb-8 border border-slate-200/50 dark:border-gray-600/30">
-                  <div className="prose prose-lg max-w-none text-slate-700 dark:text-slate-200">
-                    <ReactMarkdown>{selectedItem.content}</ReactMarkdown>
+                <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-primary via-chart-1 to-chart-2 rounded-t-3xl shadow-lg" />
+                
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="absolute top-6 right-6 w-10 h-10 bg-destructive/10 hover:bg-destructive/20 text-destructive hover:text-destructive/80 rounded-full flex items-center justify-center transition-all duration-200 text-xl font-bold shadow-lg hover:scale-110"
+                >
+                  ✕
+                </button>
+                
+                <h2 className="text-3xl lg:text-4xl font-black mb-10 pr-16 leading-[1.4] bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
+                  <ReactMarkdown>{selectedItem.title.replace(/\\n/g, '')}</ReactMarkdown>
+                </h2>
+                
+                <div className="max-h-[60vh] text-lg lg:text-xl px-2 mb-8 overflow-y-auto custom-scrollbar">
+                  <div className="rounded-3xl bg-gradient-to-br from-muted/50 via-muted/30 to-accent/10 backdrop-blur-sm shadow-xl p-10 mb-8 border border-border/30">
+                    <div className="prose prose-lg max-w-none text-foreground/90 leading-relaxed">
+                      <ReactMarkdown>{selectedItem.content}</ReactMarkdown>
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              <div className="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-slate-50 to-transparent dark:from-gray-800 pointer-events-none rounded-b-2xl" />
+                
+                <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-card to-transparent pointer-events-none rounded-b-3xl" />
+              </motion.div>
             </motion.div>
-          </motion.div>
         )}
       </AnimatePresence>
     </div>

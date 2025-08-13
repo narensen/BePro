@@ -29,7 +29,7 @@ const PostInteractions = ({
           }`}
         >
           <ThumbsUp size={18} className="transition-transform hover:scale-110" />
-          <span className="font-semibold text-base">{post.like_count || 2}</span>
+          <span className="font-semibold text-base">{post.like_count ?? 0}</span>
         </button>
 
         <button 
