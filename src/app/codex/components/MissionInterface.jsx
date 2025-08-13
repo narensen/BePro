@@ -44,10 +44,10 @@ const MissionInterface = ({
     // Show header when there's activity
     setHeaderVisible(true);
     
-    // Set timer to hide header after 5 seconds of inactivity
+    // Set timer to hide header after 2.5 seconds of inactivity
     const timer = setTimeout(() => {
       setHeaderVisible(false);
-    }, 5000);
+    }, 2500);
     
     setInactivityTimer(timer);
   };
@@ -315,7 +315,6 @@ const MissionInterface = ({
             ref={chatAreaRef}
             className="flex-1 transition-all duration-300 ease-in-out overflow-y-auto"
             onScroll={handleScroll}
-            onMouseMove={handleUserActivity}
             onClick={handleUserActivity}
           >
             <div className={`h-full transition-all duration-500 ease-in-out ${showSidebar ? 'px-8' : 'px-4'}`}>
@@ -343,7 +342,7 @@ const MissionInterface = ({
 
       {/* Fixed Footer - Chat Input adjusts based on sidebar state */}
       <div className={`fixed bottom-0 z-40 bg-white border-t border-gray-200 shadow-lg transition-all duration-500 ease-in-out ${showSidebar ? 'left-80 right-0' : 'left-0 right-0'}`}>
-        <div onMouseMove={handleUserActivity} onFocus={handleUserActivity}>
+        <div>
           <ChatInput
             currentInput={currentInput}
             setCurrentInput={setCurrentInput}
