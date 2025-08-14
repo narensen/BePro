@@ -68,38 +68,38 @@ export default function LandingPage() {
 
   return (
 
-    <main className="relative bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 overflow-x-hidden font-mono">
-      {}
+    <main className="relative bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 overflow-x-hidden font-mono safe-top safe-bottom">
+      {/* Interactive mouse effect */}
       <div 
-        className="fixed inset-0 opacity-30 pointer-events-none transition-all duration-300"
+        className="fixed inset-0 opacity-30 pointer-events-none transition-all duration-300 mobile:hidden"
         style={{
           background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255, 255, 255, 0.1), transparent 40%)`,
         }}
       />
       
-      {}
-      <FloatingElement delay={0} className="absolute top-16 left-4 md:top-20 md:left-10 opacity-20">
-        <Code2 className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-white" />
+      {/* Floating elements - Optimized for mobile */}
+      <FloatingElement delay={0} className="absolute mobile:top-12 mobile:left-2 top-16 left-4 md:top-20 md:left-10 opacity-20">
+        <Code2 className="mobile:w-8 mobile:h-8 w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-white" />
       </FloatingElement>
-      <FloatingElement delay={2} className="absolute top-40 right-4 md:right-20 opacity-20">
-        <Brain className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white" />
+      <FloatingElement delay={2} className="absolute mobile:top-32 mobile:right-2 top-40 right-4 md:right-20 opacity-20">
+        <Brain className="mobile:w-6 mobile:h-6 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white" />
       </FloatingElement>
-      <FloatingElement delay={4} className="absolute bottom-40 left-4 md:left-20 opacity-20">
-        <Target className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-white" />
+      <FloatingElement delay={4} className="absolute mobile:bottom-32 mobile:left-2 bottom-40 left-4 md:left-20 opacity-20">
+        <Target className="mobile:w-8 mobile:h-8 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-white" />
       </FloatingElement>
       
       <ResponsiveHeader user={user} onAuthAction={handleAuthAction} onSignOut={handleSignOut} />
 
       <ResponsiveHeroSection user={user} onAuthAction={handleAuthAction} />
 
-      {}
-      <AnimatedSection className="py-20 sm:py-24 md:py-32 px-4 sm:px-6" background="bg-white/10 backdrop-blur-xl">
+      {/* AI Mentor Section */}
+      <AnimatedSection className="mobile:py-16 py-20 sm:py-24 md:py-32 container-mobile mobile:px-3 px-4 sm:px-6" background="bg-white/10 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto">
-          {}
-          <div className="text-center mb-12 md:mb-20">
-            {}
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 md:mb-8 text-gray-900">Meet Your <span className="text-white">AI Mentor</span></h2>
-            <p className="max-w-4xl mx-auto text-lg sm:text-xl md:text-2xl text-gray-800 leading-relaxed font-bold">
+          {/* Section header */}
+          <div className="text-center mobile:mb-8 mb-12 md:mb-20">
+            {/* Title */}
+            <h2 className="mobile:text-3xl text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mobile:mb-4 mb-6 md:mb-8 text-gray-900">Meet Your <span className="text-white">AI Mentor</span></h2>
+            <p className="max-w-4xl mx-auto mobile:text-base text-lg sm:text-xl md:text-2xl text-gray-800 leading-relaxed font-bold mobile:px-4">
               Like having a senior developer watching over your shoulder. Your AI mentor provides instant feedback and guides you towards mastery.
             </p>
           </div>
@@ -107,10 +107,10 @@ export default function LandingPage() {
         </div>
       </AnimatedSection>
       
-      <AnimatedSection className="py-20 sm:py-24 md:py-32 px-4 sm:px-6" background="backdrop-blur-xl">
+      <AnimatedSection className="mobile:py-16 py-20 sm:py-24 md:py-32 container-mobile mobile:px-3 px-4 sm:px-6" background="backdrop-blur-xl">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 md:mb-8 text-white">The Illusion of Progress</h2>
-          <p className="max-w-4xl mx-auto text-lg sm:text-xl md:text-2xl text-gray-900 leading-relaxed font-bold">
+          <h2 className="mobile:text-3xl text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mobile:mb-4 mb-6 md:mb-8 text-white">The Illusion of Progress</h2>
+          <p className="max-w-4xl mx-auto mobile:text-base text-lg sm:text-xl md:text-2xl text-gray-900 leading-relaxed font-bold mobile:px-4">
             You&apos;ve done everything they told you to. You&apos;ve taken the courses. You&apos;ve collected the certificates. 
             And yet, you are still at the bottom of the mountain.
           </p>

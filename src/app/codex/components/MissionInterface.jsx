@@ -280,8 +280,8 @@ const MissionInterface = ({
   }
 
   return (
-    <div className="min-h-screen font-mono">
-      {/* Fixed Header with Auto-Hide */}
+    <div className="min-h-screen font-mono safe-top safe-bottom">
+      {/* Fixed Header with Auto-Hide - Enhanced for mobile */}
       <div className={`fixed top-0 left-0 right-0 z-50 transform transition-transform duration-500 ease-out ${
         headerVisible ? 'translate-y-0' : '-translate-y-full'
       }`}>
@@ -294,30 +294,39 @@ const MissionInterface = ({
         />
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex min-h-screen pt-16 transition-all duration-500 ease-in-out">
-        {/* Sidebar - Fixed position, lower z-index to not interfere with footer */}
-        <div className={`fixed left-0 top-16 bottom-0 w-80 bg-white border-r border-gray-200 shadow-lg z-20 transform transition-transform duration-500 ease-in-out ${showSidebar ? 'translate-x-0' : '-translate-x-full'}`}>
-          <div className="h-full overflow-y-auto pb-24">
-            <MissionSidebar
-              missionDescription={missionDescription}
-              setCurrentInput={setCurrentInput}
-              showSidebar={showSidebar}
-              setShowSidebar={setShowSidebar}
+      {/* Main Content Area - Mobile responsive */}
+      <div className="flex min-h-screen mobile:pt-14 pt-16 transition-all duration-500 ease-in-out">
+        {/* Sidebar - Mobile overlay, desktop fixed */}
+        <div className={`mobile:fixed fixed left-0 mobile:top-0 top-16 bottom-0 mobile:w-full w-80 bg-white mobile:border-0 border-r border-gray-200 shadow-lg mobile:z-50 z-20 transform transition-transform duration-500 ease-in-out ${showSidebar ? 'translate-x-0' : 'mobile:-translate-x-full -translate-x-full'}`}>
+          {/* Mobile overlay backdrop */}
+          {showSidebar && (
+            <div 
+              className="mobile:block hidden fixed inset-0 bg-black/50 z-40"
+              onClick={() => setShowSidebar(false)}
             />
+          )}
+          <div className="h-full overflow-y-auto mobile:pb-20 pb-24 mobile:z-50 relative">
+            <div className="mobile:pt-16">
+              <MissionSidebar
+                missionDescription={missionDescription}
+                setCurrentInput={setCurrentInput}
+                showSidebar={showSidebar}
+                setShowSidebar={setShowSidebar}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Main Chat Area - Smoothly adjusts position when sidebar is open */}
-        <div className={`flex-1 flex flex-col bg-white/95 backdrop-blur-sm transition-all duration-500 ease-in-out ${showSidebar ? 'ml-80' : 'ml-0'} pb-32`}>
-          {/* Chat Messages Area - Full scroll capability with scroll detection */}
+        {/* Main Chat Area - Mobile optimized */}
+        <div className={`flex-1 flex flex-col bg-white/95 backdrop-blur-sm transition-all duration-500 ease-in-out mobile:ml-0 ${showSidebar ? 'ml-80' : 'ml-0'} mobile:pb-20 pb-32`}>
+          {/* Chat Messages Area - Mobile scroll optimization */}
           <div 
             ref={chatAreaRef}
             className="flex-1 transition-all duration-300 ease-in-out overflow-y-auto"
             onScroll={handleScroll}
             onClick={handleUserActivity}
           >
-            <div className={`h-full transition-all duration-500 ease-in-out ${showSidebar ? 'px-8' : 'px-4'}`}>
+            <div className={`h-full transition-all duration-500 ease-in-out mobile:px-3 ${showSidebar ? 'px-8' : 'px-4'}`}>
               <ChatArea
                 messages={messages}
                 isLoading={isLoading}
@@ -325,9 +334,9 @@ const MissionInterface = ({
             </div>
           </div>
 
-          {/* Code Editor - Conditional with smooth appearance */}
+          {/* Code Editor - Mobile full screen overlay */}
           {showCodeEditor && (
-            <div className="border-t border-gray-200 bg-white transform transition-all duration-300 ease-in-out animate-in slide-in-from-bottom">
+            <div className={`mobile:fixed mobile:inset-0 mobile:z-40 mobile:bg-white border-t border-gray-200 bg-white transform transition-all duration-300 ease-in-out animate-in slide-in-from-bottom ${showCodeEditor ? 'mobile:translate-y-0' : 'mobile:translate-y-full'}`}>
               <CodeEditor
                 showCodeEditor={showCodeEditor}
                 setShowCodeEditor={setShowCodeEditor}
@@ -340,8 +349,8 @@ const MissionInterface = ({
         </div>
       </div>
 
-      {/* Fixed Footer - Chat Input adjusts based on sidebar state */}
-      <div className={`fixed bottom-0 z-40 bg-white border-t border-gray-200 shadow-lg transition-all duration-500 ease-in-out ${showSidebar ? 'left-80 right-0' : 'left-0 right-0'}`}>
+      {/* Fixed Footer - Mobile optimized chat input */}
+      <div className={`fixed bottom-0 z-40 bg-white border-t border-gray-200 shadow-lg transition-all duration-500 ease-in-out safe-bottom mobile:left-0 mobile:right-0 ${showSidebar ? 'left-80 right-0' : 'left-0 right-0'}`}>
         <div>
           <ChatInput
             currentInput={currentInput}
