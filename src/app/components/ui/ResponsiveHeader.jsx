@@ -50,44 +50,45 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
             )}
           </div>
 
-          {}
+          {/* Mobile hamburger menu - Enhanced touch target */}
           <button
             onClick={toggleMenu}
-            className="md:hidden p-2 text-gray-900 hover:bg-white/20 rounded-lg transition-colors"
+            className="md:hidden touch-target p-2 text-gray-900 hover:bg-white/20 rounded-lg transition-colors active:scale-95"
             aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
-        {}
+        {/* Mobile menu - Enhanced with better touch targets */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 pt-4 border-t border-white/20">
-            <nav className="flex flex-col space-y-3 mb-4">
+          <div className="md:hidden mt-4 pt-4 border-t border-white/20 mobile-fade-in">
+            <nav className="flex flex-col space-y-2 mb-4">
               <a 
                 href="#codex" 
-                className="text-gray-800 hover:text-gray-900 transition-colors font-bold py-2 px-2 rounded-lg hover:bg-white/20"
+                className="touch-target text-gray-800 hover:text-gray-900 transition-colors font-bold py-3 px-3 rounded-lg hover:bg-white/20 active:scale-95"
                 onClick={() => setIsMenuOpen(false)}
               >
                 The Codex
               </a>
               <a 
                 href="#fortress" 
-                className="text-gray-800 hover:text-gray-900 transition-colors font-bold py-2 px-2 rounded-lg hover:bg-white/20"
+                className="touch-target text-gray-800 hover:text-gray-900 transition-colors font-bold py-3 px-3 rounded-lg hover:bg-white/20 active:scale-95"
                 onClick={() => setIsMenuOpen(false)}
               >
                 The Fortress
               </a>
               <a 
                 href="#philosophy" 
-                className="text-gray-800 hover:text-gray-900 transition-colors font-bold py-2 px-2 rounded-lg hover:bg-white/20"
+                className="touch-target text-gray-800 hover:text-gray-900 transition-colors font-bold py-3 px-3 rounded-lg hover:bg-white/20 active:scale-95"
                 onClick={() => setIsMenuOpen(false)}
               >
                 The Philosophy
               </a>
             </nav>
             
-            {}
+            {/* Mobile action buttons - Enhanced */}
             <div className="flex flex-col gap-3">
               {user ? (
                 <>
@@ -96,7 +97,7 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
                       router.push('/home');
                       setIsMenuOpen(false);
                     }} 
-                    className="w-full px-4 py-3 font-bold bg-gray-900 text-amber-300 rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-lg cursor-pointer"
+                    className="touch-target w-full px-6 py-3 font-bold bg-gray-900 text-amber-300 rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-lg active:scale-95"
                   >
                     Dashboard
                   </button>
@@ -105,7 +106,7 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
                       onSignOut();
                       setIsMenuOpen(false);
                     }} 
-                    className="w-full px-4 py-3 font-bold text-gray-800 hover:text-gray-900 transition-colors cursor-pointer border border-gray-800 rounded-xl hover:bg-white/10"
+                    className="touch-target w-full px-6 py-3 font-bold text-gray-800 hover:text-gray-900 transition-colors border border-gray-800 rounded-xl hover:bg-white/10 active:scale-95"
                   >
                     Sign Out
                   </button>
@@ -116,7 +117,7 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
                     onAuthAction();
                     setIsMenuOpen(false);
                   }} 
-                  className="w-full px-4 py-3 font-bold text-amber-300 rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-lg cursor-pointer"
+                  className="touch-target w-full px-6 py-3 font-bold bg-gray-900 text-amber-300 rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-lg active:scale-95"
                 >
                   Enter The Forge
                 </button>

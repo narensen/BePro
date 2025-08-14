@@ -162,8 +162,8 @@ export default function SideBar() {
   };
   return (
     <>
-      {}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-[100] bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 border-b border-white/20 shadow-lg">
+      {/* Mobile Header - Enhanced with better touch targets */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-[100] bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 border-b border-white/20 shadow-lg safe-top">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center space-x-3">
             <h1 className="text-xl font-black text-gray-900">BePro</h1>
@@ -173,7 +173,8 @@ export default function SideBar() {
             <div className="relative">
               <button
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30 hover:bg-white/30 transition-all duration-200"
+                className="touch-target flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30 hover:bg-white/30 transition-all duration-200"
+                aria-label="Profile menu"
               >
                 <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
                   {avatarUrl ? (
@@ -205,19 +206,19 @@ export default function SideBar() {
                 </svg>
               </button>
               
-              {}
+              {/* Profile dropdown menu - Enhanced for mobile */}
               {showProfileMenu && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-white/30 py-2 z-50">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-white/30 py-2 z-50 mobile-fade-in">
                   <button
                     onClick={() => handleProfileMenuClick(`/${username}`)}
-                    className="w-full text-left px-4 py-3 text-gray-900 hover:bg-gray-100/50 transition-colors flex items-center space-x-3"
+                    className="touch-target w-full text-left px-4 py-3 text-gray-900 hover:bg-gray-100/50 transition-colors flex items-center space-x-3"
                   >
                     <User size={16} />
                     <span className="font-medium">Profile</span>
                   </button>
                   <button
                     onClick={() => handleProfileMenuClick('/settings')}
-                    className="w-full text-left px-4 py-3 text-gray-900 hover:bg-gray-100/50 transition-colors flex items-center space-x-3"
+                    className="touch-target w-full text-left px-4 py-3 text-gray-900 hover:bg-gray-100/50 transition-colors flex items-center space-x-3"
                   >
                     <Settings size={16} />
                     <span className="font-medium">Settings</span>
@@ -228,7 +229,7 @@ export default function SideBar() {
                       handleSignOut();
                       setShowProfileMenu(false);
                     }}
-                    className="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 transition-colors flex items-center space-x-3"
+                    className="touch-target w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 transition-colors flex items-center space-x-3"
                   >
                     <LogOut size={16} />
                     <span className="font-medium">Logout</span>
@@ -239,7 +240,7 @@ export default function SideBar() {
           ) : (
             <button
               onClick={() => router.push('/auth')}
-              className="bg-gray-900 text-amber-300 px-4 py-2 rounded-full font-bold text-sm hover:bg-gray-800 transition-colors"
+              className="touch-target bg-gray-900 text-amber-300 px-4 py-2 rounded-full font-bold text-sm hover:bg-gray-800 transition-colors"
             >
               Login
             </button>
@@ -406,25 +407,35 @@ export default function SideBar() {
      {}
 
      {}
-     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-white/95 backdrop-blur-sm border-t border-gray-200/50 shadow-2xl pb-safe">
-       <div className="flex items-center justify-around py-2 px-4">
+     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-white/95 backdrop-blur-sm border-t border-gray-200/50 shadow-2xl safe-bottom">
+       <div className="flex items-center justify-around py-1 px-2">
          {[...navItems.slice(0, 4), { name: 'Profile', icon: User, href: `/${username}` }].map((item) => {
            const isActive = pathname === item.href;
            const Icon = item.icon;
+           
+           // Add unread count for messages
+           const showBadge = item.name === 'Messages' && unreadCount > 0;
+           
            return (
              <button
                key={item.name}
                onClick={() => handleMobileNavClick(item.href)}
-               className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 relative ${
+               className={`touch-target flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 relative min-w-[60px] ${
                  isActive 
-                   ? 'text-amber-600 scale-110' 
-                   : 'text-gray-600 hover:text-gray-800 active:scale-95'
+                   ? 'text-amber-600 scale-105 bg-amber-50' 
+                   : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50 active:scale-95'
                }`}
+               aria-label={item.name}
              >
                <div className="relative">
-                 <Icon size={20} />
+                 <Icon size={20} className="transition-transform duration-200" />
+                 {showBadge && (
+                   <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                     {unreadCount > 9 ? '9+' : unreadCount}
+                   </div>
+                 )}
                </div>
-               <span className={`text-xs mt-1 font-medium transition-all duration-300 ${
+               <span className={`text-xs mt-1 font-medium transition-all duration-200 truncate w-full text-center ${
                  isActive ? 'text-amber-600' : 'text-gray-500'
                }`}>
                  {item.name === 'Dashboard' ? 'Home' : item.name === 'Profile' ? 'Profile' : item.name}
@@ -432,7 +443,7 @@ export default function SideBar() {
                {isActive && (
                  <motion.div
                    layoutId="mobile-active-indicator"
-                   className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-amber-600 rounded-full"
+                   className="absolute -top-0.5 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-amber-600 rounded-full"
                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                  />
                )}

@@ -134,7 +134,8 @@ textarea:focus {
 .spinner {
   @apply w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin;
 }
-@media (max-width: 768px) {
+/* Mobile Explore Page Enhancements */
+@media (max-width: 767px) {
   .mobile-stack {
     @apply flex-col;
   }
@@ -145,6 +146,65 @@ textarea:focus {
   
   .mobile-hidden {
     @apply hidden;
+  }
+  
+  /* Mobile post cards */
+  .mobile-post-card {
+    @apply mx-3 mb-4 rounded-2xl;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* Mobile typography adjustments */
+  .mobile-post-title {
+    @apply text-lg leading-tight;
+  }
+  
+  .mobile-post-content {
+    @apply text-sm leading-relaxed;
+  }
+  
+  /* Mobile button optimizations */
+  .mobile-btn {
+    @apply touch-target px-4 py-3 rounded-xl text-sm font-medium;
+  }
+  
+  .mobile-btn-icon {
+    @apply touch-target p-3 rounded-full;
+  }
+  
+  /* Mobile search and filter */
+  .mobile-search-container {
+    @apply px-4 py-3 space-y-3;
+  }
+  
+  .mobile-filter-chips {
+    @apply flex gap-2 overflow-x-auto pb-2;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .mobile-filter-chips::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .mobile-filter-chip {
+    @apply flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium;
+  }
+  
+  /* Mobile spacing */
+  .mobile-content-spacing > * + * {
+    @apply mt-4;
+  }
+  
+  /* Mobile modal adjustments */
+  .mobile-modal {
+    @apply fixed inset-0 z-50 p-4;
+    padding-top: calc(env(safe-area-inset-top) + 1rem);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
+  }
+  
+  .mobile-modal-content {
+    @apply w-full h-full bg-white rounded-2xl overflow-hidden;
   }
 }
 @media (prefers-reduced-motion: reduce) {
