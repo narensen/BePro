@@ -65,13 +65,13 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
         <SideBar />
-        <div className="lg:ml-72 flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="text-2xl lg:text-4xl font-black mb-4 lg:mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent animate-pulse mt-16 lg:mt-0">
+        <div className="desktop:ml-72 flex items-center justify-center min-h-screen container-mobile">
+          <div className="text-center p-6">
+            <div className="mobile:text-2xl text-2xl lg:text-4xl font-black mb-4 lg:mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent animate-pulse mt-16 lg:mt-0">
               BePro Dashboard
             </div>
             <div className="w-8 h-8 lg:w-10 lg:h-10 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin mx-auto"></div>
-            <p className="text-gray-800 mt-4 text-sm lg:text-lg">Loading your dashboard...</p>
+            <p className="text-gray-800 mt-4 mobile:text-sm text-sm lg:text-lg">Loading your dashboard...</p>
           </div>
         </div>
       </div>
@@ -82,18 +82,19 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-x-hidden relative">
       <SideBar />
 
-      <div className="transition-all duration-300 ease-in-out pb-20 lg:pb-0 lg:ml-72">
-        <main className="p-4 sm:p-6 pt-16 lg:pt-4">
+      <div className="transition-all duration-300 ease-in-out pb-20 lg:pb-0 desktop:ml-72">
+        <main className="container-mobile p-4 sm:p-6 pt-16 lg:pt-4">
           <div className="max-w-6xl mx-auto">
             <DashboardHeader username={username || 'User'} />
             
             <CodexReport username={username} />
             
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-              <div className="lg:col-span-2">
+            {/* Enhanced mobile-responsive grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 mobile:gap-4 gap-6 lg:gap-8">
+              <div className="lg:col-span-2 mobile:order-2 lg:order-1">
                 <RecentNotifications username={username} userProfile={userProfile} />
               </div>
-              <div className="space-y-6 lg:space-y-8">
+              <div className="space-y-6 lg:space-y-8 mobile:order-1 lg:order-2">
                 <QuickActions />
               </div>
             </div>
