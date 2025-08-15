@@ -152,3 +152,12 @@ html {
   .z-sidebar-toggle { z-index: 80; }
   .z-bottom-nav { z-index: 90; }
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}

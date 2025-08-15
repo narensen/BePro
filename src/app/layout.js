@@ -9,7 +9,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="antialiased min-h-screen flex flex-col">
-        {children}
+        <main className="flex-1 fade-in">{children}</main>
       </body>
     </html>
   );
