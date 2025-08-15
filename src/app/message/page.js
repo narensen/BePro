@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 
@@ -20,7 +20,7 @@ import MobileLayout from './components/MobileLayout'
 
 export default function MessagesPage() {
   const router = useRouter()
-  const { user, username, clearUserSession } = useUserStore()
+  const { user, username, clearUserSession, setTotalUnreadCount } = useUserStore()
   const [conversations, setConversations] = useState([])
   const [activeConversation, setActiveConversation] = useState(null)
   const [messages, setMessages] = useState([])
@@ -44,6 +44,11 @@ export default function MessagesPage() {
     activeConversationRef.current = activeConversation
   }, [activeConversation])
 
+  useEffect(() => {
+    const total = Object.values(unreadCounts).reduce((acc, count) => acc + count, 0);
+    setTotalUnreadCount(total);
+  }, [unreadCounts, setTotalUnreadCount]);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
@@ -65,10 +70,16 @@ export default function MessagesPage() {
   const markConversationAsRead = async (otherUsername) => {
     if (!username || !otherUsername) return
     
+    const conversationId = [username, otherUsername].sort().join('_');
+
+    // Optimistically update the UI
+    setUnreadCounts(prev => ({
+      ...prev,
+      [conversationId]: 0
+    }));
+
     try {
-      console.log(`Marking messages as read from ${otherUsername}`)
-      
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('messages')
         .update({ is_read: true })
         .eq('sender_username', otherUsername)
@@ -76,20 +87,9 @@ export default function MessagesPage() {
         .eq('is_read', false)
       
       if (error) {
-        console.error('Error marking messages as read:', error)
-      } else {
-        console.log('Successfully marked messages as read')
-        
-        // Update conversations list to reflect new unread counts
-        const updatedConversations = await getUserConversations()
-        setConversations(updatedConversations || [])
-        
-        // Clear unread count for this conversation
-        const conversationId = [username, otherUsername].sort().join('_')
-        setUnreadCounts(prev => ({
-          ...prev,
-          [conversationId]: 0
-        }))
+        console.error('Error marking messages as read:', error);
+        // If the update fails, we might want to revert the optimistic update.
+        // For now, we'll just log the error.
       }
     } catch (error) {
       console.error('Error in markConversationAsRead:', error)
@@ -98,61 +98,58 @@ export default function MessagesPage() {
 
   // Function to get user conversations (frontend version)
   const getUserConversations = async () => {
+    if (!username) return [];
     try {
-      const { data, error } = await supabase
+      const { data: messages, error } = await supabase
         .from('messages')
         .select('*')
         .or(`sender_username.eq.${username},receiver_username.eq.${username}`)
-        .order('created_at', { ascending: false })
-      
+        .order('created_at', { ascending: false });
+
       if (error) {
-        console.error('Error fetching conversations:', error)
-        return []
+        console.error('Error fetching conversations:', error);
+        return [];
       }
-      
-      const conversationsMap = new Map()
-      
-      data?.forEach(msg => {
-        const otherUser = msg.sender_username === username ? msg.receiver_username : msg.sender_username
-        const conversationId = [username, otherUser].sort().join('_')
-        
-        if (!conversationsMap.has(conversationId) || 
-            new Date(msg.created_at) > new Date(conversationsMap.get(conversationId).created_at)) {
-          
+
+      const conversationsMap = new Map();
+      const unreadCountsMap = new Map();
+
+      messages.forEach(msg => {
+        const otherUser = msg.sender_username === username ? msg.receiver_username : msg.sender_username;
+        const conversationId = [username, otherUser].sort().join('_');
+
+        if (!conversationsMap.has(conversationId)) {
           conversationsMap.set(conversationId, {
             conversationId,
             otherUsername: otherUser,
             lastMessage: {
               content: msg.content.content,
               senderUsername: msg.content.senderUsername,
-              timestamp: msg.content.timestamp
+              timestamp: msg.content.timestamp,
             },
             created_at: msg.created_at,
-            unreadCount: 0 // Will be calculated below
-          })
+          });
         }
-      })
+
+        if (msg.receiver_username === username && !msg.is_read) {
+          unreadCountsMap.set(conversationId, (unreadCountsMap.get(conversationId) || 0) + 1);
+        }
+      });
       
       const conversations = Array.from(conversationsMap.values()).sort((a, b) => 
         new Date(b.created_at) - new Date(a.created_at)
-      )
-      
-      // Calculate unread counts
-      for (const conversation of conversations) {
-        const { data: unreadData } = await supabase
-          .from('messages')
-          .select('id')
-          .eq('sender_username', conversation.otherUsername)
-          .eq('receiver_username', username)
-          .eq('is_read', false)
-        
-        conversation.unreadCount = unreadData?.length || 0
-      }
-      
-      return conversations
+      );
+
+      const newUnreadCounts = {};
+      unreadCountsMap.forEach((count, id) => {
+        newUnreadCounts[id] = count;
+      });
+      setUnreadCounts(newUnreadCounts);
+
+      return conversations;
     } catch (err) {
-      console.error('Error in getUserConversations:', err)
-      return []
+      console.error('Error in getUserConversations:', err);
+      return [];
     }
   }
 
@@ -344,7 +341,7 @@ export default function MessagesPage() {
     scrollToBottom()
   }, [messages])
 
-  const searchUsers = async (query) => {
+  const searchUsers = useCallback(async (query) => {
     if (!query.trim()) {
       setSearchResults([])
       setIsSearching(false)
@@ -372,7 +369,7 @@ export default function MessagesPage() {
     } finally {
       setIsSearching(false)
     }
-  }
+  }, [user?.id])
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -380,7 +377,7 @@ export default function MessagesPage() {
     }, 300)
 
     return () => clearTimeout(timeoutId)
-  }, [searchQuery, user?.id])
+  }, [searchQuery, searchUsers])
 
   const handleSignout = async () => {
     if (socket) {

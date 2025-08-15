@@ -34,11 +34,11 @@ export default function SideBar() {
     setUserSession,
     setUsername,
     clearUserSession,
+    totalUnreadCount,
   } = useUserStore();
 
   const [loading, setLoading] = useState(!user);
   const [avatarUrl, setAvatarUrl] = useState('');
-  const [unreadCount, setUnreadCount] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -91,46 +91,6 @@ export default function SideBar() {
     fetchUserProfile();
   }, [user, setUsername]);
   
-  useEffect(() => {
-    if (!username) return;
-
-    const fetchUnreadCount = async () => {
-      const { count, error } = await supabase
-        .from('messages')
-        .select('*', { count: 'exact', head: true })
-        .eq('receiver_username', username)
-        .eq('is_read', false);
-
-      if (error) {
-        console.error('Error fetching unread message count:', error);
-      } else {
-        setUnreadCount(count ?? 0);
-      }
-    };
-
-    fetchUnreadCount();
-
-    const channel = supabase
-      .channel('public:messages')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'messages',
-          filter: `receiver_username=eq.${username}`,
-        },
-        () => {
-          fetchUnreadCount();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [username]);
-
   const navItems = [
     { name: 'Dashboard', icon: Home, href: '/home' },
     { name: 'Explore', icon: Search, href: '/home/explore' },
@@ -339,6 +299,11 @@ export default function SideBar() {
                     >
                       <Icon size={20} />
                       <span className="font-medium">{item.name}</span>
+                      {item.name === 'Messages' && totalUnreadCount > 0 && (
+                        <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                          {totalUnreadCount > 99 ? '99+' : totalUnreadCount}
+                        </span>
+                      )}
                     </div>
                   </Link>
                 );
@@ -406,7 +371,7 @@ export default function SideBar() {
      {}
 
      {}
-     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-white/95 backdrop-blur-sm border-t border-gray-200/50 shadow-2xl pb-safe">
+     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 border-t border-white/20 shadow-2xl pb-safe">
        <div className="flex items-center justify-around py-2 px-4">
          {[...navItems.slice(0, 4), { name: 'Profile', icon: User, href: `/${username}` }].map((item) => {
            const isActive = pathname === item.href;
@@ -417,22 +382,27 @@ export default function SideBar() {
                onClick={() => handleMobileNavClick(item.href)}
                className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 relative ${
                  isActive 
-                   ? 'text-amber-600 scale-110' 
-                   : 'text-gray-600 hover:text-gray-800 active:scale-95'
+                   ? 'text-gray-900 scale-110'
+                   : 'text-gray-700 hover:text-gray-900 active:scale-95'
                }`}
              >
                <div className="relative">
                  <Icon size={20} />
+                 {item.name === 'Messages' && totalUnreadCount > 0 && (
+                    <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                      {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
+                    </span>
+                  )}
                </div>
                <span className={`text-xs mt-1 font-medium transition-all duration-300 ${
-                 isActive ? 'text-amber-600' : 'text-gray-500'
+                 isActive ? 'text-gray-900' : 'text-gray-700'
                }`}>
                  {item.name === 'Dashboard' ? 'Home' : item.name === 'Profile' ? 'Profile' : item.name}
                </span>
                {isActive && (
                  <motion.div
                    layoutId="mobile-active-indicator"
-                   className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-amber-600 rounded-full"
+                   className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-gray-900 rounded-full"
                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                  />
                )}
