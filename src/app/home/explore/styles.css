@@ -83,7 +83,7 @@
 button:focus,
 input:focus,
 textarea:focus {
-  outline: 2px solid rgba(245, 158, 11, 0.5);
+  outline: 2px solid rgba(136, 136, 136, 0.5);
   outline-offset: 2px;
 }
 .glass {
@@ -98,22 +98,22 @@ textarea:focus {
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 .gradient-primary {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b, #ea580c);
+  background: linear-gradient(135deg, #0D0D0D, #888888, #F9F9F9);
 }
 
 .gradient-secondary {
-  background: linear-gradient(135deg, #fef3c7, #fde68a, #fbbf24);
+  background: linear-gradient(135deg, #F9F9F9, #888888, #0D0D0D);
 }
 .btn-primary {
-  @apply px-4 py-2 rounded-full font-medium transition-all duration-300 bg-white text-orange-600 hover:bg-white/90 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-400;
+  @apply px-4 py-2 rounded-full font-medium transition-all duration-300 bg-white text-gray-900 hover:bg-white/90 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-600;
 }
 
 .btn-secondary {
-  @apply px-4 py-2 rounded-full font-medium transition-all duration-300 bg-white/20 text-white hover:bg-white/30 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-400;
+  @apply px-4 py-2 rounded-full font-medium transition-all duration-300 bg-white/20 text-white hover:bg-white/30 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-600;
 }
 
 .btn-ghost {
-  @apply px-3 py-2 rounded-lg font-medium transition-all duration-300 text-white/80 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-400;
+  @apply px-3 py-2 rounded-lg font-medium transition-all duration-300 text-white/80 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-600;
 }
 .card {
   @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-xl transition-all duration-300 hover:bg-white/20 hover:scale-[1.01] hover:shadow-lg;
@@ -123,10 +123,10 @@ textarea:focus {
   @apply bg-white/20 backdrop-blur-md border border-white/30 rounded-xl shadow-lg transition-all duration-300 hover:bg-white/30 hover:scale-[1.01] hover:shadow-xl;
 }
 .input-glass {
-  @apply w-full px-4 py-2 bg-white/20 border border-white/30 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-300;
+  @apply w-full px-4 py-2 bg-white/20 border border-white/30 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition-all duration-300;
 }
 .text-gradient {
-  background: linear-gradient(135deg, #fbbf24, #ea580c);
+  background: linear-gradient(135deg, #0D0D0D, #888888);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

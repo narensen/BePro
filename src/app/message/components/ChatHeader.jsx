@@ -11,7 +11,7 @@ export default function ChatHeader({ activeConversation, otherUserTyping, isConn
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
-      <div className="relative w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-yellow-400">
+      <div className="relative w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-gray-600 to-gray-200">
         {activeConversation.otherUser?.avatar_url ? (
           <img src={activeConversation.otherUser.avatar_url} alt={activeConversation.otherUsername} className="w-full h-full rounded-full object-cover" />
         ) : (

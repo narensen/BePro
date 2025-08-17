@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-export default function StatCard({ title, value, subtitle, icon: Icon, trend, color = 'from-amber-400 to-yellow-400', delay = 0 }) {
+export default function StatCard({ title, value, subtitle, icon: Icon, trend, color = 'from-gray-400 to-gray-200', delay = 0 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

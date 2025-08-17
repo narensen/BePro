@@ -115,7 +115,7 @@ export default function AdminStatsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+      <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 font-mono relative">
         <SideBar />
         <div className="lg:ml-72 flex items-center justify-center min-h-screen">
           <div className="text-center">
@@ -132,7 +132,7 @@ export default function AdminStatsPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+      <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 font-mono relative">
         <SideBar />
         <div className="lg:ml-72 flex items-center justify-center min-h-screen">
           <motion.div
@@ -148,7 +148,7 @@ export default function AdminStatsPage() {
             </p>
             <button
               onClick={() => router.push('/home')}
-              className="bg-gradient-to-r from-gray-900 to-gray-800 text-amber-300 font-bold px-6 py-3 rounded-xl shadow-lg hover:scale-105 transition-all duration-300"
+              className="bg-gradient-to-r from-gray-900 to-gray-800 text-gray-300 font-bold px-6 py-3 rounded-xl shadow-lg hover:scale-105 transition-all duration-300"
             >
               Return to Dashboard
             </button>
@@ -160,7 +160,7 @@ export default function AdminStatsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+      <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 font-mono relative">
         <SideBar />
         <div className="lg:ml-72 flex items-center justify-center min-h-screen">
           <motion.div
@@ -174,7 +174,7 @@ export default function AdminStatsPage() {
             <div className="flex space-x-4">
               <button
                 onClick={handleRefresh}
-                className="bg-gradient-to-r from-gray-900 to-gray-800 text-amber-300 font-bold px-6 py-3 rounded-xl shadow-lg hover:scale-105 transition-all duration-300 flex items-center space-x-2"
+                className="bg-gradient-to-r from-gray-900 to-gray-800 text-gray-300 font-bold px-6 py-3 rounded-xl shadow-lg hover:scale-105 transition-all duration-300 flex items-center space-x-2"
               >
                 <RefreshCw className="w-4 h-4" />
                 <span>Retry</span>
@@ -193,7 +193,7 @@ export default function AdminStatsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-x-hidden relative">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 font-mono overflow-x-hidden relative">
       <SideBar />
 
       <div className="transition-all duration-300 ease-in-out pb-20 lg:pb-0 lg:ml-72">
@@ -265,7 +265,7 @@ export default function AdminStatsPage() {
                     value={statistics.users?.wau}
                     subtitle="Active in past 7 days"
                     icon={Calendar}
-                    color="from-orange-400 to-red-400"
+                    color="from-gray-400 to-red-400"
                     delay={3}
                   />
                 </div>

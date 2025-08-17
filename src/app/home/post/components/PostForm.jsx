@@ -19,7 +19,7 @@ export default function PostForm({ content, handleContentChange, charCount, maxC
           className="w-full p-4 lg:p-6 border-2 border-gray-300 rounded-xl lg:rounded-2xl text-gray-800 placeholder-gray-500 focus:outline-none focus:border-gray-900 resize-none font-medium text-sm lg:text-base"
         />
         <div className="absolute bottom-3 lg:bottom-4 right-3 lg:right-4 text-xs lg:text-sm">
-          <span className={`font-semibold ${charCount > maxChars * 0.8 ? 'text-orange-600' : 'text-gray-600'}`}>
+          <span className={`font-semibold ${charCount > maxChars * 0.8 ? 'text-gray-600' : 'text-gray-600'}`}>
             {charCount}
           </span>
           <span className="text-gray-500">/{maxChars}</span>

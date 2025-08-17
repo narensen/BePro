@@ -10,7 +10,7 @@ export default function LoadingSection() {
       aria-label="Loading content"
     >
       <motion.div
-        className="w-10 h-10 lg:w-14 lg:h-14 border-[4px] border-t-amber-400 rounded-full"
+        className="w-10 h-10 lg:w-14 lg:h-14 border-[4px] border-t-gray-400 rounded-full"
         animate={{ rotate: 360 }}
         transition={{
           repeat: Infinity,

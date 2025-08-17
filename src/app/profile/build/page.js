@@ -289,7 +289,7 @@ const ProfileBuilder = () => {
   }, [user]);
 
   return (
-    <main className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 min-h-screen flex items-center justify-center p-4 transition-all duration-500 ease-in-out">
+    <main className="bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 min-h-screen flex items-center justify-center p-4 transition-all duration-500 ease-in-out">
       <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl w-full max-w-4xl p-8 animate-fadeIn transition-all duration-700">
         {currentStep === 1 && (
           <div className="transition-opacity duration-500 ease-in-out opacity-100">
@@ -303,7 +303,7 @@ const ProfileBuilder = () => {
             {}
             <div className="mb-6 flex flex-col items-center">
               <div className="relative mb-4">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
+                <div className="w-24 h-24 rounded-full bg-gradient-to-r from-gray-500 to-gray-300 flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
                   {avatarPreview ? (
                     <img
                       src={avatarPreview}
@@ -391,7 +391,7 @@ const ProfileBuilder = () => {
               disabled={usernameStatus !== 'available'}
               className={`w-full py-3 rounded-xl font-bold flex justify-center items-center gap-2 ${
                 usernameStatus === 'available'
-                  ? 'bg-black text-amber-300 hover:scale-105 transition'
+                  ? 'bg-black text-gray-300 hover:scale-105 transition'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
             >
@@ -432,7 +432,7 @@ const ProfileBuilder = () => {
                         onClick={() => handleTagToggle(tag.id)}
                         className={`px-3 py-2 text-sm rounded-xl border transition-all ${
                           selectedTags.includes(tag.id)
-                            ? 'bg-gray-900 text-amber-300 border-gray-900'
+                            ? 'bg-gray-900 text-gray-300 border-gray-900'
                             : selectedTags.length >= 6
                             ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
                             : 'bg-white text-gray-700 border-gray-300 hover:border-gray-900'
@@ -459,7 +459,7 @@ const ProfileBuilder = () => {
                 disabled={selectedTags.length === 0 || isLoading}
                 className={`flex-1 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
                   selectedTags.length > 0 && !isLoading
-                    ? 'bg-black text-amber-300 hover:scale-105'
+                    ? 'bg-black text-gray-300 hover:scale-105'
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
               >

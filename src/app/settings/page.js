@@ -345,7 +345,7 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+      <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 font-mono relative">
         <SideBar />
         <div className="lg:ml-72 flex items-center justify-center min-h-screen">
           <div className="text-center">
@@ -360,7 +360,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 font-mono relative">
       {}
       <SideBar />
       
@@ -370,7 +370,7 @@ export default function SettingsPage() {
         <div className="hidden lg:block sticky top-0 z-30 bg-white/90 backdrop-blur-sm border-b border-gray-200/50 p-3 lg:p-6">
           <div className="text-center lg:text-left">
             <h1 className="text-2xl lg:text-4xl font-black text-gray-900 mb-1 lg:mb-2">Settings</h1>
-            <p className="text-amber-600 text-sm lg:text-lg font-medium">Manage your account preferences and profile information</p>
+            <p className="text-gray-600 text-sm lg:text-lg font-medium">Manage your account preferences and profile information</p>
           </div>
         </div>
 
@@ -380,7 +380,7 @@ export default function SettingsPage() {
             {}
             <div className="lg:hidden mb-6 text-center">
               <h1 className="text-3xl font-black text-gray-900 mb-2">Settings</h1>
-              <p className="text-amber-600 font-medium">Manage your account preferences and profile information</p>
+              <p className="text-gray-600 font-medium">Manage your account preferences and profile information</p>
             </div>
             
             {message && (
@@ -398,7 +398,7 @@ export default function SettingsPage() {
                     onClick={() => setActiveTab(tab)}
                     className={`w-full sm:w-auto px-4 lg:px-6 py-2 lg:py-3 rounded-lg font-bold transition-all duration-300 text-sm lg:text-base ${
                       activeTab === tab
-                        ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-lg'
+                        ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 shadow-lg'
                         : 'text-gray-400 hover:text-gray-200'
                     }`}
                   >
@@ -410,14 +410,14 @@ export default function SettingsPage() {
 
             {}
             {activeTab === 'profile' && (
-              <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-2xl rounded-2xl p-4 lg:p-8 border border-gray-700">
+              <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 shadow-2xl rounded-2xl p-4 lg:p-8 border border-gray-700">
                 <h2 className="text-xl lg:text-2xl font-black mb-4 lg:mb-6">Profile Information</h2>
                 
                 <form onSubmit={handleProfileUpdate} className="space-y-4 lg:space-y-6">
                   {}
                   <div className="flex flex-col items-center mb-4 lg:mb-6">
                     <div className="relative mb-3 lg:mb-4">
-                      <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 flex items-center justify-center overflow-hidden border-4 border-amber-400 shadow-lg">
+                      <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-full bg-gradient-to-r from-gray-500 to-gray-300 flex items-center justify-center overflow-hidden border-4 border-gray-400 shadow-lg">
                         {avatarPreview ? (
                           <img
                             src={avatarPreview}
@@ -447,7 +447,7 @@ export default function SettingsPage() {
                       )}
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2">
-                      <label className="cursor-pointer bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 px-3 lg:px-4 py-2 rounded-lg flex items-center gap-2 transition-colors border border-amber-500/30 text-sm lg:text-base">
+                      <label className="cursor-pointer bg-gray-500/20 hover:bg-gray-500/30 text-gray-300 px-3 lg:px-4 py-2 rounded-lg flex items-center gap-2 transition-colors border border-gray-500/30 text-sm lg:text-base">
                         <Camera size={16} />
                         <span>
                           {avatarPreview || formData.avatar_url ? 'Change Avatar' : 'Upload Avatar'}
@@ -461,13 +461,13 @@ export default function SettingsPage() {
                       </label>
                       
                       {avatarUploading && (
-                        <div className="flex items-center gap-2 text-amber-300">
+                        <div className="flex items-center gap-2 text-gray-300">
                           <Loader2 className="w-4 h-4 animate-spin" />
                           <span className="text-sm">Uploading...</span>
                         </div>
                       )}
                     </div>
-                    <p className="text-xs text-amber-200 mt-2 text-center">
+                    <p className="text-xs text-gray-200 mt-2 text-center">
                       JPG, PNG, GIF up to 5MB
                     </p>
                   </div>
@@ -475,7 +475,7 @@ export default function SettingsPage() {
                   {}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                     <div>
-                      <label className="block text-amber-200 text-sm font-bold mb-2">
+                      <label className="block text-gray-200 text-sm font-bold mb-2">
                         Email Address
                       </label>
                       <input
@@ -483,12 +483,12 @@ export default function SettingsPage() {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors text-sm lg:text-base"
+                        className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-gray-400 transition-colors text-sm lg:text-base"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-amber-200 text-sm font-bold mb-2">
+                      <label className="block text-gray-200 text-sm font-bold mb-2">
                         Full Name
                       </label>
                       <input
@@ -496,11 +496,11 @@ export default function SettingsPage() {
                         name="fullName"
                         value={formData.fullName}
                         onChange={handleInputChange}
-                        className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors text-sm lg:text-base"
+                        className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-gray-400 transition-colors text-sm lg:text-base"
                       />
                     </div>
                     <div>
-                      <label className="block text-amber-200 text-sm font-bold mb-2">
+                      <label className="block text-gray-200 text-sm font-bold mb-2">
                         GitHub URL
                       </label>
                       <input
@@ -508,12 +508,12 @@ export default function SettingsPage() {
                         name="github_url"
                         value={formData.github_url || ''}
                         onChange={handleInputChange}
-                        className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors text-sm lg:text-base"
+                        className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-gray-400 transition-colors text-sm lg:text-base"
                         placeholder="https://github.com/yourprofile"
                       />
                     </div>
                     <div>
-                      <label className="block text-amber-200 text-sm font-bold mb-2">
+                      <label className="block text-gray-200 text-sm font-bold mb-2">
                         X URL
                       </label>
                       <input
@@ -521,12 +521,12 @@ export default function SettingsPage() {
                         name="x_url"
                         value={formData.x_url || ''}
                         onChange={handleInputChange}
-                        className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors text-sm lg:text-base"
+                        className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-gray-400 transition-colors text-sm lg:text-base"
                         placeholder="https://x.com/yourprofile"
                       />
                     </div>
                     <div>
-                      <label className="block text-amber-200 text-sm font-bold mb-2">
+                      <label className="block text-gray-200 text-sm font-bold mb-2">
                         Location
                       </label>
                       <input
@@ -534,12 +534,12 @@ export default function SettingsPage() {
                         name="location"
                         value={formData.location || ''}
                         onChange={handleInputChange}
-                        className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors text-sm lg:text-base"
+                        className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-gray-400 transition-colors text-sm lg:text-base"
                         placeholder="City, Country"
                       />
                     </div>
                     <div>
-                      <label className="block text-amber-200 text-sm font-bold mb-2">
+                      <label className="block text-gray-200 text-sm font-bold mb-2">
                         University
                       </label>
                       <input
@@ -547,7 +547,7 @@ export default function SettingsPage() {
                         name="university"
                         value={formData.university || ''}
                         onChange={handleInputChange}
-                        className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors text-sm lg:text-base"
+                        className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-gray-400 transition-colors text-sm lg:text-base"
                         placeholder="Your University"
                       />
                     </div>
@@ -555,7 +555,7 @@ export default function SettingsPage() {
 
                   {}
                   <div>
-                    <label className="block text-amber-200 text-sm font-bold mb-2 flex items-center gap-2">
+                    <label className="block text-gray-200 text-sm font-bold mb-2 flex items-center gap-2">
                       <Tag size={16} />
                       Interests & Tags
                     </label>
@@ -568,7 +568,7 @@ export default function SettingsPage() {
                           return tag ? (
                             <span
                               key={tagId}
-                              className="bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-bold flex items-center gap-2"
+                              className="bg-gradient-to-r from-gray-200 to-gray-600 text-gray-900 px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-bold flex items-center gap-2"
                             >
                               {tag.name}
                               <button
@@ -591,7 +591,7 @@ export default function SettingsPage() {
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors text-sm lg:text-base"
+                        className="w-full pl-10 pr-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-gray-400 transition-colors text-sm lg:text-base"
                         placeholder="Search interests..."
                       />
                     </div>
@@ -601,7 +601,7 @@ export default function SettingsPage() {
                       <div className="space-y-3 lg:space-y-4">
                         {Object.entries(groupedTags).map(([category, tags]) => (
                           <div key={category}>
-                            <h3 className="font-bold text-amber-200 mb-2 text-xs lg:text-sm uppercase tracking-wider">
+                            <h3 className="font-bold text-gray-200 mb-2 text-xs lg:text-sm uppercase tracking-wider">
                               {category}
                             </h3>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -612,10 +612,10 @@ export default function SettingsPage() {
                                   onClick={() => handleTagToggle(tag.id)}
                                   className={`px-2 lg:px-3 py-2 text-xs lg:text-sm rounded-lg border transition-all text-left ${
                                     selectedTags.includes(tag.id)
-                                      ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 border-yellow-400'
+                                      ? 'bg-gradient-to-r from-gray-200 to-gray-600 text-gray-900 border-gray-400'
                                       : selectedTags.length >= 6
                                       ? 'bg-gray-700 text-gray-400 border-gray-600 cursor-not-allowed'
-                                      : 'bg-gray-700 text-gray-200 border-gray-600 hover:border-amber-400 hover:bg-gray-600'
+                                      : 'bg-gray-700 text-gray-200 border-gray-600 hover:border-gray-400 hover:bg-gray-600'
                                   }`}
                                   disabled={!selectedTags.includes(tag.id) && selectedTags.length >= 6}
                                 >
@@ -627,17 +627,17 @@ export default function SettingsPage() {
                         ))}
                       </div>
                     </div>
-                    <p className="text-xs text-amber-200 mt-2">
+                    <p className="text-xs text-gray-200 mt-2">
                       Select up to 6 interests to personalize your experience ({selectedTags.length}/6)
                     </p>
                   </div>
 
                   {}
-                  <div className="bg-amber-500/20 text-amber-200 p-3 lg:p-4 rounded-xl border border-amber-500/30">
+                  <div className="bg-gray-500/20 text-gray-200 p-3 lg:p-4 rounded-xl border border-gray-500/30">
                     <p className="font-bold mb-2 text-sm lg:text-base">📧 Username Change Request</p>
                     <p className="text-xs lg:text-sm">
                       To change your username, please email us at{' '}
-                      <a href="mailto:bepro.sunday@gmail.com" className="text-amber-300 underline font-bold">
+                      <a href="mailto:bepro.sunday@gmail.com" className="text-gray-300 underline font-bold">
                         bepro.sunday@gmail.com
                       </a>
                       {' '}with your current and desired username.
@@ -648,7 +648,7 @@ export default function SettingsPage() {
                   <button
                     type="submit"
                     disabled={updating || avatarUploading}
-                    className="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 py-3 lg:py-4 rounded-xl font-black text-base lg:text-lg hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-gradient-to-r from-gray-200 to-gray-600 text-gray-900 py-3 lg:py-4 rounded-xl font-black text-base lg:text-lg hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {updating ? 'Updating...' : 'Update Profile'}
                   </button>
@@ -658,12 +658,12 @@ export default function SettingsPage() {
 
             {}
             {activeTab === 'password' && (
-              <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-2xl rounded-2xl p-4 lg:p-8 border border-gray-700">
+              <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 shadow-2xl rounded-2xl p-4 lg:p-8 border border-gray-700">
                 <h2 className="text-xl lg:text-2xl font-black mb-4 lg:mb-6">Change Password</h2>
                 
                 <form onSubmit={handlePasswordUpdate} className="space-y-4 lg:space-y-6">
                   <div>
-                    <label className="block text-amber-200 text-sm font-bold mb-2">
+                    <label className="block text-gray-200 text-sm font-bold mb-2">
                       New Password
                     </label>
                     <input
@@ -671,13 +671,13 @@ export default function SettingsPage() {
                       name="newPassword"
                       value={passwordData.newPassword}
                       onChange={handlePasswordChange}
-                      className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors text-sm lg:text-base"
+                      className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-gray-400 transition-colors text-sm lg:text-base"
                       required
                       minLength={6}
                     />
                   </div>
                   <div>
-                    <label className="block text-amber-200 text-sm font-bold mb-2">
+                    <label className="block text-gray-200 text-sm font-bold mb-2">
                       Confirm New Password
                     </label>
                     <input
@@ -685,7 +685,7 @@ export default function SettingsPage() {
                       name="confirmPassword"
                       value={passwordData.confirmPassword}
                       onChange={handlePasswordChange}
-                      className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-amber-400 transition-colors text-sm lg:text-base"
+                      className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-800 border border-gray-600 rounded-xl text-white focus:outline-none focus:border-gray-400 transition-colors text-sm lg:text-base"
                       required
                       minLength={6}
                     />
@@ -693,7 +693,7 @@ export default function SettingsPage() {
                   <button
                     type="submit"
                     disabled={updating}
-                    className="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 py-3 lg:py-4 rounded-xl font-black text-base lg:text-lg hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-gradient-to-r from-gray-200 to-gray-600 text-gray-900 py-3 lg:py-4 rounded-xl font-black text-base lg:text-lg hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {updating ? 'Updating...' : 'Update Password'}
                   </button>
@@ -703,7 +703,7 @@ export default function SettingsPage() {
 
             {}
             {activeTab === 'account' && (
-              <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-2xl rounded-2xl p-4 lg:p-8 border border-gray-700">
+              <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 shadow-2xl rounded-2xl p-4 lg:p-8 border border-gray-700">
                 <h2 className="text-xl lg:text-2xl font-black mb-4 lg:mb-6">Account Management</h2>
                 <div className="space-y-4 lg:space-y-6">
                   <div className="bg-red-500/20 text-red-300 p-4 lg:p-6 rounded-xl border border-red-500/30">

@@ -114,14 +114,14 @@ const FollowButton = ({ targetUserId, targetUsername, onFollowChange }) => {
   };
   if (!currentUsername || !currentUserId) {
     return (
-      <div className="text-amber-200/60 text-sm italic">
+      <div className="text-gray-200/60 text-sm italic">
         Login to follow
       </div>
     );
   }
   if (currentUserId === targetUserId || currentUsername === targetUsername) {
     return (
-      <div className="text-amber-200/60 text-sm italic">
+      <div className="text-gray-200/60 text-sm italic">
         
       </div>
     );
@@ -129,7 +129,7 @@ const FollowButton = ({ targetUserId, targetUsername, onFollowChange }) => {
   if (checkingStatus) {
     return (
       <div className="w-24 h-10 bg-gradient-to-r from-gray-800 to-gray-900 rounded-full animate-pulse border border-gray-700 flex items-center justify-center">
-        <div className="w-4 h-4 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin"></div>
+        <div className="w-4 h-4 border-2 border-gray-400/30 border-t-gray-400 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -141,8 +141,8 @@ const FollowButton = ({ targetUserId, targetUsername, onFollowChange }) => {
         disabled={loading}
         className={`px-6 py-2 rounded-full font-bold text-sm transition-all duration-200 ${
           isFollowing
-            ? 'bg-gradient-to-r from-gray-700 to-gray-800 text-amber-200 hover:from-red-600 hover:to-red-700 hover:text-white border border-gray-600'
-            : 'bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 hover:from-yellow-500 hover:to-orange-500 border border-yellow-500'
+            ? 'bg-gradient-to-r from-gray-700 to-gray-800 text-gray-200 hover:from-red-600 hover:to-red-700 hover:text-white border border-gray-600'
+            : 'bg-gradient-to-r from-gray-200 to-gray-600 text-gray-900 hover:from-gray-300 hover:to-gray-700 border border-gray-500'
         } ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}`}
       >
         {loading ? (

@@ -49,11 +49,11 @@ export default function ConversationsList({
               key={conversation.conversationId}
               onClick={() => selectConversation(conversation)}
               className={`p-4 border-b border-gray-100 cursor-pointer transition-colors hover:bg-gray-50 ${
-                activeConversation?.conversationId === conversation.conversationId ? 'bg-orange-50 border-l-4 border-orange-400' : 'border-l-4 border-transparent'
+                activeConversation?.conversationId === conversation.conversationId ? 'bg-gray-50 border-l-4 border-gray-400' : 'border-l-4 border-transparent'
               }`}
             >
               <div className="flex items-center space-x-3">
-                <div className="relative w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-yellow-400">
+                <div className="relative w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-gray-600 to-gray-200">
                   {conversation.otherUser?.avatar_url ? (
                     <img src={conversation.otherUser.avatar_url} alt={conversation.otherUsername} className="w-full h-full rounded-full object-cover" />
                   ) : (

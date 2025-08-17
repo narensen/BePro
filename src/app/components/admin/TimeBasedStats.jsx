@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-export default function TimeBasedStats({ title, data, icon: Icon, color = 'from-amber-400 to-yellow-400' }) {
+export default function TimeBasedStats({ title, data, icon: Icon, color = 'from-gray-400 to-gray-200' }) {
   const timeLabels = {
     today: 'Today',
     week: 'This Week',

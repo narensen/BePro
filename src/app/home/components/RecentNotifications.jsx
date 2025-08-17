@@ -186,7 +186,7 @@ export default function RecentNotifications({ username, userProfile }) {
       case 'like':
         return <Heart size={16} className="text-red-400" />
       case 'bookmark':
-        return <Bookmark size={16} className="text-yellow-400" />
+        return <Bookmark size={16} className="text-gray-400" />
       default:
         return <Bell size={16} className="text-gray-400" />
     }
@@ -207,10 +207,10 @@ export default function RecentNotifications({ username, userProfile }) {
     <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-amber-500/20 rounded-xl">
-            <Bell className="w-6 h-6 text-amber-400" />
+          <div className="p-2 bg-gray-500/20 rounded-xl">
+            <Bell className="w-6 h-6 text-gray-400" />
           </div>
-          <h3 className="text-xl lg:text-2xl font-black text-amber-300">Recent Activity</h3>
+          <h3 className="text-xl lg:text-2xl font-black text-gray-300">Recent Activity</h3>
         </div>
       </div>
 
@@ -233,8 +233,8 @@ export default function RecentNotifications({ username, userProfile }) {
           <div className="w-16 h-16 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
             <Bell className="w-8 h-8 text-gray-600" />
           </div>
-          <h4 className="text-lg font-bold text-amber-300 mb-2">No notifications yet</h4>
-          <p className="text-amber-200/80 text-sm">
+          <h4 className="text-lg font-bold text-gray-300 mb-2">No notifications yet</h4>
+          <p className="text-gray-200/80 text-sm">
             Start engaging with the community to see activity here!
           </p>
         </div>
@@ -246,10 +246,10 @@ export default function RecentNotifications({ username, userProfile }) {
               className={`flex items-start gap-3 p-4 rounded-xl transition-all duration-300 hover:scale-[1.02] ${
                 notification.isRead 
                   ? 'bg-gray-800/30 border border-gray-700/50' 
-                  : 'bg-amber-500/10 border border-amber-500/30'
+                  : 'bg-gray-500/10 border border-gray-500/30'
               }`}
             >
-              <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-amber-400/50 flex-shrink-0">
+              <div className="w-10 h-10 bg-gradient-to-br from-gray-500 to-gray-300 rounded-full flex items-center justify-center overflow-hidden border-2 border-gray-400/50 flex-shrink-0">
                 {notification.user?.avatar_url ? (
                   <img
                     src={notification.user.avatar_url}
@@ -268,29 +268,29 @@ export default function RecentNotifications({ username, userProfile }) {
                   {getNotificationIcon(notification.type)}
                   <Link 
                     href={`/${notification.user?.username}`}
-                    className="font-bold text-amber-300 hover:text-amber-200 transition-colors text-sm lg:text-base"
+                    className="font-bold text-gray-300 hover:text-gray-200 transition-colors text-sm lg:text-base"
                   >
                     @{notification.user?.username}
                   </Link>
-                  <span className="text-amber-200/80 text-sm">
+                  <span className="text-gray-200/80 text-sm">
                     {notification.message}
                   </span>
                 </div>
                 
                 {notification.postContent && (
-                  <p className="text-amber-200/60 text-xs mb-2 italic">
+                  <p className="text-gray-200/60 text-xs mb-2 italic">
                     "{notification.postContent}"
                   </p>
                 )}
                 
-                <div className="flex items-center gap-2 text-xs text-amber-200/60">
+                <div className="flex items-center gap-2 text-xs text-gray-200/60">
                   <Calendar size={12} />
                   <span>{formatNotificationTime(notification.timestamp)}</span>
                 </div>
               </div>
 
               {!notification.isRead && (
-                <div className="w-2 h-2 bg-amber-400 rounded-full flex-shrink-0 mt-2"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full flex-shrink-0 mt-2"></div>
               )}
             </div>
           ))}
@@ -301,7 +301,7 @@ export default function RecentNotifications({ username, userProfile }) {
         <div className="mt-6 text-center">
           <button
             onClick={() => {/* TODO: Navigate to full notifications page */}}
-            className="text-amber-300 hover:text-amber-200 font-bold text-sm transition-colors"
+            className="text-gray-300 hover:text-gray-200 font-bold text-sm transition-colors"
           >
             View All Notifications
           </button>

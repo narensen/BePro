@@ -35,7 +35,7 @@ const PostContent = ({ post, searchQuery }) => {
           {post.tags.map((tag, index) => (
             <span
               key={index}
-              className="inline-block bg-orange-400 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-orange-500 transition-all duration-200 cursor-pointer transform hover:scale-105"
+              className="inline-block bg-gray-400 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-gray-500 transition-all duration-200 cursor-pointer transform hover:scale-105"
             >
               #{tag}
             </span>

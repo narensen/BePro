@@ -68,7 +68,7 @@ export default function LandingPage() {
 
   return (
 
-    <main className="relative bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 overflow-x-hidden font-mono">
+    <main className="relative bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 text-gray-900 overflow-x-hidden font-mono">
       {}
       <div 
         className="fixed inset-0 opacity-30 pointer-events-none transition-all duration-300"

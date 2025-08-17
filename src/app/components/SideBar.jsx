@@ -123,7 +123,7 @@ export default function SideBar() {
   return (
     <>
       {}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-[100] bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 border-b border-white/20 shadow-lg">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-[100] bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 border-b border-white/20 shadow-lg">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center space-x-3">
             <h1 className="text-xl font-black text-gray-900">BePro</h1>
@@ -135,7 +135,7 @@ export default function SideBar() {
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
                 className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30 hover:bg-white/30 transition-all duration-200"
               >
-                <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+                <div className="w-8 h-8 bg-gradient-to-r from-gray-500 to-gray-300 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
                   {avatarUrl ? (
                     <img
                       src={avatarUrl}
@@ -199,7 +199,7 @@ export default function SideBar() {
           ) : (
             <button
               onClick={() => router.push('/auth')}
-              className="bg-gray-900 text-amber-300 px-4 py-2 rounded-full font-bold text-sm hover:bg-gray-800 transition-colors"
+              className="bg-gray-900 text-gray-300 px-4 py-2 rounded-full font-bold text-sm hover:bg-gray-800 transition-colors"
             >
               Login
             </button>
@@ -229,7 +229,7 @@ export default function SideBar() {
         <div className="flex-1 flex items-center justify-center p-6">
           <button
             onClick={() => router.push('/')}
-            className="text-center bg-gradient-to-r from-gray-900 to-gray-800 text-amber-300 font-bold px-5 py-3 rounded-2xl shadow-md hover:scale-105 transition-all w-full"
+            className="text-center bg-gradient-to-r from-gray-900 to-gray-800 text-gray-300 font-bold px-5 py-3 rounded-2xl shadow-md hover:scale-105 transition-all w-full"
           >
             Login
           </button>
@@ -237,8 +237,8 @@ export default function SideBar() {
       ) : (
         <>
           <div className="p-4 border-b border-gray-200/30">
-            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-400/20 to-yellow-400/20 rounded-xl">
-              <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-400/20 to-gray-400/20 rounded-xl">
+              <div className="w-10 h-10 bg-gradient-to-r from-gray-500 to-gray-300 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
                 {avatarUrl ? (
                   <img
                     src={avatarUrl}
@@ -286,7 +286,7 @@ export default function SideBar() {
                     {isActive && (
                       <motion.div
                         layoutId="active-pill"
-                        className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md"
+                        className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-400 to-gray-200 shadow-md"
                         transition={{ type: 'spring', stiffness: 400, damping: 35 }}
                       />
                     )}
@@ -344,7 +344,7 @@ export default function SideBar() {
                     {isActive && (
                       <motion.div
                         layoutId="active-pill"
-                        className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md"
+                        className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-400 to-gray-200 shadow-md"
                         transition={{ type: 'spring', stiffness: 400, damping: 35 }}
                       />
                     )}
@@ -371,7 +371,7 @@ export default function SideBar() {
      {}
 
      {}
-     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 border-t border-white/20 shadow-2xl pb-safe">
+     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 border-t border-white/20 shadow-2xl pb-safe">
        <div className="flex items-center justify-around py-2 px-4">
          {[...navItems.slice(0, 4), { name: 'Profile', icon: User, href: `/${username}` }].map((item) => {
            const isActive = pathname === item.href;

@@ -2,7 +2,7 @@
 
 export default function MessagesHeader({ isConnected, showAddUser, setShowAddUser }) {
   return (
-    <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-yellow-400/20 to-orange-400/20">
+    <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-gray-400/20 to-gray-600/20">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-black text-gray-900">Messages</h2>
         <button

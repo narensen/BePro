@@ -52,7 +52,7 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
           <div className="flex-shrink-0">
             <button
               onClick={onStartMission}
-              className="group relative flex items-center gap-4 px-10 py-5 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-500 hover:via-yellow-500 hover:to-amber-600 rounded-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 text-primary-foreground font-black text-xl shadow-2xl hover:shadow-amber-400/25 border border-amber-400/30"
+              className="group relative flex items-center gap-4 px-10 py-5 bg-gradient-to-r from-gray-400 via-gray-400 to-gray-500 hover:from-gray-500 hover:via-gray-500 hover:to-gray-600 rounded-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 text-primary-foreground font-black text-xl shadow-2xl hover:shadow-amber-400/25 border border-gray-400/30"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300" />
               <Play size={24} className="relative z-10 drop-shadow-lg group-hover:scale-110 transition-transform duration-300" />
@@ -111,7 +111,7 @@ const RoadmapGridWithMission = ({ missions, username, onStartMission }) => {
           <div className="flex-shrink-0">
             <button
               onClick={onStartMission}
-              className="group relative flex items-center gap-4 px-10 py-5 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-500 hover:via-yellow-500 hover:to-amber-600 rounded-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 text-primary-foreground font-black text-xl shadow-2xl hover:shadow-amber-400/25 border border-amber-400/30"
+              className="group relative flex items-center gap-4 px-10 py-5 bg-gradient-to-r from-gray-400 via-gray-400 to-gray-500 hover:from-gray-500 hover:via-gray-500 hover:to-gray-600 rounded-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 text-primary-foreground font-black text-xl shadow-2xl hover:shadow-amber-400/25 border border-gray-400/30"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300" />
               <Play size={24} className="relative z-10 drop-shadow-lg group-hover:scale-110 transition-transform duration-300" />

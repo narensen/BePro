@@ -46,7 +46,7 @@ export default function ChatArea({
           />
         </>
       ) : (
-        <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-yellow-50 to-orange-50">
+        <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
           <div className="text-center text-gray-600 p-6">
             <h3 className="text-xl font-semibold mb-2">Select a conversation</h3>
             <p>Choose one from the list or start a new chat.</p>

@@ -570,7 +570,7 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-hidden relative">
+    <div className="h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 font-mono overflow-hidden relative">
       <SideBar />
 
       <div className="hidden lg:flex h-screen lg:ml-72">

@@ -9,7 +9,7 @@ export default function PrivacyPolicyPage() {
       
       <section className="max-w-4xl mx-auto space-y-10 mt-8">
         <h1 className="text-4xl font-bold tracking-tight">
-          <span className="text-yellow-500">BEPRO PRIVACY POLICY</span>
+          <span className="text-gray-500">BEPRO PRIVACY POLICY</span>
         </h1>
 
         <p className="text-lg leading-relaxed">
@@ -21,7 +21,7 @@ export default function PrivacyPolicyPage() {
         </p>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">1. Overview</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">1. Overview</h2>
           <p className="mt-4 text-lg leading-relaxed">
             BePro is an AI-powered platform for skill development, project-based learning, and job discovery. In the course of delivering this experience, we collect and use data to:
           </p>
@@ -37,7 +37,7 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">2. Data We Collect</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">2. Data We Collect</h2>
           <p className="mt-4 text-lg leading-relaxed">
             We collect the following types of information:
           </p>
@@ -90,7 +90,7 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">3. How We Use Your Data</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">3. How We Use Your Data</h2>
           <p className="mt-4 text-lg">We use your information to:</p>
           <ul className="mt-4 space-y-2 text-lg list-disc list-inside ml-4">
             <li>Provide, personalize, and improve our Services</li>
@@ -105,7 +105,7 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">4. Legal Basis for Processing</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">4. Legal Basis for Processing</h2>
           <p className="mt-4 text-lg">We rely on several legal bases to process your data:</p>
           <ul className="mt-4 space-y-2 text-lg list-disc list-inside ml-4">
             <li><strong>Contractual necessity:</strong> To create and manage your account, deliver services, and communicate with you.</li>
@@ -116,7 +116,7 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">5. Sharing & Disclosure</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">5. Sharing & Disclosure</h2>
           <p className="mt-4 text-lg">
             We do not sell your personal data. However, we may share your data under specific conditions:
           </p>
@@ -128,14 +128,14 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">6. International Data Transfers</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">6. International Data Transfers</h2>
           <p className="mt-4 text-lg">
             Your data may be processed or stored in countries outside of your own, including the United States. We implement appropriate safeguards to ensure your data remains protected, regardless of jurisdiction.
           </p>
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">7. Data Retention</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">7. Data Retention</h2>
           <p className="mt-4 text-lg">We retain your information only as long as necessary to:</p>
           <ul className="mt-4 space-y-2 text-lg list-disc list-inside ml-4">
             <li>Provide Services</li>
@@ -148,7 +148,7 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">8. Your Rights</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">8. Your Rights</h2>
           <p className="mt-4 text-lg">Depending on your region, you may have the right to:</p>
           <ul className="mt-4 space-y-2 text-lg list-disc list-inside ml-4">
             <li>Access your personal data</li>
@@ -163,7 +163,7 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">9. Children&apos;s Privacy</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">9. Children&apos;s Privacy</h2>
           <p className="mt-4 text-lg">
             BePro is not intended for users under the age of 13. We do not knowingly collect personal data from children. If we become aware of such collection, we will delete the information promptly.
           </p>
@@ -173,7 +173,7 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">10. Data Security</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">10. Data Security</h2>
           <p className="mt-4 text-lg">
             We take your data security seriously. BePro implements industry-standard measures to protect your data from:
           </p>
@@ -188,7 +188,7 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">11. Changes to This Policy</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">11. Changes to This Policy</h2>
           <p className="mt-4 text-lg">We may update this Privacy Policy from time to time. When we do:</p>
           <ul className="mt-4 space-y-2 text-lg list-disc list-inside ml-4">
             <li>The &quot;Effective Date&quot; at the top will be revised</li>
@@ -200,7 +200,7 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div className="text-center pt-10">
-          <h2 className="text-2xl font-semibold text-yellow-500 mb-4">12. Contact Us</h2>
+          <h2 className="text-2xl font-semibold text-gray-500 mb-4">12. Contact Us</h2>
           <p className="text-lg mb-2">
             For any questions, requests, or concerns regarding your data and privacy:
           </p>

@@ -5,7 +5,7 @@ export default function AboutPage() {
     <main className="min-h-screen px-6 py-12 md:px-20 lg:px-40 bg-white text-black dark:bg-black dark:text-white transition-colors duration-300">
       <section className="max-w-4xl mx-auto space-y-10">
         <h1 className="text-4xl font-bold tracking-tight">
-         BePro is your <span className="text-yellow-500">Career Operating System</span>
+         BePro is your <span className="text-gray-500">Career Operating System</span>
         </h1>
 
         <p className="text-lg leading-relaxed">
@@ -17,7 +17,7 @@ export default function AboutPage() {
         </p>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">🎯 Our Mission</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">🎯 Our Mission</h2>
           <p className="mt-2 text-lg italic">
             “To bridge the gap between learning and earning — for every student, in every role, everywhere.”
           </p>
@@ -27,7 +27,7 @@ export default function AboutPage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">⚙️ What We Do</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">⚙️ What We Do</h2>
           <ul className="mt-4 space-y-4 text-lg list-disc list-inside">
             <li>
               <strong>🔎 Scrape Jobs from Real Companies</strong> – Our AI analyzes job roles and extracts in-demand skills, tools, and project ideas.
@@ -51,7 +51,7 @@ export default function AboutPage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">💡 Why We Exist</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">💡 Why We Exist</h2>
           <p className="mt-2 text-lg">
             Because most students don’t know where to start.
             <br />
@@ -74,7 +74,7 @@ export default function AboutPage() {
 
           <Link
             href="/waitlist"
-            className="inline-block mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-xl transition-all"
+            className="inline-block mt-6 px-6 py-3 bg-gray-500 hover:bg-gray-600 text-black font-semibold rounded-xl transition-all"
           >
             👉 Join the Waitlist
           </Link>

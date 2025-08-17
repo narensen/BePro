@@ -36,7 +36,7 @@ export default function ResponsiveHeroSection({ user, onAuthAction }) {
 
   return (
     <section className="min-h-screen flex items-center justify-center relative pt-20 px-4 sm:px-6">
-      <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/50 via-amber-400/50 to-orange-400/50" />
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-400/50 via-gray-400/50 to-gray-400/50" />
       <div className="relative z-10 text-center max-w-6xl mx-auto w-full">
         <div className="mb-4 sm:mb-6 h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px] flex flex-col justify-center">
           <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-tight transition-all duration-500 ease-in-out transform ${
@@ -62,7 +62,7 @@ export default function ResponsiveHeroSection({ user, onAuthAction }) {
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center animate-fade-in-up px-4">
           <button 
             onClick={onAuthAction} 
-            className="group relative w-full sm:w-auto px-8 sm:px-10 py-4 font-bold bg-gray-900 text-amber-300 rounded-2xl text-lg sm:text-xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 overflow-hidden cursor-pointer"
+            className="group relative w-full sm:w-auto px-8 sm:px-10 py-4 font-bold bg-gray-900 text-gray-300 rounded-2xl text-lg sm:text-xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 overflow-hidden cursor-pointer"
           >
             <span className="relative z-10">{user ? 'Enter Dashboard' : 'Begin Your Ascent'}</span>
             <div className="absolute inset-0 bg-gray-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

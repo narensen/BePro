@@ -29,7 +29,7 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
               <>
                 <button 
                   onClick={() => router.push('/home')} 
-                  className="px-4 lg:px-6 py-2 lg:py-3 font-bold bg-gray-900 text-amber-300 rounded-xl hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-lg cursor-pointer text-sm lg:text-base"
+                  className="px-4 lg:px-6 py-2 lg:py-3 font-bold bg-gray-900 text-gray-300 rounded-xl hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-lg cursor-pointer text-sm lg:text-base"
                 >
                   Dashboard
                 </button>
@@ -43,7 +43,7 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
             ) : (
               <button 
                 onClick={onAuthAction} 
-                className="px-4 lg:px-6 py-2 lg:py-3 font-bold bg-gray-900 text-amber-300 rounded-xl hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-lg cursor-pointer text-sm lg:text-base"
+                className="px-4 lg:px-6 py-2 lg:py-3 font-bold bg-gray-900 text-gray-300 rounded-xl hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-lg cursor-pointer text-sm lg:text-base"
               >
                 Enter The Forge
               </button>
@@ -96,7 +96,7 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
                       router.push('/home');
                       setIsMenuOpen(false);
                     }} 
-                    className="w-full px-4 py-3 font-bold bg-gray-900 text-amber-300 rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-lg cursor-pointer"
+                    className="w-full px-4 py-3 font-bold bg-gray-900 text-gray-300 rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-lg cursor-pointer"
                   >
                     Dashboard
                   </button>
@@ -116,7 +116,7 @@ export default function ResponsiveHeader({ user, onAuthAction, onSignOut }) {
                     onAuthAction();
                     setIsMenuOpen(false);
                   }} 
-                  className="w-full px-4 py-3 font-bold text-amber-300 rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-lg cursor-pointer"
+                  className="w-full px-4 py-3 font-bold text-gray-300 rounded-xl hover:bg-gray-800 transition-all duration-300 shadow-lg cursor-pointer"
                 >
                   Enter The Forge
                 </button>

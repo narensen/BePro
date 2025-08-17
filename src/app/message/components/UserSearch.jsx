@@ -18,7 +18,7 @@ export default function UserSearch({
           placeholder="Search users to message..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
         />
         {isSearching && (
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -35,7 +35,7 @@ export default function UserSearch({
               onClick={() => startConversation(userResult)}
               className="flex items-center space-x-3 p-2 hover:bg-white rounded-lg cursor-pointer transition-colors"
             >
-              <div className="relative w-8 h-8 bg-gradient-to-br from-orange-400 to-yellow-400 rounded-full flex items-center justify-center">
+              <div className="relative w-8 h-8 bg-gradient-to-br from-gray-600 to-gray-200 rounded-full flex items-center justify-center">
                 {userResult.avatar_url ? (
                   <img src={userResult.avatar_url} alt={userResult.username} className="w-full h-full rounded-full object-cover" />
                 ) : (

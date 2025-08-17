@@ -9,13 +9,13 @@ const AIMentorFeedback = ({ feedback }) => {
     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 -translate-y-full z-50 animate-fade-in-down">
       <div className="relative">
         <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-t-[12px] border-transparent border-t-gray-900"></div>
-        <div className="bg-gray-900 text-white px-3 sm:px-4 py-2 sm:py-3 rounded-2xl shadow-2xl border border-amber-400/30 min-w-48 sm:min-w-64 backdrop-blur-xl">
+        <div className="bg-gray-900 text-white px-3 sm:px-4 py-2 sm:py-3 rounded-2xl shadow-2xl border border-gray-400/30 min-w-48 sm:min-w-64 backdrop-blur-xl">
           <div className="flex items-start gap-2 sm:gap-3">
-            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center flex-shrink-0">
               <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-bold text-amber-400 mb-1">Codex</p>
+              <p className="text-xs font-bold text-gray-400 mb-1">Codex</p>
               <p className="text-xs sm:text-sm leading-tight break-words">{feedback.message}</p>
             </div>
           </div>
@@ -80,13 +80,13 @@ export default function ResponsiveInteractiveDemo() {
         <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
           <div className="flex gap-1 sm:gap-2">
             <div className="w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full"></div>
-            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-yellow-500 rounded-full"></div>
+            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-gray-500 rounded-full"></div>
             <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full"></div>
           </div>
           <span className="ml-2 sm:ml-4 text-gray-400 text-xs sm:text-sm font-mono">main.js - Codex Active</span>
           <div className="ml-auto flex items-center gap-1 sm:gap-2">
-            <div className={`w-2 h-2 rounded-full ${isLoading ? 'bg-yellow-400 animate-pulse' : 'bg-green-400'}`}></div>
-            <span className={`text-xs font-medium ${isLoading ? 'text-yellow-400' : 'text-green-400'}`}>
+            <div className={`w-2 h-2 rounded-full ${isLoading ? 'bg-gray-400 animate-pulse' : 'bg-green-400'}`}></div>
+            <span className={`text-xs font-medium ${isLoading ? 'text-gray-400' : 'text-green-400'}`}>
               {isLoading ? 'Thinking...' : 'Live'}
             </span>
           </div>
@@ -108,7 +108,7 @@ export default function ResponsiveInteractiveDemo() {
         <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-2 sm:gap-3">
             <div>
-              <p className="text-amber-400 text-sm font-bold">Codex</p>
+              <p className="text-gray-400 text-sm font-bold">Codex</p>
               <p className="text-gray-400 text-xs">Continuously Watching</p>
             </div>
           </div>

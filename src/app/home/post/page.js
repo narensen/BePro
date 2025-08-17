@@ -123,7 +123,7 @@ export default function CreatePost() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 font-mono relative">
       <SideBar />
 
       <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
@@ -159,12 +159,12 @@ export default function CreatePost() {
                 className={`w-full py-3 lg:py-4 rounded-xl lg:rounded-2xl font-black text-base lg:text-lg flex items-center justify-center gap-2 lg:gap-3 transition-all ${
                   submitting || !content.trim() || tags.length === 0
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-black text-amber-300 hover:scale-105 shadow-lg'
+                    : 'bg-black text-gray-300 hover:scale-105 shadow-lg'
                 }`}
               >
                 {submitting ? (
                   <>
-                    <div className="w-5 h-5 lg:w-6 lg:h-6 border-2 border-amber-300/30 border-t-amber-300 rounded-full animate-spin"></div>
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 border-2 border-gray-300/30 border-t-gray-300 rounded-full animate-spin"></div>
                     <span>Posting...</span>
                   </>
                 ) : (

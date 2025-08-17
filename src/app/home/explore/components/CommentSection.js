@@ -40,7 +40,7 @@ const CommentSection = ({
       <div className="px-6 py-6 bg-gray-50 border-t border-gray-200 space-y-6">
         <div className="flex gap-4">
           <textarea
-            className="flex-1 border border-gray-300 rounded-xl p-4 text-sm resize-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-200 hover:shadow-sm focus:shadow-md bg-white"
+            className="flex-1 border border-gray-300 rounded-xl p-4 text-sm resize-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400 transition-all duration-200 hover:shadow-sm focus:shadow-md bg-white"
             rows={3}
             placeholder="Write a comment..."
             value={commentText}
@@ -48,7 +48,7 @@ const CommentSection = ({
           />
           <button
             onClick={handleComment}
-            className="bg-yellow-500 text-white px-6 py-3 rounded-xl hover:bg-yellow-600 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed font-medium self-start"
+            className="bg-gray-500 text-white px-6 py-3 rounded-xl hover:bg-gray-600 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed font-medium self-start"
             disabled={!commentText.trim()}
           >
             Post

@@ -60,7 +60,7 @@ export default function TagSelector({ tags, removeTag, expandedCategories, toggl
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-4">
           {tags.map((tag) => (
-            <div key={tag} className="flex items-center gap-1 px-3 lg:px-4 py-2 bg-black text-amber-300 rounded-full text-xs lg:text-sm font-bold shadow-lg">
+            <div key={tag} className="flex items-center gap-1 px-3 lg:px-4 py-2 bg-black text-gray-300 rounded-full text-xs lg:text-sm font-bold shadow-lg">
               <span>{tag}</span>
               <button onClick={() => removeTag(tag)} className="ml-1 hover:bg-white/20 rounded-full p-1 transition-colors">
                 <X className="w-3 h-3" />
@@ -76,7 +76,7 @@ export default function TagSelector({ tags, removeTag, expandedCategories, toggl
           <div key={category}>
             <button
               onClick={() => toggleCategory(category)}
-              className="w-full flex justify-between items-center px-3 lg:px-4 py-2 lg:py-3 bg-black text-amber-300 rounded-xl font-bold text-left shadow-md text-sm lg:text-base"
+              className="w-full flex justify-between items-center px-3 lg:px-4 py-2 lg:py-3 bg-black text-gray-300 rounded-xl font-bold text-left shadow-md text-sm lg:text-base"
             >
               <span>{category}</span>
               {expandedCategories.includes(category) ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -89,7 +89,7 @@ export default function TagSelector({ tags, removeTag, expandedCategories, toggl
                     onClick={() => toggleTag(tag.name)}
                     className={`px-3 lg:px-4 py-2 rounded-xl text-xs lg:text-sm font-bold transition-all duration-200 transform hover:scale-105 ${
                       tags.includes(tag.name)
-                        ? 'bg-gray-900 text-amber-300 shadow-lg'
+                        ? 'bg-gray-900 text-gray-300 shadow-lg'
                         : tags.length >= 6
                         ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                         : 'bg-white text-gray-800 border-2 border-gray-300 hover:border-gray-900 shadow-sm'

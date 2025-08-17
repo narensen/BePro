@@ -207,7 +207,7 @@ export default function ProfileBar({ currentUser }) {
           className="flex items-center space-x-3"
           onClick={() => handleUserClick(user.username)}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-yellow-400 rounded-full flex items-center justify-center flex-shrink-0">
+          <div className="w-12 h-12 bg-gradient-to-br from-gray-600 to-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
             {user.avatar_url ? (
               <img 
                 src={user.avatar_url} 
@@ -221,14 +221,14 @@ export default function ProfileBar({ currentUser }) {
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-bold truncate text-lg hover:text-amber-600 transition-colors">
+            <p className="font-bold truncate text-lg hover:text-gray-600 transition-colors">
               {user.username || user.email?.split('@')[0] || 'Anonymous'}
             </p>
             {showSimilarity && user.similarity !== undefined && (
               <div className="flex items-center mt-2">
                 <div className="w-20 h-2 bg-gray-600 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full transition-all duration-300"
+                    className="h-full bg-gradient-to-r from-gray-200 to-gray-600 rounded-full transition-all duration-300"
                     style={{ width: `${user.similarity * 100}%` }}
                   />
                 </div>
@@ -246,7 +246,7 @@ export default function ProfileBar({ currentUser }) {
             {user.tags.slice(0, 3).map((tag, index) => (
               <span
                 key={index}
-                className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 text-xs rounded-full font-medium"
+                className="px-3 py-1 bg-gradient-to-r from-gray-200 to-gray-600 text-gray-900 text-xs rounded-full font-medium"
               >
                 {tag}
               </span>
@@ -266,7 +266,7 @@ export default function ProfileBar({ currentUser }) {
     <button
       onClick={onClick}
       disabled={loading}
-      className="w-full mt-4 py-3 px-4 bg-gradient-to-r from-yellow-400 to-orange-400 text-black font-bold rounded-xl hover:from-yellow-500 hover:to-orange-500 transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+      className="w-full mt-4 py-3 px-4 bg-gradient-to-r from-gray-200 to-gray-600 text-black font-bold rounded-xl hover:from-gray-300 hover:to-gray-700 transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
     >
       {loading ? (
         <>
@@ -285,7 +285,7 @@ export default function ProfileBar({ currentUser }) {
   );
 
   return (
-    <div className="w-80 bg-white/90 backdrop-blur-sm border-r border-gray-200/50 border-l-2 border-amber-400 h-full fixed right-0 top-0 overflow-y-auto shadow-2xl font-mono z-30">
+    <div className="w-80 bg-white/90 backdrop-blur-sm border-r border-gray-200/50 border-l-2 border-gray-400 h-full fixed right-0 top-0 overflow-y-auto shadow-2xl font-mono z-30">
       <div className="p-6">
         {}
         <div className="mb-6">
@@ -314,11 +314,11 @@ export default function ProfileBar({ currentUser }) {
               placeholder="Search users..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-3 bg-black/80 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 bg-black/80 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition-all"
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               {isSearching ? (
-                <div className="w-5 h-5 border-2 border-gray-400 border-t-amber-400 rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-gray-400 border-t-gray-400 rounded-full animate-spin" />
               ) : (
                 <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -331,7 +331,7 @@ export default function ProfileBar({ currentUser }) {
         {}
         {searchQuery && (
           <div className="mb-8">
-            <h3 className="text-xl font-bold text-amber-300 mb-4 flex items-center">
+            <h3 className="text-xl font-bold text-gray-300 mb-4 flex items-center">
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -375,7 +375,7 @@ export default function ProfileBar({ currentUser }) {
             {loading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="text-center">
-                  <div className="w-8 h-8 border-2 border-gray-600 border-t-amber-400 rounded-full animate-spin mx-auto mb-4" />
+                  <div className="w-8 h-8 border-2 border-gray-600 border-t-gray-400 rounded-full animate-spin mx-auto mb-4" />
                   <p className="text-gray-400 text-sm">Finding recommendations...</p>
                 </div>
               </div>

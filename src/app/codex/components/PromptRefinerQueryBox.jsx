@@ -184,7 +184,7 @@ const PromptRefinerQueryBox = ({
                 value={currentInput}
                 onChange={(e) => setCurrentInput(e.target.value)}
                 placeholder="e.g., I want to become a full-stack developer, or I want to transition into data science..."
-                className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 outline-none transition-all duration-300 resize-none font-mono text-gray-800 placeholder-gray-400"
+                className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-gray-400 focus:ring-4 focus:ring-gray-400/20 outline-none transition-all duration-300 resize-none font-mono text-gray-800 placeholder-gray-400"
                 rows={4}
                 disabled={disabled || isRefining}
               />
@@ -197,10 +197,10 @@ const PromptRefinerQueryBox = ({
                 onValueChange={(value) => setDuration(value)}
                 disabled={disabled || isRefining}
               >
-                <SelectTrigger className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-800 font-mono focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 transition-all duration-300">
+                <SelectTrigger className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-800 font-mono focus:border-gray-400 focus:ring-4 focus:ring-gray-400/20 transition-all duration-300">
                   <SelectValue placeholder="Select timeline" />
                 </SelectTrigger>
-                <SelectContent className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-800 font-mono focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 transition-all duration-300">
+                <SelectContent className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-800 font-mono focus:border-gray-400 focus:ring-4 focus:ring-gray-400/20 transition-all duration-300">
                   <SelectItem  value="1 month">1 Month</SelectItem>
                   <SelectItem value="3 months">3 Months</SelectItem>
                   <SelectItem value="6 months">6 Months</SelectItem>
@@ -212,11 +212,11 @@ const PromptRefinerQueryBox = ({
             <button
               onClick={handleInitialSubmit}
               disabled={disabled || isRefining || !currentInput.trim() || !duration}
-              className="w-full px-6 py-4 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 rounded-xl font-black text-lg hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+              className="w-full px-6 py-4 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 rounded-xl font-black text-lg hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
             >
               {isRefining ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-amber-300/30 border-t-amber-300 rounded-full animate-spin"></div>
+                  <div className="w-5 h-5 border-2 border-gray-300/30 border-t-gray-300 rounded-full animate-spin"></div>
                   Refining Your Goal...
                 </>
               ) : (
@@ -243,12 +243,12 @@ const PromptRefinerQueryBox = ({
     >
       <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-3 h-3 bg-amber-400 rounded-full animate-pulse"></div>
+          <div className="w-3 h-3 bg-gray-400 rounded-full animate-pulse"></div>
           <h3 className="font-black text-lg">Codex Assistant</h3>
         </div>
         <button
           onClick={resetConversation}
-          className="text-amber-300 hover:text-amber-200 transition-colors"
+          className="text-gray-300 hover:text-gray-200 transition-colors"
           title="Start Over"
           disabled={isRefining || loading}
         >
@@ -271,8 +271,8 @@ const PromptRefinerQueryBox = ({
               <div
                 className={`max-w-[85%] p-6 rounded-2xl ${
                   message.type === 'user'
-                    ? 'bg-gradient-to-r from-amber-400 to-yellow-400 text-gray-900'
-                    : 'bg-gray-50 text-gray-800 border-l-4 border-amber-400'
+                    ? 'bg-gradient-to-r from-gray-400 to-gray-200 text-gray-900'
+                    : 'bg-gray-50 text-gray-800 border-l-4 border-gray-400'
                 }`}
               >
                 {message.type === 'user' ? (
@@ -295,11 +295,11 @@ const PromptRefinerQueryBox = ({
             animate={{ opacity: 1, y: 0 }}
             className="flex justify-start"
           >
-            <div className="bg-gray-50 p-6 rounded-2xl border-l-4 border-amber-400">
+            <div className="bg-gray-50 p-6 rounded-2xl border-l-4 border-gray-400">
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 <span className="ml-3 text-gray-600 text-sm font-medium">Codex is thinking...</span>
               </div>
             </div>
@@ -354,13 +354,13 @@ const PromptRefinerQueryBox = ({
                 }
               }}
               placeholder="Type your response... (Shift+Enter for new line)"
-              className="flex-1 p-4 border-2 border-gray-200 rounded-xl focus:border-amber-400 focus:ring-4 focus:ring-amber-400/20 outline-none transition-all duration-300 text-gray-800 placeholder-gray-400"
+              className="flex-1 p-4 border-2 border-gray-200 rounded-xl focus:border-gray-400 focus:ring-4 focus:ring-gray-400/20 outline-none transition-all duration-300 text-gray-800 placeholder-gray-400"
               disabled={isRefining || loading}
             />
             <button
               onClick={handleContinueConversation}
               disabled={isRefining || loading || !currentInput.trim()}
-              className="px-6 py-4 bg-gradient-to-r from-amber-400 to-yellow-400 text-gray-900 rounded-xl font-black hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-4 bg-gradient-to-r from-gray-400 to-gray-200 text-gray-900 rounded-xl font-black hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isRefining ? (
                 <div className="w-5 h-5 border-2 border-gray-900/30 border-t-gray-900 rounded-full animate-spin"></div>

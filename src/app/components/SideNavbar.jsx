@@ -22,10 +22,10 @@ export default function SideNavbar() {
       {}
       <div className={`mt-16 px-4 ${isOpen ? "block" : "hidden"}`}>
         <nav className="space-y-4">
-          <a href="#" className="block hover:text-yellow-300">Dashboard</a>
-          <a href="#" className="block hover:text-yellow-300">Skills</a>
-          <a href="#" className="block hover:text-yellow-300">Projects</a>
-          <a href="#" className="block hover:text-yellow-300">Settings</a>
+          <a href="#" className="block hover:text-gray-300">Dashboard</a>
+          <a href="#" className="block hover:text-gray-300">Skills</a>
+          <a href="#" className="block hover:text-gray-300">Projects</a>
+          <a href="#" className="block hover:text-gray-300">Settings</a>
         </nav>
       </div>
     </div>

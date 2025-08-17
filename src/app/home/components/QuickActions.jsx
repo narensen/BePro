@@ -12,28 +12,28 @@ export default function QuickActions() {
       title: 'Create Post',
       description: 'Share your thoughts',
       href: '/home/post',
-      gradient: 'from-amber-400 to-yellow-400'
+      gradient: 'from-gray-400 to-gray-200'
     },
     {
       icon: Search,
       title: 'Explore',
       description: 'Discover content',
       href: '/home/explore',
-      gradient: 'from-amber-400 to-yellow-400'
+      gradient: 'from-gray-400 to-gray-200'
     },
     {
       icon: AtomIcon,
       title: 'Codex',
       description: 'Continue learning',
       href: '/codex',
-      gradient: 'from-amber-400 to-yellow-400'
+      gradient: 'from-gray-400 to-gray-200'
     },
     {
       icon: MessageSquare,
       title: 'Messages',
       description: 'Chat with others',
       href: '/message',
-      gradient: 'from-amber-400 to-yellow-400'
+      gradient: 'from-gray-400 to-gray-200'
     }
   ]
 
@@ -54,10 +54,10 @@ export default function QuickActions() {
               <div className={`w-12 h-12 lg:w-14 lg:h-14 bg-gradient-to-r relative left-4 ${action.gradient} rounded-xl flex items-center justify-center mb-3 lg:mb-4 group-hover:scale-110 transition-transform duration-300`}>
                 <Icon className="flex items-center justify-center text-white" />
               </div>
-              <h4 className="text-amber-300 font-bold text-sm lg:text-base mb-1">
+              <h4 className="text-gray-300 font-bold text-sm lg:text-base mb-1">
                 {action.title}
               </h4>
-              <p className="text-amber-200/80 text-xs lg:text-sm">
+              <p className="text-gray-200/80 text-xs lg:text-sm">
                 {action.description}
               </p>
             </button>

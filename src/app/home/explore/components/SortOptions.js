@@ -14,7 +14,7 @@ export default function SortOptions({ sortMode, setSortMode }) {
           onClick={() => setSortMode(mode.key)}
           className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 ${
             sortMode === mode.key
-              ? 'bg-white text-orange-600 shadow-lg scale-105'
+              ? 'bg-white text-gray-600 shadow-lg scale-105'
               : 'bg-white/20 text-white hover:bg-white/30 hover:scale-105'
           }`}
           title={mode.desc}

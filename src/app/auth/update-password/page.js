@@ -50,7 +50,7 @@ export default function UpdatePassword() {
 
   if (loading) {
     return (
-      <main className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 font-sans min-h-screen flex items-center justify-center">
+      <main className="bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 text-gray-900 font-sans min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="text-4xl font-black mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent animate-pulse">
             BePro
@@ -66,11 +66,11 @@ export default function UpdatePassword() {
 
   if (success) {
     return (
-      <main className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 font-sans min-h-screen relative overflow-hidden">
+      <main className="bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 text-gray-900 font-sans min-h-screen relative overflow-hidden">
         {}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gray-900 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-amber-600 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-gray-600 rounded-full blur-3xl"></div>
         </div>
 
         <div className="flex items-center justify-center min-h-screen px-4 relative z-10">
@@ -84,7 +84,7 @@ export default function UpdatePassword() {
             </p>
             <button
               onClick={() => window.location.href = '/signin'}
-              className="w-full bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 px-6 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer"
+              className="w-full bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 px-6 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer"
             >
               Continue to Sign In
             </button>
@@ -95,11 +95,11 @@ export default function UpdatePassword() {
   }
 
   return (
-    <main className="bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 text-gray-900 font-sans min-h-screen relative overflow-hidden">
+    <main className="bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 text-gray-900 font-sans min-h-screen relative overflow-hidden">
       {}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gray-900 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-amber-600 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-gray-600 rounded-full blur-3xl"></div>
       </div>
 
       <div className="flex items-center justify-center min-h-screen px-4 relative z-10">
@@ -124,7 +124,7 @@ export default function UpdatePassword() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-amber-200 rounded-xl focus:border-amber-400 focus:outline-none transition-colors bg-white/80 backdrop-blur-sm"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gray-400 focus:outline-none transition-colors bg-white/80 backdrop-blur-sm"
                   placeholder="Enter your new password"
                   required
                 />
@@ -149,7 +149,7 @@ export default function UpdatePassword() {
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-amber-200 rounded-xl focus:border-amber-400 focus:outline-none transition-colors bg-white/80 backdrop-blur-sm"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gray-400 focus:outline-none transition-colors bg-white/80 backdrop-blur-sm"
                   placeholder="Confirm your new password"
                   required
                 />
@@ -171,14 +171,14 @@ export default function UpdatePassword() {
             )}
 
             {}
-            <div className="text-sm text-gray-600 bg-amber-50 p-3 rounded-xl">
+            <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-xl">
               Password must be at least 6 characters long
             </div>
 
             {}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 px-6 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer"
+              className="w-full bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 px-6 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer"
             >
               Update Password
             </button>

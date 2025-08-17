@@ -9,7 +9,7 @@ export default function TermsOfServicePage() {
       
       <section className="max-w-4xl mx-auto space-y-10 mt-8">
         <h1 className="text-4xl font-bold tracking-tight">
-          <span className="text-yellow-500">BEPRO – TERMS OF SERVICE</span>
+          <span className="text-gray-500">BEPRO – TERMS OF SERVICE</span>
         </h1>
 
         <p className="text-lg leading-relaxed">
@@ -21,7 +21,7 @@ export default function TermsOfServicePage() {
         </p>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">1. Eligibility</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">1. Eligibility</h2>
           <p className="mt-4 text-lg leading-relaxed">
             You may use BePro only if you are at least 13 years of age. If you are under 18, you must have the consent of a parent or legal guardian. By registering or accessing BePro, you confirm that you meet these eligibility requirements and are capable of entering into a legally binding agreement.
           </p>
@@ -31,7 +31,7 @@ export default function TermsOfServicePage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">2. Account Registration & Responsibility</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">2. Account Registration & Responsibility</h2>
           <p className="mt-4 text-lg leading-relaxed">
             To access many features of BePro, you must create an account. You agree to:
           </p>
@@ -52,7 +52,7 @@ export default function TermsOfServicePage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">3. Use of the Services</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">3. Use of the Services</h2>
           <p className="mt-4 text-lg leading-relaxed">
             BePro is intended to be used for lawful, ethical, and constructive purposes. By using our Services, you agree to:
           </p>
@@ -75,7 +75,7 @@ export default function TermsOfServicePage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">4. Content Ownership and License</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">4. Content Ownership and License</h2>
           
           <div className="mt-4">
             <h3 className="text-xl font-semibold">a. Your Content</h3>
@@ -105,7 +105,7 @@ export default function TermsOfServicePage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">5. AI-Powered Features</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">5. AI-Powered Features</h2>
           <p className="mt-4 text-lg leading-relaxed">
             BePro uses artificial intelligence to enhance your learning experience, assess your progress, and match you with potential job opportunities.
           </p>
@@ -120,7 +120,7 @@ export default function TermsOfServicePage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">6. Paid Services & Subscriptions</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">6. Paid Services & Subscriptions</h2>
           <p className="mt-4 text-lg leading-relaxed">
             BePro may offer Pro Plans and other subscription-based premium features. By purchasing a subscription, you agree to:
           </p>
@@ -135,7 +135,7 @@ export default function TermsOfServicePage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">7. Termination & Account Suspension</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">7. Termination & Account Suspension</h2>
           <p className="mt-4 text-lg leading-relaxed">
             We reserve the right to suspend, restrict, or terminate your access to the Services, with or without notice, if:
           </p>
@@ -152,7 +152,7 @@ export default function TermsOfServicePage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">8. Disclaimer of Warranties</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">8. Disclaimer of Warranties</h2>
           <p className="mt-4 text-lg leading-relaxed">
             BePro provides its Services &quot;as is&quot; and &quot;as available&quot; without warranties of any kind, either express or implied. We do not guarantee:
           </p>
@@ -167,7 +167,7 @@ export default function TermsOfServicePage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">9. Limitation of Liability</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">9. Limitation of Liability</h2>
           <p className="mt-4 text-lg leading-relaxed">
             To the fullest extent permitted by law, BePro shall not be held liable for any:
           </p>
@@ -183,7 +183,7 @@ export default function TermsOfServicePage() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-yellow-500">10. Changes to These Terms</h2>
+          <h2 className="text-2xl font-semibold text-gray-500">10. Changes to These Terms</h2>
           <p className="mt-4 text-lg leading-relaxed">
             We may update or revise these Terms from time to time. If we make material changes, we will:
           </p>
@@ -197,7 +197,7 @@ export default function TermsOfServicePage() {
         </div>
 
         <div className="text-center pt-10">
-          <h2 className="text-2xl font-semibold text-yellow-500 mb-4">11. Contact Information</h2>
+          <h2 className="text-2xl font-semibold text-gray-500 mb-4">11. Contact Information</h2>
           <p className="text-lg mb-4">
             If you have any questions, concerns, or feedback about these Terms, please reach out to us at:
           </p>

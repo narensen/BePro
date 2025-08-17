@@ -8,7 +8,7 @@ const GetStartedButton = ({ onClick, className = '' }) => {
       onClick={onClick}
       className={`
         bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900
-        text-amber-300 font-black text-lg
+        text-gray-300 font-black text-lg
         px-8 py-4 rounded-xl
         shadow-lg hover:shadow-xl
         hover:scale-105

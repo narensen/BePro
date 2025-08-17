@@ -25,7 +25,7 @@ const PostInteractions = ({
         <button 
           onClick={() => handleLikeDislike('like', post.id, userInteractions[post.id]?.like)}
           className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 hover:bg-gray-50 ${
-            userInteractions[post.id]?.like ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600'
+            userInteractions[post.id]?.like ? 'text-gray-600 bg-gray-50' : 'text-gray-600'
           }`}
         >
           <ThumbsUp size={18} className="transition-transform hover:scale-110" />

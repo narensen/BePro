@@ -196,7 +196,7 @@ export default function Explore() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400">
+      <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500">
         <SideBar />
         <div className="pt-16 lg:pt-0 lg:ml-72">
           <LoadingSpinner />
@@ -206,7 +206,7 @@ export default function Explore() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 font-mono relative">
       <SideBar />
 
       <div className="min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72 xl:mr-80" >

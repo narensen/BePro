@@ -40,7 +40,7 @@ const ChatMessage = ({ message }) => {
     ol: ({ children }) => <ol className="list-decimal list-inside mb-2 space-y-1 text-gray-700">{children}</ol>,
     li: ({ children }) => <li className="ml-2">{children}</li>,
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-amber-500 pl-4 italic bg-amber-50 py-2 mb-2 rounded-r">
+      <blockquote className="border-l-4 border-gray-500 pl-4 italic bg-gray-50 py-2 mb-2 rounded-r">
         {children}
       </blockquote>
     ),
@@ -51,7 +51,7 @@ const ChatMessage = ({ message }) => {
   const getMessageStyles = () => {
     switch (message.type) {
       case 'user':
-        return 'bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 shadow-lg ml-auto';
+        return 'bg-gradient-to-r from-gray-200 to-gray-600 text-gray-900 shadow-lg ml-auto';
       case 'error':
         return 'bg-gradient-to-r from-red-50 to-red-100 border border-red-200 text-red-800 shadow-md';
       case 'system':
@@ -66,7 +66,7 @@ const ChatMessage = ({ message }) => {
       case 'system':
         return <CheckCircle size={16} className="text-green-600 flex-shrink-0" />;
       case 'assistant':
-        return <MessageCircle size={16} className="text-amber-600 flex-shrink-0" />;
+        return <MessageCircle size={16} className="text-gray-600 flex-shrink-0" />;
       case 'error':
         return <AlertTriangle size={16} className="text-red-600 flex-shrink-0" />;
       default:

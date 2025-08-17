@@ -280,7 +280,7 @@ export default function Codex() {
 
   if (!initialDataLoaded || userHasRoadmap === null || isGeneratingRoadmap) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+      <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 font-mono relative">
         <SideBar />
         <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
           <div className="px-3 lg:px-8 py-4 lg:py-8">
@@ -324,7 +324,7 @@ export default function Codex() {
           onMissionComplete={handleMissionComplete}
         />
       ) : (
-        <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+        <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 font-mono relative">
           <SideBar />
           <div className="transition-all duration-300 ease-in-out min-h-screen pb-20 pt-16 lg:pt-0 lg:pb-0 lg:ml-72">
             <div className="px-3 lg:px-8 py-4 lg:py-8">

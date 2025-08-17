@@ -17,20 +17,20 @@ export default function DashboardHeader({ username }) {
         <p className="text-gray-600">Welcome to your BePro dashboard</p>
       </div>
       
-      <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700">
+      <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h2 className="text-2xl lg:text-3xl font-black text-amber-300 mb-2">
+            <h2 className="text-2xl lg:text-3xl font-black text-gray-300 mb-2">
               Welcome back, {username}!
             </h2>
-            <div className="flex items-center gap-2 text-amber-200">
+            <div className="flex items-center gap-2 text-gray-200">
               <Calendar size={16} />
               <span className="text-sm lg:text-base">{currentDate}</span>
             </div>
           </div>
-          <div className="flex items-center gap-2 bg-amber-500/20 px-4 py-2 rounded-xl border border-amber-500/30">
-            <Target size={16} className="text-amber-300" />
-            <span className="text-amber-300 font-bold text-sm lg:text-base">Pro Member</span>
+          <div className="flex items-center gap-2 bg-gray-500/20 px-4 py-2 rounded-xl border border-gray-500/30">
+            <Target size={16} className="text-gray-300" />
+            <span className="text-gray-300 font-bold text-sm lg:text-base">Pro Member</span>
           </div>
         </div>
       </div>

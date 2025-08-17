@@ -9,13 +9,13 @@ export default function MessageInput({ newMessage, activeConversation, isConnect
           value={newMessage}
           onChange={handleTyping}
           placeholder={`Message ${activeConversation.otherUsername}...`}
-          className="flex-1 px-4 py-3 bg-gray-100 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500"
+          className="flex-1 px-4 py-3 bg-gray-100 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-gray-500"
           disabled={!isConnected}
         />
         <button
           type="submit"
           disabled={!newMessage.trim() || !isConnected}
-          className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 rounded-2xl font-semibold hover:from-yellow-500 hover:to-orange-500 disabled:opacity-50"
+          className="px-6 py-3 bg-gradient-to-r from-gray-200 to-gray-600 text-gray-900 rounded-2xl font-semibold hover:from-gray-300 hover:to-gray-700 disabled:opacity-50"
         >
           Send
         </button>

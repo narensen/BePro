@@ -103,8 +103,8 @@ const Comment = ({
             
             {comment.parent_comment_id && (
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>
-                <span className="text-xs text-yellow-600 font-medium">
+                <div className="w-1.5 h-1.5 bg-gray-500 rounded-full"></div>
+                <span className="text-xs text-gray-600 font-medium">
                   Replying to a comment
                 </span>
               </div>
@@ -121,7 +121,7 @@ const Comment = ({
             {level < maxDepth && (
               <button
                 onClick={() => setShowReplyForm(!showReplyForm)}
-                className="flex items-center gap-2 text-xs text-gray-500 hover:text-yellow-600 transition-colors px-2 py-1 rounded-lg hover:bg-yellow-50"
+                className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-600 transition-colors px-2 py-1 rounded-lg hover:bg-gray-50"
               >
                 <Reply size={12} />
                 <span className="font-medium">Reply</span>
@@ -131,7 +131,7 @@ const Comment = ({
             {replies.length > 0 && (
               <button
                 onClick={toggleReplies}
-                className="flex items-center gap-2 text-xs text-gray-500 hover:text-yellow-600 transition-colors px-2 py-1 rounded-lg hover:bg-yellow-50"
+                className="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-600 transition-colors px-2 py-1 rounded-lg hover:bg-gray-50"
               >
                 {showReplies ? 
                   <ChevronUp size={12} /> : 
@@ -150,7 +150,7 @@ const Comment = ({
         <div className="mt-3 ml-11">
           <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
             <textarea
-              className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-200"
+              className="w-full border border-gray-300 rounded-lg p-3 text-sm resize-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400 transition-all duration-200"
               rows={2}
               placeholder={`Reply to @${comment.profile?.username || 'user'}...`}
               value={replyText}
@@ -159,7 +159,7 @@ const Comment = ({
             <div className="flex gap-2 mt-3">
               <button
                 onClick={handleReply}
-                className="bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-600 transition-all duration-200 disabled:opacity-50 font-medium"
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-600 transition-all duration-200 disabled:opacity-50 font-medium"
                 disabled={!replyText.trim()}
               >
                 Reply
@@ -192,7 +192,7 @@ const Comment = ({
       
       {loadingReplies && showReplies && (
         <div className="mt-3 ml-11 text-xs text-gray-500 flex items-center gap-2">
-          <div className="w-2 h-2 bg-yellow-500 rounded-full animate-bounce"></div>
+          <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
           <span>Loading replies...</span>
         </div>
       )}

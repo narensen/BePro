@@ -7,7 +7,7 @@ export function highlightQuery(text, query) {
 
   return parts.map((part, index) =>
     regex.test(part) ? (
-      <mark key={index} className="bg-yellow-300 text-black font-semibold rounded px-1">
+      <mark key={index} className="bg-gray-300 text-black font-semibold rounded px-1">
         {part}
       </mark>
     ) : (

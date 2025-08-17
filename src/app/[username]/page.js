@@ -85,7 +85,7 @@ export default function ProfilePage({ params }) {
   };
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+      <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 font-mono relative">
         <SideBar />
         <div className="lg:ml-72 flex items-center justify-center min-h-screen">
           <div className="text-center">
@@ -114,15 +114,15 @@ export default function ProfilePage({ params }) {
     const [headline, subline] = punchlines[randomIndex].split(". ");
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+      <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 font-mono relative">
         <SideBar />
         <div className="lg:ml-72 flex justify-center items-center min-h-screen px-4">
-          <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-2xl rounded-2xl w-full max-w-md lg:max-w-2xl p-6 lg:p-12 flex flex-col justify-center items-center hover:scale-105 transition-all duration-300 border border-gray-700">
+          <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 shadow-2xl rounded-2xl w-full max-w-md lg:max-w-2xl p-6 lg:p-12 flex flex-col justify-center items-center hover:scale-105 transition-all duration-300 border border-gray-700">
             <h1 className="mb-6 lg:mb-10 text-2xl lg:text-3xl font-black mt-16 lg:mt-0">Error 404</h1>
-            <h1 className="text-xl lg:text-3xl font-black text-amber-300 text-center mb-3 lg:mb-4 transition-all duration-500">
+            <h1 className="text-xl lg:text-3xl font-black text-gray-300 text-center mb-3 lg:mb-4 transition-all duration-500">
               {headline}.
             </h1>
-            <p className="text-base lg:text-xl text-center text-amber-200 italic transition-all duration-700 delay-150">
+            <p className="text-base lg:text-xl text-center text-gray-200 italic transition-all duration-700 delay-150">
               {subline}
             </p>
           </div>
@@ -131,7 +131,7 @@ export default function ProfilePage({ params }) {
     );
   }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 font-mono relative">
       {}
       <SideBar />
       
@@ -142,9 +142,9 @@ export default function ProfilePage({ params }) {
           <div className="max-w-4xl mx-auto">
             
             {}
-            <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 shadow-2xl rounded-2xl p-4 lg:p-8 mb-6 lg:mb-16 hover:scale-105 transition-all duration-300 border border-gray-700">
+            <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 shadow-2xl rounded-2xl p-4 lg:p-8 mb-6 lg:mb-16 hover:scale-105 transition-all duration-300 border border-gray-700">
               <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 lg:space-x-8 mb-6 lg:mb-8">
-                <div className="w-24 h-24 lg:w-32 lg:h-32 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-gray-900 text-3xl lg:text-5xl font-black overflow-hidden">
+                <div className="w-24 h-24 lg:w-32 lg:h-32 bg-gradient-to-br from-gray-200 to-gray-600 rounded-full flex items-center justify-center text-gray-900 text-3xl lg:text-5xl font-black overflow-hidden">
                   {user.avatar_url ? (
                     <img src={user.avatar_url} alt={user.username} className="w-full h-full object-cover" />
                   ) : (
@@ -153,7 +153,7 @@ export default function ProfilePage({ params }) {
                 </div>
                 <div className="flex-1 text-center sm:text-left">
                   <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-2 sm:space-y-0 sm:space-x-4 mb-2">
-                    <h1 className="text-3xl lg:text-6xl font-black text-amber-300">{user.username}</h1>
+                    <h1 className="text-3xl lg:text-6xl font-black text-gray-300">{user.username}</h1>
                     <div className="sm:mt-2">
                       <FollowButton
                         currentUserId={currentUser?.id}
@@ -162,8 +162,8 @@ export default function ProfilePage({ params }) {
                       />
                     </div>
                   </div>
-                  <p className="text-lg lg:text-2xl text-amber-200 mb-2 lg:mb-4">{user.name}</p>
-                  <p className="text-amber-200/80 text-sm lg:text-lg">
+                  <p className="text-lg lg:text-2xl text-gray-200 mb-2 lg:mb-4">{user.name}</p>
+                  <p className="text-gray-200/80 text-sm lg:text-lg">
                     Joined {new Date(user.created_at).toLocaleDateString('en-US', { 
                       year: 'numeric', 
                       month: 'long', 
@@ -176,40 +176,40 @@ export default function ProfilePage({ params }) {
               {}
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 lg:gap-6 mb-6 lg:mb-8">
                 <div className="text-center">
-                  <div className="text-2xl lg:text-4xl font-black text-amber-300">
+                  <div className="text-2xl lg:text-4xl font-black text-gray-300">
                     {userPosts?.length || 0}
                   </div>
-                  <div className="text-amber-200 text-sm lg:text-lg">Posts</div>
+                  <div className="text-gray-200 text-sm lg:text-lg">Posts</div>
                 </div>
                 <button
                   onClick={() => setFollowersModalOpen(true)}
                   className="text-center hover:scale-105 transition-all duration-200 cursor-pointer"
                 >
-                  <div className="text-2xl lg:text-4xl font-black text-amber-300">
+                  <div className="text-2xl lg:text-4xl font-black text-gray-300">
                     {followerCount || 0}
                   </div>
-                  <div className="text-amber-200 text-sm lg:text-lg hover:text-amber-100">Followers</div>
+                  <div className="text-gray-200 text-sm lg:text-lg hover:text-gray-100">Followers</div>
                 </button>
                 <button
                   onClick={() => setFollowingModalOpen(true)}
                   className="text-center hover:scale-105 transition-all duration-200 cursor-pointer"
                 >
-                  <div className="text-2xl lg:text-4xl font-black text-amber-300">
+                  <div className="text-2xl lg:text-4xl font-black text-gray-300">
                     {followingCount || 0}
                   </div>
-                  <div className="text-amber-200 text-sm lg:text-lg hover:text-amber-100">Following</div>
+                  <div className="text-gray-200 text-sm lg:text-lg hover:text-gray-100">Following</div>
                 </button>
                 <div className="text-center">
-                  <div className="text-2xl lg:text-4xl font-black text-amber-300">
+                  <div className="text-2xl lg:text-4xl font-black text-gray-300">
                     {likedPosts?.length || 0}
                   </div>
-                  <div className="text-amber-200 text-sm lg:text-lg">Likes</div>
+                  <div className="text-gray-200 text-sm lg:text-lg">Likes</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl lg:text-4xl font-black text-amber-300">
+                  <div className="text-2xl lg:text-4xl font-black text-gray-300">
                     {user.tags?.length || 0}
                   </div>
-                  <div className="text-amber-200 text-sm lg:text-lg">Tags</div>
+                  <div className="text-gray-200 text-sm lg:text-lg">Tags</div>
                 </div>
               </div>
 
@@ -217,7 +217,7 @@ export default function ProfilePage({ params }) {
               {user.tags && user.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 lg:gap-3">
                   {user.tags.map((tag, index) => (
-                    <span key={index} className="bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-2 lg:px-4 py-1 lg:py-2 rounded-full text-xs lg:text-sm font-bold">
+                    <span key={index} className="bg-gradient-to-r from-gray-200 to-gray-600 text-gray-900 px-2 lg:px-4 py-1 lg:py-2 rounded-full text-xs lg:text-sm font-bold">
                       {tag}
                     </span>
                   ))}
@@ -232,7 +232,7 @@ export default function ProfilePage({ params }) {
                   onClick={() => setActiveTab('posts')}
                   className={`flex-1 py-2 px-4 rounded-lg font-bold transition-all text-sm ${
                     activeTab === 'posts'
-                      ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300'
+                      ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300'
                       : 'text-gray-400'
                   }`}
                 >
@@ -242,7 +242,7 @@ export default function ProfilePage({ params }) {
                   onClick={() => setActiveTab('liked')}
                   className={`flex-1 py-2 px-4 rounded-lg font-bold transition-all text-sm ${
                     activeTab === 'liked'
-                      ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300'
+                      ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300'
                       : 'text-gray-400'
                   }`}
                 >
@@ -264,17 +264,17 @@ export default function ProfilePage({ params }) {
                 <div className="space-y-4 lg:space-y-6">
                   {userPosts && userPosts.length > 0 ? (
                     userPosts.map((post) => (
-                      <div key={post.id} className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 rounded-2xl p-4 lg:p-6 border border-gray-700 hover:scale-105 transition-all duration-300 shadow-xl">
+                      <div key={post.id} className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 rounded-2xl p-4 lg:p-6 border border-gray-700 hover:scale-105 transition-all duration-300 shadow-xl">
                         <div className="flex justify-between items-start mb-3 lg:mb-4">
-                          <span className="text-amber-200/80 text-xs lg:text-sm">
+                          <span className="text-gray-200/80 text-xs lg:text-sm">
                             {new Date(post.created_at).toLocaleDateString()}
                           </span>
                         </div>
-                        <p className="text-amber-300 text-sm lg:text-lg leading-relaxed mb-3 lg:mb-4 font-medium">{post.content}</p>
+                        <p className="text-gray-300 text-sm lg:text-lg leading-relaxed mb-3 lg:mb-4 font-medium">{post.content}</p>
                         {post.tags && post.tags.length > 0 && (
                           <div className="flex flex-wrap gap-1 lg:gap-2">
                             {post.tags.map((tag, index) => (
-                              <span key={index} className="bg-orange-500/20 text-orange-200 text-xs px-2 lg:px-3 py-1 rounded-full border border-orange-400/30">
+                              <span key={index} className="bg-gray-500/20 text-gray-200 text-xs px-2 lg:px-3 py-1 rounded-full border border-gray-400/30">
                                 {tag}
                               </span>
                             ))}
@@ -283,9 +283,9 @@ export default function ProfilePage({ params }) {
                       </div>
                     ))
                   ) : (
-                    <div className="text-center py-12 lg:py-16 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 rounded-2xl border border-gray-700">
-                      <div className="text-amber-300 text-lg lg:text-xl mb-3 lg:mb-4 font-bold">No posts yet</div>
-                      <div className="text-amber-200 text-sm lg:text-base">
+                    <div className="text-center py-12 lg:py-16 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 rounded-2xl border border-gray-700">
+                      <div className="text-gray-300 text-lg lg:text-xl mb-3 lg:mb-4 font-bold">No posts yet</div>
+                      <div className="text-gray-200 text-sm lg:text-base">
                         {currentUser?.id === user.id ? 'Time to start sharing your pro journey!' : 'This user hasn\'t posted yet'}
                       </div>
                     </div>
@@ -303,20 +303,20 @@ export default function ProfilePage({ params }) {
                 <div className="space-y-4 lg:space-y-6">
                   {likedPosts && likedPosts.length > 0 ? (
                     likedPosts.map((interaction) => (
-                      <div key={interaction.id} className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 rounded-2xl p-4 lg:p-6 border border-gray-700 hover:scale-105 transition-all duration-300 shadow-xl">
+                      <div key={interaction.id} className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 rounded-2xl p-4 lg:p-6 border border-gray-700 hover:scale-105 transition-all duration-300 shadow-xl">
                         <div className="flex justify-between items-start mb-3 lg:mb-4">
-                          <span className="text-yellow-200 font-bold text-sm lg:text-base">
+                          <span className="text-gray-200 font-bold text-sm lg:text-base">
                             @{interaction.posts?.username}
                           </span>
-                          <span className="text-amber-200/80 text-xs lg:text-sm">
+                          <span className="text-gray-200/80 text-xs lg:text-sm">
                             {new Date(interaction.posts?.created_at).toLocaleDateString()}
                           </span>
                         </div>
-                        <p className="text-amber-300 text-sm lg:text-lg leading-relaxed mb-3 lg:mb-4 font-medium">{interaction.posts?.content}</p>
+                        <p className="text-gray-300 text-sm lg:text-lg leading-relaxed mb-3 lg:mb-4 font-medium">{interaction.posts?.content}</p>
                         {interaction.posts?.tags && interaction.posts.tags.length > 0 && (
                           <div className="flex flex-wrap gap-1 lg:gap-2">
                             {interaction.posts.tags.map((tag, index) => (
-                              <span key={index} className="bg-yellow-500/20 text-yellow-200 text-xs px-2 lg:px-3 py-1 rounded-full border border-yellow-400/30">
+                              <span key={index} className="bg-gray-500/20 text-gray-200 text-xs px-2 lg:px-3 py-1 rounded-full border border-gray-400/30">
                                 {tag}
                               </span>
                             ))}
@@ -325,9 +325,9 @@ export default function ProfilePage({ params }) {
                       </div>
                     ))
                   ) : (
-                    <div className="text-center py-12 lg:py-16 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-amber-300 rounded-2xl border border-gray-700">
-                      <div className="text-amber-300 text-lg lg:text-xl mb-3 lg:mb-4 font-bold">No liked posts yet</div>
-                      <div className="text-amber-200 text-sm lg:text-base">
+                    <div className="text-center py-12 lg:py-16 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-gray-300 rounded-2xl border border-gray-700">
+                      <div className="text-gray-300 text-lg lg:text-xl mb-3 lg:mb-4 font-bold">No liked posts yet</div>
+                      <div className="text-gray-200 text-sm lg:text-base">
                         {currentUser?.id === user.id ? 'Start exploring and supporting other pros!' : 'This user hasn\'t liked any posts yet'}
                       </div>
                     </div>
