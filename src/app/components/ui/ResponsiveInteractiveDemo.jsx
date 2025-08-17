@@ -8,14 +8,14 @@ const AIMentorFeedback = ({ feedback }) => {
   return (
     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 -translate-y-full z-50 animate-fade-in-down">
       <div className="relative">
-        <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-t-[12px] border-transparent border-t-gray-900"></div>
-        <div className="bg-gray-900 text-white px-3 sm:px-4 py-2 sm:py-3 rounded-2xl shadow-2xl border border-amber-400/30 min-w-48 sm:min-w-64 backdrop-blur-xl">
+        <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-t-[12px] border-transparent border-t-deep-navy"></div>
+        <div className="bg-deep-navy text-warm-beige px-3 sm:px-4 py-2 sm:py-3 rounded-2xl shadow-2xl border border-muted-terracotta/30 min-w-48 sm:min-w-64 backdrop-blur-xl">
           <div className="flex items-start gap-2 sm:gap-3">
-            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-              <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-muted-terracotta to-cool-teal rounded-full flex items-center justify-center flex-shrink-0">
+              <Brain className="w-3 h-3 sm:w-4 sm:h-4 text-warm-beige" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-bold text-amber-400 mb-1">Codex</p>
+              <p className="text-xs font-bold text-muted-terracotta mb-1">Codex</p>
               <p className="text-xs sm:text-sm leading-tight break-words">{feedback.message}</p>
             </div>
           </div>
@@ -75,7 +75,7 @@ export default function ResponsiveInteractiveDemo() {
 
   return (
     <div className="relative w-full">
-      <div className="bg-gray-900 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-gray-700/50 backdrop-blur-xl">
+      <div className="bg-deep-navy rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-light-gray/50 backdrop-blur-xl">
         {}
         <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
           <div className="flex gap-1 sm:gap-2">
@@ -83,10 +83,10 @@ export default function ResponsiveInteractiveDemo() {
             <div className="w-3 h-3 sm:w-4 sm:h-4 bg-yellow-500 rounded-full"></div>
             <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full"></div>
           </div>
-          <span className="ml-2 sm:ml-4 text-gray-400 text-xs sm:text-sm font-mono">main.js - Codex Active</span>
+          <span className="ml-2 sm:ml-4 text-light-gray text-xs sm:text-sm font-mono">main.js - Codex Active</span>
           <div className="ml-auto flex items-center gap-1 sm:gap-2">
-            <div className={`w-2 h-2 rounded-full ${isLoading ? 'bg-yellow-400 animate-pulse' : 'bg-green-400'}`}></div>
-            <span className={`text-xs font-medium ${isLoading ? 'text-yellow-400' : 'text-green-400'}`}>
+            <div className={`w-2 h-2 rounded-full ${isLoading ? 'bg-muted-terracotta animate-pulse' : 'bg-cool-teal'}`}></div>
+            <span className={`text-xs font-medium ${isLoading ? 'text-muted-terracotta' : 'text-cool-teal'}`}>
               {isLoading ? 'Thinking...' : 'Live'}
             </span>
           </div>
@@ -98,7 +98,7 @@ export default function ResponsiveInteractiveDemo() {
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="// Start typing JavaScript code here..."
-            className="w-full h-32 sm:h-40 lg:h-48 bg-transparent text-green-400 font-mono text-xs sm:text-sm resize-none outline-none placeholder-gray-500/70 leading-relaxed"
+            className="w-full h-32 sm:h-40 lg:h-48 bg-transparent text-cool-teal font-mono text-xs sm:text-sm resize-none outline-none placeholder-light-gray/70 leading-relaxed"
             spellCheck={false}
           />
           
@@ -108,8 +108,8 @@ export default function ResponsiveInteractiveDemo() {
         <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-2 sm:gap-3">
             <div>
-              <p className="text-amber-400 text-sm font-bold">Codex</p>
-              <p className="text-gray-400 text-xs">Continuously Watching</p>
+              <p className="text-muted-terracotta text-sm font-bold">Codex</p>
+              <p className="text-light-gray text-xs">Continuously Watching</p>
             </div>
           </div>
           {error && (
