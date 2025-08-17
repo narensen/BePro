@@ -68,71 +68,71 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--secondary);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--primary);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--accent);
 }
 button:focus,
 input:focus,
 textarea:focus {
-  outline: 2px solid rgba(245, 158, 11, 0.5);
+  outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
 .glass {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--primary-foreground);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border);
 }
 
 .glass-strong {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--primary-foreground);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--border);
 }
 .gradient-primary {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b, #ea580c);
+  background: linear-gradient(135deg, var(--accent), var(--destructive));
 }
 
 .gradient-secondary {
-  background: linear-gradient(135deg, #fef3c7, #fde68a, #fbbf24);
+  background: linear-gradient(135deg, var(--secondary), var(--accent));
 }
 .btn-primary {
-  @apply px-4 py-2 rounded-full font-medium transition-all duration-300 bg-white text-orange-600 hover:bg-white/90 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-400;
+  @apply px-4 py-2 rounded-full font-medium transition-all duration-300 bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring;
 }
 
 .btn-secondary {
-  @apply px-4 py-2 rounded-full font-medium transition-all duration-300 bg-white/20 text-white hover:bg-white/30 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-400;
+  @apply px-4 py-2 rounded-full font-medium transition-all duration-300 bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring;
 }
 
 .btn-ghost {
-  @apply px-3 py-2 rounded-lg font-medium transition-all duration-300 text-white/80 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-400;
+  @apply px-3 py-2 rounded-lg font-medium transition-all duration-300 text-primary-foreground hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring;
 }
 .card {
-  @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-xl transition-all duration-300 hover:bg-white/20 hover:scale-[1.01] hover:shadow-lg;
+  @apply bg-card text-card-foreground backdrop-blur-md border border-border rounded-xl transition-all duration-300 hover:bg-card/80 hover:scale-[1.01] hover:shadow-lg;
 }
 
 .card-elevated {
-  @apply bg-white/20 backdrop-blur-md border border-white/30 rounded-xl shadow-lg transition-all duration-300 hover:bg-white/30 hover:scale-[1.01] hover:shadow-xl;
+  @apply bg-card/80 backdrop-blur-md border border-border rounded-xl shadow-lg transition-all duration-300 hover:bg-card/60 hover:scale-[1.01] hover:shadow-xl;
 }
 .input-glass {
-  @apply w-full px-4 py-2 bg-white/20 border border-white/30 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-300;
+  @apply w-full px-4 py-2 bg-input border border-border rounded-xl text-primary-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all duration-300;
 }
 .text-gradient {
-  background: linear-gradient(135deg, #fbbf24, #ea580c);
+  background: linear-gradient(135deg, var(--accent), var(--destructive));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .spinner {
-  @apply w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin;
+  @apply w-6 h-6 border-2 border-border border-t-primary rounded-full animate-spin;
 }
 @media (max-width: 768px) {
   .mobile-stack {

@@ -171,30 +171,30 @@ export default function CodexReport({ username }) {
       case 'studied':
         return {
           icon: CheckCircle,
-          bgColor: '',
-          borderColor: 'focus:ring-0',
-          iconColor: ''
+          bgColor: 'bg-primary',
+          borderColor: 'border-ring',
+          iconColor: 'text-secondary'
         }
       case 'not_studied':
         return {
           icon: Clock,
-          bgColor: 'from-yellow-500/20 to-orange-500/20',
-          borderColor: 'border-yellow-500/30',
-          iconColor: 'text-yellow-400'
+          bgColor: 'bg-accent',
+          borderColor: 'border-accent',
+          iconColor: 'text-primary'
         }
       case 'no_roadmap':
         return {
           icon: Target,
-          bgColor: 'from-yellow-400 via-amber-400 to-orange-400',
-          borderColor: 'border-gray-700',
-          iconColor: 'text-gray-900'
+          bgColor: 'bg-destructive',
+          borderColor: 'border-destructive',
+          iconColor: 'text-primary'
         }
       default:
         return {
           icon: XCircle,
-          bgColor: 'from-red-500/20 to-red-600/20',
-          borderColor: 'border-red-500/30',
-          iconColor: 'text-red-400'
+          bgColor: 'bg-destructive',
+          borderColor: 'border-destructive',
+          iconColor: 'text-primary'
         }
     }
   }
@@ -233,12 +233,12 @@ export default function CodexReport({ username }) {
     }
 
     const getIntensityColor = (count) => {
-      if (!count || count <= 0) return "bg-gray-800"
-      if (count <= 4) return "bg-amber-100"
-      if (count <= 9) return "bg-amber-300"
-      if (count <= 14) return "bg-amber-400"
-      if (count <= 19) return "bg-amber-500"
-      return "bg-amber-600"
+      if (!count || count <= 0) return "bg-secondary"
+      if (count <= 4) return "bg-primary"
+      if (count <= 9) return "bg-accent"
+      if (count <= 14) return "bg-destructive"
+      if (count <= 19) return "bg-ring"
+      return "bg-primary"
     }
 
     const getIntensityLevel = (count) => {
@@ -299,12 +299,12 @@ export default function CodexReport({ username }) {
     const monthPositions = getMonthPositions()
 
     return (
-      <div className="bg-gray-800/50 rounded-xl p-6 mb-6">
+      <div className="bg-secondary rounded-xl p-6 mb-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-amber-400" />
-            <h4 className="text-xl font-bold text-amber-300">Activity Timeline</h4>
+            <Calendar className="w-5 h-5 text-primary" />
+            <h4 className="text-xl font-bold text-primary">Activity Timeline</h4>
           </div>
           
           {/* Year Navigation */}
@@ -312,19 +312,19 @@ export default function CodexReport({ username }) {
             <button 
               onClick={() => navigateYear('prev')}
               disabled={availableYears.indexOf(selectedYear) >= availableYears.length - 1}
-              className="p-1 rounded-full bg-gray-700 hover:bg-amber-500/20 text-amber-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="p-1 rounded-full bg-primary hover:bg-accent text-primary-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
             
-            <h3 className="text-lg font-bold text-amber-300 min-w-[4rem] text-center">
+            <h3 className="text-lg font-bold text-primary min-w-[4rem] text-center">
               {selectedYear}
             </h3>
             
             <button 
               onClick={() => navigateYear('next')}
               disabled={availableYears.indexOf(selectedYear) <= 0}
-              className="p-1 rounded-full bg-gray-700 hover:bg-amber-500/20 text-amber-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="p-1 rounded-full bg-primary hover:bg-accent text-primary-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronRight size={16} />
             </button>
@@ -352,7 +352,7 @@ export default function CodexReport({ username }) {
                 return (
                   <div
                     key={month}
-                    className="absolute text-xs text-amber-200/70"
+                    className="absolute text-xs text-primary/70"
                     style={{
                       left: `${60 + weekIndex * 14}px`,
                       top: '0px',
@@ -372,7 +372,7 @@ export default function CodexReport({ username }) {
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
                   <div 
                     key={day} 
-                    className="h-3 flex items-center justify-end text-xs text-amber-200/50"
+                    className="h-3 flex items-center justify-end text-xs text-primary/50"
                     style={{ opacity: index % 2 === 1 ? 1 : 0 }}
                   >
                     {index % 2 === 1 ? day : ''}
@@ -402,8 +402,8 @@ export default function CodexReport({ username }) {
                           className={`w-3 h-3 rounded-sm transition-all duration-200 cursor-pointer ${intensityColor} ${
                             !isCurrentYear ? 'opacity-30' : ''
                           } ${
-                            isToday ? 'ring-2 ring-amber-400 ring-opacity-60' : ''
-                          } hover:ring-2 hover:ring-amber-300 hover:ring-opacity-40`}
+                            isToday ? 'ring-2 ring-ring ring-opacity-60' : ''
+                          } hover:ring-2 hover:ring-ring hover:ring-opacity-40`}
                           onMouseEnter={(e) => isCurrentYear && handleCellHover(dateStr, count, e)}
                           onMouseLeave={handleCellLeave}
                           style={{
@@ -419,7 +419,7 @@ export default function CodexReport({ username }) {
 
             {/* Legend */}
             <div className="flex items-center justify-between mt-4 ml-16">
-              <div className="flex items-center gap-2 text-xs text-amber-200/50">
+              <div className="flex items-center gap-2 text-xs text-primary/50">
                 <span>Less</span>
                 <div className="flex gap-[2px]">
                   {[0, 1, 5, 10, 15, 20].map((level) => (
@@ -439,17 +439,17 @@ export default function CodexReport({ username }) {
         {/* Hover Tooltip */}
         {hoveredCell && (
           <div 
-            className="fixed z-50 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm pointer-events-none shadow-xl"
+            className="fixed z-50 bg-primary border border-border rounded-lg px-3 py-2 text-sm pointer-events-none shadow-xl"
             style={{
               left: hoveredCell.x,
               top: hoveredCell.y,
               transform: 'translateX(-50%) translateY(-100%)'
             }}
           >
-            <div className="text-amber-200 font-medium">
+            <div className="text-primary-foreground font-medium">
               {hoveredCell.count} Interactions
             </div>
-            <div className="text-amber-200/70 text-xs">
+            <div className="text-primary-foreground/70 text-xs">
               {new Date(hoveredCell.date + 'T00:00:00').toLocaleDateString('en-US', { 
                 weekday: 'long',
                 month: 'short', 
@@ -462,15 +462,15 @@ export default function CodexReport({ username }) {
 
         {/* Year Selection Tabs */}
         {availableYears.length > 1 && (
-          <div className="flex flex-wrap justify-center gap-2 mt-6 pt-4 border-t border-gray-700/50">
+          <div className="flex flex-wrap justify-center gap-2 mt-6 pt-4 border-t border-border/50">
             {availableYears.map(year => (
               <button
                 key={year}
                 onClick={() => setSelectedYear(year)}
                 className={`px-3 py-1 text-sm rounded-md transition-all ${
                   selectedYear === year 
-                    ? 'bg-amber-500 text-gray-900 font-bold shadow-md' 
-                    : 'bg-gray-700/50 text-amber-200/70 hover:bg-gray-700 hover:text-amber-200'
+                    ? 'bg-accent text-primary-foreground font-bold shadow-md'
+                    : 'bg-primary/50 text-primary-foreground/70 hover:bg-primary hover:text-primary-foreground'
                 }`}
               >
                 {year}
@@ -484,15 +484,15 @@ export default function CodexReport({ username }) {
 
   if (loadingPage) {
     return (
-      <div className="bg-gray-900 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700 mb-6 lg:mb-8">
+      <div className="bg-secondary rounded-2xl p-6 lg:p-8 shadow-xl border border-border mb-6 lg:mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-amber-500/20 rounded-xl animate-pulse"></div>
-          <h3 className="text-xl lg:text-2xl font-black text-amber-300">Codex Report</h3>
+          <div className="p-2 bg-primary/20 rounded-xl animate-pulse"></div>
+          <h3 className="text-xl lg:text-2xl font-black text-primary">Codex Report</h3>
         </div>
         <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-gray-700 rounded"></div>
-          <div className="h-4 bg-gray-700 rounded w-3/4"></div>
-          <div className="h-40 bg-gray-700 rounded"></div>
+          <div className="h-4 bg-primary/20 rounded"></div>
+          <div className="h-4 bg-primary/20 rounded w-3/4"></div>
+          <div className="h-40 bg-primary/20 rounded"></div>
         </div>
       </div>
     )
@@ -502,12 +502,12 @@ export default function CodexReport({ username }) {
   const StatusIcon = config.icon
 
   return (
-    <div className="bg-gray-900 rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-700 mb-6 lg:mb-8">
+    <div className="bg-secondary rounded-2xl p-6 lg:p-8 shadow-xl border border-border mb-6 lg:mb-8">
       <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-amber-500/20 rounded-xl">
+        <div className="p-2 bg-primary/20 rounded-xl">
         </div>
-        <h3 className="text-xl lg:text-2xl font-black text-amber-300">Codex Report</h3>
-        <div className="text-xs text-amber-200/50 ml-auto">@{username}</div>
+        <h3 className="text-xl lg:text-2xl font-black text-primary">Codex Report</h3>
+        <div className="text-xs text-primary/50 ml-auto">@{username}</div>
       </div>
 
       {hasRoadmap ? (
@@ -515,46 +515,46 @@ export default function CodexReport({ username }) {
           {/* Stats Grid with 3D effect */}
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 perspective-800">
             <div 
-              className="bg-gray-800/50 rounded-xl p-4 border border-gray-700 transition-all duration-300 hover:shadow-xl"
+              className="bg-primary/50 rounded-xl p-4 border border-border transition-all duration-300 hover:shadow-xl"
               style={{ 
                 transform: 'translateZ(10px) rotateX(5deg)',
                 transformStyle: 'preserve-3d',
-                boxShadow: '0 8px 16px -8px rgba(0, 0, 0, 0.4), 0 0 8px rgba(251, 191, 36, 0.1)'
+                boxShadow: '0 8px 16px -8px rgba(0, 0, 0, 0.4), 0 0 8px var(--accent)'
               }}
             >
               <div className="flex items-center gap-2 mb-2">
-                <Flame className="w-5 h-5 text-orange-400" />
-                <span className="text-sm text-gray-400">Current Streak</span>
+                <Flame className="w-5 h-5 text-destructive" />
+                <span className="text-sm text-primary-foreground">Current Streak</span>
               </div>
-              <div className="text-2xl font-bold text-orange-300">{currentStreak} days</div>
+              <div className="text-2xl font-bold text-destructive">{currentStreak} days</div>
             </div>
             
             <div 
-              className="bg-gray-800/50 rounded-xl p-4 border border-gray-700 transition-all duration-300 hover:shadow-xl"
+              className="bg-primary/50 rounded-xl p-4 border border-border transition-all duration-300 hover:shadow-xl"
               style={{ 
                 transform: 'translateZ(10px) rotateX(5deg)',
                 transformStyle: 'preserve-3d',
-                boxShadow: '0 8px 16px -8px rgba(0, 0, 0, 0.4), 0 0 8px rgba(79, 209, 197, 0.1)'
+                boxShadow: '0 8px 16px -8px rgba(0, 0, 0, 0.4), 0 0 8px var(--ring)'
               }}
             >
               <div className="flex items-center gap-2 mb-2">
-                <Target className="w-5 h-5 text-blue-400" />
-                <span className="text-sm text-gray-400">Progress</span>
+                <Target className="w-5 h-5 text-ring" />
+                <span className="text-sm text-primary-foreground">Progress</span>
               </div>
-              <div className="text-2xl font-bold text-blue-300">
+              <div className="text-2xl font-bold text-ring">
                 {totalMissions > 0 ? Math.round((completedMissions / totalMissions) * 100) : 0}%
               </div>
             </div>
             
             <div 
-              className="bg-gray-800/50 rounded-xl p-4 border border-gray-700 col-span-2 lg:col-span-1 transition-all duration-300 hover:shadow-xl"
+              className="bg-primary/50 rounded-xl p-4 border border-border col-span-2 lg:col-span-1 transition-all duration-300 hover:shadow-xl"
               style={{ 
                 transform: 'translateZ(10px) rotateX(5deg)',
                 transformStyle: 'preserve-3d',
-                boxShadow: '0 8px 16px -8px rgba(0, 0, 0, 0.4), 0 0 8px rgba(74, 222, 128, 0.1)'
+                boxShadow: '0 8px 16px -8px rgba(0, 0, 0, 0.4), 0 0 8px var(--primary)'
               }}
             >
-              <div className="text-2xl font-bold text-green-300">
+              <div className="text-2xl font-bold text-primary-foreground">
                 {completedMissions}/{totalMissions}
               </div>
             </div>
@@ -572,13 +572,13 @@ export default function CodexReport({ username }) {
           <button
             onClick={() => window.location.href = '/codex'}
             disabled={loading}
-            className={`w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 py-3 lg:py-4 rounded-xl font-black text-base lg:text-lg transition-all duration-300 shadow-lg 
+            className={`w-full bg-gradient-to-r from-accent to-destructive text-primary-foreground py-3 lg:py-4 rounded-xl font-black text-base lg:text-lg transition-all duration-300 shadow-lg
               ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:scale-105 hover:shadow-xl'}`}
           >
             {loading ? (
               <div className="flex items-center justify-center gap-2">
                 <svg
-                  className="animate-spin h-5 w-5 text-gray-900"
+                  className="animate-spin h-5 w-5 text-primary-foreground"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"

@@ -24,16 +24,16 @@
   border-radius: inherit;
   background: conic-gradient(
     from var(--angle),
-    #ff5f81,
-    #5870ff,
-    #44e0e6,
-    #ff5f81
+    var(--destructive),
+    var(--primary),
+    var(--ring),
+    var(--destructive)
   );
   animation: spin 4s linear infinite;
   padding: 2px;
   mask: 
-    linear-gradient(#000 0 0) content-box, 
-    linear-gradient(#000 0 0);
+    linear-gradient(var(--primary) 0 0) content-box,
+    linear-gradient(var(--primary) 0 0);
   mask-composite: exclude;
   -webkit-mask-composite: destination-out;
   filter: blur(20px);
@@ -41,8 +41,8 @@
 .glow-container textarea {
   width: 100%;
   height: 100%;
-  background-color: #000;
-  color: #fff;
+  background-color: var(--primary);
+  color: var(--secondary);
   border: none;
   outline: none;
   padding: 1rem;
