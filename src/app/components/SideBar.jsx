@@ -122,20 +122,20 @@ export default function SideBar() {
   };
   return (
     <>
-      {}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-[100] bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 border-b border-white/20 shadow-lg">
+      {/* Mobile Header with Deep Navy theme */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-[100] bg-deep-navy border-b border-warm-beige/20 shadow-lg backdrop-blur-xl">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center space-x-3">
-            <h1 className="text-xl font-black text-gray-900">BePro</h1>
+            <h1 className="text-xl font-black text-warm-beige">BePro</h1>
           </div>
           
           {user ? (
             <div className="relative">
               <button
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full p-2 border border-white/30 hover:bg-white/30 transition-all duration-200"
+                className="flex items-center space-x-2 bg-terracotta/20 backdrop-blur-sm rounded-full p-2 border border-terracotta/30 hover:bg-terracotta/30 transition-all duration-200"
               >
-                <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+                <div className="w-8 h-8 bg-gradient-to-r from-terracotta to-muted-teal rounded-full flex items-center justify-center overflow-hidden border-2 border-warm-beige shadow-md">
                   {avatarUrl ? (
                     <img
                       src={avatarUrl}
@@ -160,17 +160,17 @@ export default function SideBar() {
                     </span>
                   )}
                 </div>
-                <svg className="w-4 h-4 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-warm-beige" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
               
-              {}
+              {/* Updated Mobile Profile Menu */}
               {showProfileMenu && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl border border-white/30 py-2 z-50">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-warm-beige/95 backdrop-blur-sm rounded-xl shadow-xl border border-deep-navy/20 py-2 z-50">
                   <button
                     onClick={() => handleProfileMenuClick(`/${username}`)}
-                    className="w-full text-left px-4 py-3 text-gray-900 hover:bg-gray-100/50 transition-colors flex items-center space-x-3"
+                    className="w-full text-left px-4 py-3 text-deep-navy hover:bg-terracotta/10 transition-colors flex items-center space-x-3"
                   >
                     <User size={16} />
                     <span className="font-medium">Profile</span>
@@ -208,37 +208,38 @@ export default function SideBar() {
       </div>
 
       {}
-      <div className="hidden lg:flex h-screen font-mono bg-white/90 backdrop-blur-sm border-r border-gray-200/50 shadow-xl flex-col fixed z-[70] w-72 left-0 top-0">
+      {/* Desktop Sidebar with Deep Navy theme */}
+      <div className="hidden lg:flex h-screen font-sans bg-deep-navy backdrop-blur-sm border-r border-warm-beige/20 shadow-xl flex-col fixed z-[70] w-72 left-0 top-0">
 
-      <div className="p-6 border-b border-gray-200/30">
+      <div className="p-6 border-b border-warm-beige/20">
         <Link href="/home">
-          <h1 className="font-black bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent cursor-pointer transition-all duration-300 text-3xl">
+          <h1 className="font-black bg-gradient-to-r from-warm-beige to-terracotta bg-clip-text text-transparent cursor-pointer transition-all duration-300 text-3xl hover-lift">
             BePro
           </h1>
         </Link>
-        <p className="text-sm text-gray-600 font-medium mt-1">
+        <p className="text-sm text-warm-beige/70 font-medium mt-1">
           Learn smart. Build loud. Get hired.
         </p>
       </div>
 
       {loading ? (
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-10 h-10 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin"></div>
+          <div className="w-10 h-10 border-4 border-terracotta/20 border-t-terracotta rounded-full animate-spin"></div>
         </div>
       ) : !user ? (
         <div className="flex-1 flex items-center justify-center p-6">
           <button
             onClick={() => router.push('/')}
-            className="text-center bg-gradient-to-r from-gray-900 to-gray-800 text-amber-300 font-bold px-5 py-3 rounded-2xl shadow-md hover:scale-105 transition-all w-full"
+            className="text-center bg-terracotta text-white font-bold px-6 py-3 rounded-2xl shadow-md hover:bg-terracotta/90 hover-lift transition-all w-full"
           >
             Login
           </button>
         </div>
       ) : (
         <>
-          <div className="p-4 border-b border-gray-200/30">
-            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-400/20 to-yellow-400/20 rounded-xl">
-              <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
+          <div className="p-4 border-b border-warm-beige/20">
+            <div className="flex items-center gap-3 p-3 bg-terracotta/10 rounded-xl hover:bg-terracotta/15 transition-colors">
+              <div className="w-10 h-10 bg-gradient-to-r from-terracotta to-muted-teal rounded-full flex items-center justify-center overflow-hidden border-2 border-warm-beige shadow-md">
                 {avatarUrl ? (
                   <img
                     src={avatarUrl}
@@ -264,10 +265,10 @@ export default function SideBar() {
                 )}
               </div>
               <div className="flex-1">
-                <p className="font-bold text-gray-900 text-sm">
+                <p className="font-bold text-warm-beige text-sm">
                   {username || 'User'}
                 </p>
-                <p className="text-gray-600 text-xs">{user.email}</p>
+                <p className="text-warm-beige/70 text-xs">{user.email}</p>
               </div>
             </div>
           </div>
@@ -286,21 +287,21 @@ export default function SideBar() {
                     {isActive && (
                       <motion.div
                         layoutId="active-pill"
-                        className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md"
+                        className="absolute inset-0 rounded-3xl bg-terracotta shadow-md"
                         transition={{ type: 'spring', stiffness: 400, damping: 35 }}
                       />
                     )}
                     <div
-                      className={`flex items-center gap-3 p-3 rounded-3xl font-semibold relative z-10 transition-all duration-200 ${
+                      className={`flex items-center gap-3 p-3 rounded-3xl font-semibold relative z-10 transition-all duration-200 hover-lift ${
                         isActive
-                          ? 'text-gray-900'
-                          : 'text-gray-600 hover:text-gray-800 hover:scale-105'
+                          ? 'text-white'
+                          : 'text-warm-beige/70 hover:text-warm-beige hover:bg-terracotta/10'
                       }`}
                     >
                       <Icon size={20} />
                       <span className="font-medium">{item.name}</span>
                       {item.name === 'Messages' && totalUnreadCount > 0 && (
-                        <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        <span className="ml-auto bg-muted-teal text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                           {totalUnreadCount > 99 ? '99+' : totalUnreadCount}
                         </span>
                       )}
@@ -311,8 +312,8 @@ export default function SideBar() {
             </nav>
           </div>
 
-          {}
-          <div className="p-4 border-t border-gray-200/30">
+          {/* Bottom Navigation */}
+          <div className="p-4 border-t border-warm-beige/20">
             <div className="space-y-1 cursor-pointer">
               {[...bottomItems,
                 {
@@ -324,10 +325,10 @@ export default function SideBar() {
                 const Icon = item.icon;
                 const content = (
                   <div
-                    className={`flex items-center gap-3 p-3 rounded-3xl font-semibold relative z-10 transition-colors duration-300 ${
+                    className={`flex items-center gap-3 p-3 rounded-3xl font-semibold relative z-10 transition-all duration-200 hover-lift ${
                       isActive
-                        ? 'text-gray-900'
-                        : 'text-gray-600 hover:text-gray-800'
+                        ? 'text-white'
+                        : 'text-warm-beige/70 hover:text-warm-beige hover:bg-terracotta/10'
                     }`}
                   >
                     <Icon size={20} />
@@ -344,7 +345,7 @@ export default function SideBar() {
                     {isActive && (
                       <motion.div
                         layoutId="active-pill"
-                        className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 to-yellow-400 shadow-md"
+                        className="absolute inset-0 rounded-3xl bg-terracotta shadow-md"
                         transition={{ type: 'spring', stiffness: 400, damping: 35 }}
                       />
                     )}
