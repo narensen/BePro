@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -28,6 +28,62 @@ const MissionInterface = ({
   const [showCodeEditor, setShowCodeEditor] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
   const [sessionLoaded, setSessionLoaded] = useState(false);
+  
+  // Auto-hide header states
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+  const [inactivityTimer, setInactivityTimer] = useState(null);
+  const chatAreaRef = useRef(null);
+
+  // Auto-hide header functionality
+  const resetInactivityTimer = () => {
+    if (inactivityTimer) {
+      clearTimeout(inactivityTimer);
+    }
+    
+    // Show header when there's activity
+    setHeaderVisible(true);
+    
+    // Set timer to hide header after 2.5 seconds of inactivity
+    const timer = setTimeout(() => {
+      setHeaderVisible(false);
+    }, 2500);
+    
+    setInactivityTimer(timer);
+  };
+
+  const handleScroll = (e) => {
+    const currentScrollTop = e.target.scrollTop;
+    
+    // Check if scrolling up
+    if (currentScrollTop < lastScrollTop && currentScrollTop > 0) {
+      // Scrolling up - show header and reset timer
+      resetInactivityTimer();
+    } else if (currentScrollTop > lastScrollTop) {
+      // Scrolling down - just reset timer
+      resetInactivityTimer();
+    }
+    
+    setLastScrollTop(currentScrollTop);
+  };
+
+  // Initialize header auto-hide
+  useEffect(() => {
+    // Start the initial timer
+    resetInactivityTimer();
+    
+    // Cleanup timer on unmount
+    return () => {
+      if (inactivityTimer) {
+        clearTimeout(inactivityTimer);
+      }
+    };
+  }, []);
+
+  // Reset timer on any user interaction
+  const handleUserActivity = () => {
+    resetInactivityTimer();
+  };
 
   useEffect(() => {
     const loadMissionSession = async () => {
@@ -146,6 +202,9 @@ const MissionInterface = ({
   const handleSendMessage = async () => {
     if (!currentInput.trim() || isLoading) return;
 
+    // Track user activity when sending message
+    handleUserActivity();
+
     const userMessage = {
       id: Date.now(),
       type: 'user',
@@ -222,8 +281,10 @@ const MissionInterface = ({
 
   return (
     <div className="min-h-screen font-mono">
-      {/* Fixed Header */}
-      <div className="fixed top-0 left-0 right-0 z-50">
+      {/* Fixed Header with Auto-Hide */}
+      <div className={`fixed top-0 left-0 right-0 z-50 transform transition-transform duration-500 ease-out ${
+        headerVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}>
         <MissionHeader
           missionNumber={missionNumber}
           missionTitle={missionTitle}
@@ -249,8 +310,13 @@ const MissionInterface = ({
 
         {/* Main Chat Area - Smoothly adjusts position when sidebar is open */}
         <div className={`flex-1 flex flex-col bg-white/95 backdrop-blur-sm transition-all duration-500 ease-in-out ${showSidebar ? 'ml-80' : 'ml-0'} pb-32`}>
-          {/* Chat Messages Area - Full scroll capability */}
-          <div className="flex-1 transition-all duration-300 ease-in-out">
+          {/* Chat Messages Area - Full scroll capability with scroll detection */}
+          <div 
+            ref={chatAreaRef}
+            className="flex-1 transition-all duration-300 ease-in-out overflow-y-auto"
+            onScroll={handleScroll}
+            onClick={handleUserActivity}
+          >
             <div className={`h-full transition-all duration-500 ease-in-out ${showSidebar ? 'px-8' : 'px-4'}`}>
               <ChatArea
                 messages={messages}
@@ -276,14 +342,16 @@ const MissionInterface = ({
 
       {/* Fixed Footer - Chat Input adjusts based on sidebar state */}
       <div className={`fixed bottom-0 z-40 bg-white border-t border-gray-200 shadow-lg transition-all duration-500 ease-in-out ${showSidebar ? 'left-80 right-0' : 'left-0 right-0'}`}>
-        <ChatInput
-          currentInput={currentInput}
-          setCurrentInput={setCurrentInput}
-          handleSendMessage={handleSendMessage}
-          isLoading={isLoading}
-          showCodeEditor={showCodeEditor}
-          setShowCodeEditor={setShowCodeEditor}
-        />
+        <div>
+          <ChatInput
+            currentInput={currentInput}
+            setCurrentInput={setCurrentInput}
+            handleSendMessage={handleSendMessage}
+            isLoading={isLoading}
+            showCodeEditor={showCodeEditor}
+            setShowCodeEditor={setShowCodeEditor}
+          />
+        </div>
       </div>
     </div>
   );

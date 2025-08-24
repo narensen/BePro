@@ -6,10 +6,12 @@ const useUserStore = create(persist(
     user: null,
     username: '',
     avatar_url: '',
+    totalUnreadCount: 0,
     setUserSession: (user) => set({ user }),
     setUsername: (username) => set({ username }),
     setAvatarUrl: (avatar_url) => set({ avatar_url }),
-    clearUserSession: () => set({ user: null, username: '', avatar_url: '' }),
+    setTotalUnreadCount: (count) => set({ totalUnreadCount: count }),
+    clearUserSession: () => set({ user: null, username: '', avatar_url: '', totalUnreadCount: 0 }),
   }),
   { name: 'user-store' }
 ));

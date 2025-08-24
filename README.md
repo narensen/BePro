@@ -1,6 +1,6 @@
 # BePro
 
-**The Career Engine for Developers Who Build in Silence**
+**The Career Engine for Developers Who Build in Silence.**
 
 BePro is a platform built for developers who care more about output than optics.
 
