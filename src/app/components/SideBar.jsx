@@ -95,7 +95,6 @@ export default function SideBar() {
     { name: 'Dashboard', icon: Home, href: '/home' },
     { name: 'Codex', icon: AtomIcon, href: '/codex' },
     { name: 'Messages', icon: MessageSquare, href: '/message' },
-    { name: 'Post', icon: PlusCircle, href: '/home/post' },
     ...(isAdmin ? [{ name: 'Stats', icon: BarChart3, href: '/stats' }] : []),
   ];
 

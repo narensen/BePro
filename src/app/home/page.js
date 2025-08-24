@@ -7,21 +7,15 @@ import SideBar from '../components/SideBar'
 import DashboardHeader from './components/DashboardHeader'
 import CodexReport from './components/CodexReport'
 import RecentNotifications from './components/RecentNotifications'
-import QuickActions from './components/QuickActions'
 import { useRouter } from 'next/navigation'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 export default function Home() {
   const router = useRouter()
   const [userProfile, setUserProfile] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const {
-    user,
-    username,
-    setUserSession,
-    setUsername,
-    clearUserSession,
-  } = useUserStore();
+  const { user, username, setUsername } = useUserStore();
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -55,23 +49,17 @@ export default function Home() {
     fetchUserProfile()
   }, [user, username, setUsername])
 
-  const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut()
-    if (error) console.error('Sign out error:', error)
-    else location.reload()
-  }
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative">
         <SideBar />
         <div className="lg:ml-72 flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="text-2xl lg:text-4xl font-black mb-4 lg:mb-6 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent animate-pulse mt-16 lg:mt-0">
+            <div className="text-2xl lg:text-4xl font-black mb-4 lg:mb-6 animate-pulse">
               BePro Dashboard
             </div>
-            <div className="w-8 h-8 lg:w-10 lg:h-10 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin mx-auto"></div>
-            <p className="text-gray-800 mt-4 text-sm lg:text-lg">Loading your dashboard...</p>
+            <div className="w-8 h-8 border-4 border-gray-900/20 border-t-gray-900 rounded-full animate-spin mx-auto"></div>
+            <p className="text-gray-800 mt-4">Loading your dashboard...</p>
           </div>
         </div>
       </div>
@@ -79,27 +67,27 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono overflow-x-hidden relative">
+    <div className="min-h-screen pl-72 bg-gradient-to-br from-yellow-400 via-amber-400 to-orange-400 font-mono relative overflow-x-hidden flex">
+      {/* Sidebar */}
       <SideBar />
 
-      <div className="transition-all duration-300 ease-in-out pb-20 lg:pb-0 lg:ml-72">
+      {/* Main content */}
+      <div className={"transition-all duration-300 ease-in-out pb-20 lg:pb-0 flex-1 lg:mr-0"}>
         <main className="p-4 sm:p-6 pt-16 lg:pt-4">
           <div className="max-w-6xl mx-auto">
             <DashboardHeader username={username || 'User'} />
-            
-            <CodexReport username={username} />
-            
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-              <div className="lg:col-span-2">
-                <RecentNotifications username={username} userProfile={userProfile} />
-              </div>
-              <div className="space-y-6 lg:space-y-8">
-                <QuickActions />
-              </div>
+
+            {/* CodexReport + Notifications stacked */}
+            <div className="max-w-3xl mx-auto space-y-10">
+              <CodexReport username={username} />
+              <RecentNotifications username={username} userProfile={userProfile} />
             </div>
           </div>
         </main>
       </div>
+
+      {/* Profile Bar (slides in/out) */}
+  
     </div>
   )
 }

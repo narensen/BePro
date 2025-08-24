@@ -303,7 +303,6 @@ export default function RecentNotifications({ username, userProfile }) {
             onClick={() => {/* TODO: Navigate to full notifications page */}}
             className="text-amber-300 hover:text-amber-200 font-bold text-sm transition-colors"
           >
-            View All Notifications
           </button>
         </div>
       )}
