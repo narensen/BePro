@@ -231,17 +231,16 @@ export default function Codex() {
     setIsGeneratingRoadmap(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_CODEX_API_URL}/create-roadmap`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_input: refinedPrompt,
-          context: `Duration: ${duration}, Username: ${username}`
-        })
-      });
-
+      const response = await fetch('/api/create-roadmap', {  // Changed URL
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body:  JSON.stringify({
+    user_input: refinedPrompt,
+    context: `Duration: ${duration}, Username: ${username}`
+  })
+});
       if (response.ok) {
         const roadmapData = await response.text();
         const parsed = parseTaggedResponse(roadmapData);
